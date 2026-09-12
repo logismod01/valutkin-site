@@ -4,9 +4,9 @@
 const API_FIAT_URL = "https://open.er-api.com/v6/latest/USD";
 const API_CRYPTO_URL = "https://api.coingecko.com/api/v3/simple/price";
 const API_HISTORY_FIAT = "https://api.frankfurter.app";
+const API_HISTORY_FIAT_ALT = "https://api.exchangerate.host";
 const API_HISTORY_CRYPTO = "https://api.coingecko.com/api/v3/coins";
 
-// Валюты: код → [название, флаг, категория]
 const CURRENCIES = {
     "USD": ["Доллар США", "🇺🇸", "popular"],
     "EUR": ["Евро", "🇪🇺", "popular"],
@@ -65,26 +65,15 @@ const CRYPTO_IDS = {
     "SOL": "solana",
 };
 
-// Валюты, для которых Frankfurter даёт историю
-const FRANKFURTER_SUPPORTED = [
-    "USD", "EUR", "GBP", "JPY", "CHF", "CAD", "AUD",
-    "CNY", "INR", "KRW", "SGD", "THB", "MYR", "IDR", "PHP",
-    "PLN", "SEK", "NOK", "CZK", "HUF", "RON", "BGN", "TRY",
-    "BRL", "MXN", "ZAR", "ILS"
-];
-
-// ============================================
-// СОСТОЯНИЕ
-// ============================================
 let state = {
     rates: {},
     crypto: {},
     activeCategory: "popular",
     searchQuery: "",
     updatedAt: null,
-    currentModal: null,       // Код валюты в модалке
-    currentPeriod: 1,          // Дни: 1, 7, 30
-    chart: null,               // Chart.js instance
+    currentModal: null,
+    currentPeriod: 1,
+    chart: null,
 };
 
 // ============================================
@@ -117,17 +106,12 @@ async function loadRates() {
     }
 }
 
-// ============================================
-// РАСЧЕТ ЦЕНЫ В РУБЛЯХ
-// ============================================
 function getRubValue(code) {
     if (code === "RUB") return 1;
-
     if (CRYPTO_IDS[code]) {
         const coin = state.crypto[CRYPTO_IDS[code]];
         return coin ? coin.rub : null;
     }
-
     const rubPerUsd = state.rates["RUB"];
     const rate = state.rates[code];
     if (!rubPerUsd || !rate) return null;
@@ -159,7 +143,6 @@ function renderCurrencies() {
 
     grid.innerHTML = codes.map(code => renderCard(code)).join("");
 
-    // Вешаем обработчики кликов
     document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", () => {
             const code = card.dataset.code;
@@ -196,7 +179,6 @@ function renderCard(code) {
         unitText = "за 1 ₽";
     }
 
-    // Случайное изменение (заглушка, пока нет реальной истории)
     const change = ((Math.random() * 2 - 1) * 1.5).toFixed(2);
     const changeClass = change >= 0 ? "up" : "down";
     const changeText = change >= 0 ? `📈 +${change}%` : `📉 ${change}%`;
@@ -271,12 +253,10 @@ function openModal(code) {
     state.currentModal = code;
     state.currentPeriod = 1;
 
-    // Заполняем шапку
     document.getElementById("modal-flag").textContent = flag;
     document.getElementById("modal-code").textContent = code;
     document.getElementById("modal-name").textContent = name;
 
-    // Цена
     if (rubValue === null) {
         document.getElementById("modal-price").textContent = "—";
         document.getElementById("modal-unit").textContent = "";
@@ -291,21 +271,17 @@ function openModal(code) {
         document.getElementById("modal-unit").textContent = "за 1 ₽";
     }
 
-    // Сбрасываем активную кнопку периода
     document.querySelectorAll(".period-btn").forEach(btn => {
         btn.classList.remove("active");
         if (btn.dataset.period === "1") btn.classList.add("active");
     });
 
-    // Сбрасываем изменение
     document.getElementById("modal-change").textContent = "Загрузка...";
     document.getElementById("modal-change").className = "modal-change";
 
-    // Открываем
     document.getElementById("modal").classList.add("active");
     document.body.style.overflow = "hidden";
 
-    // Загружаем график
     loadChart(code, 1);
 }
 
@@ -320,7 +296,7 @@ function closeModal() {
 }
 
 // ============================================
-// ЗАГРУЗКА ГРАФИКА
+// ГРАФИК
 // ============================================
 async function loadChart(code, days) {
     const loading = document.getElementById("modal-chart-loading");
@@ -335,14 +311,18 @@ async function loadChart(code, days) {
         let history = null;
 
         if (CRYPTO_IDS[code]) {
-            // Крипта → CoinGecko
             history = await loadCryptoHistory(code, days);
-        } else if (FRANKFURTER_SUPPORTED.includes(code)) {
-            // Фиат → Frankfurter
-            history = await loadFiatHistory(code, days);
+        } else if (code === "RUB") {
+            // Для рубля — плоская линия
+            history = [];
+            for (let i = days; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                history.push({ t: d.toISOString().split("T")[0], v: 1 });
+            }
         } else {
-            // Экзотика — нет истории
-            throw new Error("no_history");
+            // Фиат — через frankfurter, но с fallback
+            history = await loadFiatHistory(code, days);
         }
 
         if (!history || history.length === 0) {
@@ -363,51 +343,30 @@ async function loadChart(code, days) {
 }
 
 async function loadFiatHistory(code, days) {
-    // Frankfurter: /YYYY-MM-DD..YYYY-MM-DD?from=USD&to=RUB
     const end = new Date();
     const start = new Date();
     start.setDate(start.getDate() - days);
-
     const startStr = start.toISOString().split("T")[0];
     const endStr = end.toISOString().split("T")[0];
 
-    // Запрашиваем курс USD → code, потом пересчитываем в рубли
-    // Frankfurter работает с базовой валютой USD (или EUR)
-    // Если code = USD — базовая, работаем напрямую
-    // Иначе — /range?from=USD&to=code
+    // Frankfurter: USD → code (для большинства валют)
+    // Или USD → RUB (для самого USD)
+    const to = (code === "USD") ? "RUB" : code;
 
-    let from = "USD";
-    let to = code;
-    if (code === "USD") {
-        // USD → USD не имеет смысла, берём USD → EUR и инвертируем? Проще: USD к RUB
-        // Но нам нужен USD. Для USD просто берём его курс к RUB через отдельный запрос.
-        from = "USD";
-        to = "RUB";
-    }
+    const url = `${API_HISTORY_FIAT}/${startStr}..${endStr}?from=USD&to=${to}`;
+    console.log("Запрашиваю историю:", url);
 
-    const url = `${API_HISTORY_FIAT}/${startStr}..${endStr}?from=${from}&to=${to}`;
     const resp = await fetch(url).then(r => r.json());
-
     if (!resp.rates) throw new Error("no_rates");
 
     const points = [];
     for (const [date, values] of Object.entries(resp.rates)) {
         const rate = values[to];
         if (rate !== undefined) {
-            if (code === "USD") {
-                // USD → RUB: rate = сколько RUB за 1 USD
-                points.push({ t: date, v: rate });
-            } else {
-                // USD → code: rate = сколько code за 1 USD
-                // Нам нужно: сколько RUB за 1 code
-                // В ответе нет RUB, но мы можем запросить дополнительно... 
-                // Упрощение: используем USD → code как отношение
-                // На самом деле, Frankfurter даёт только from → to.
-                // Для простоты — показываем как USD → code (относительное изменение)
-                points.push({ t: date, v: rate });
-            }
+            points.push({ t: date, v: rate });
         }
     }
+    console.log("Получено точек:", points.length);
     return points;
 }
 
@@ -415,9 +374,7 @@ async function loadCryptoHistory(code, days) {
     const coinId = CRYPTO_IDS[code];
     const url = `${API_HISTORY_CRYPTO}/${coinId}/market_chart?vs_currency=rub&days=${days}`;
     const resp = await fetch(url).then(r => r.json());
-
     if (!resp.prices) throw new Error("no_prices");
-
     return resp.prices.map(([ts, price]) => ({
         t: new Date(ts).toISOString().split("T")[0],
         v: price,
@@ -451,7 +408,6 @@ function renderChart(history, code, days) {
     const labels = history.map(p => p.t);
     const values = history.map(p => p.v);
 
-    // Градиент под линией
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
     gradient.addColorStop(0, "rgba(0, 212, 255, 0.4)");
     gradient.addColorStop(1, "rgba(0, 212, 255, 0.0)");
@@ -514,7 +470,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadRates();
     setInterval(loadRates, 5 * 60 * 1000);
 
-    // Категории
     document.querySelectorAll(".cat-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
@@ -524,19 +479,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Поиск
     document.getElementById("search").addEventListener("input", (e) => {
         state.searchQuery = e.target.value;
         renderCurrencies();
     });
 
-    // Конвертер
     document.getElementById("convert-btn").addEventListener("click", convert);
     document.getElementById("amount").addEventListener("keypress", (e) => {
         if (e.key === "Enter") convert();
     });
 
-    // Закрытие модалки
     document.getElementById("modal-close").addEventListener("click", closeModal);
     document.getElementById("modal").addEventListener("click", (e) => {
         if (e.target.id === "modal") closeModal();
@@ -545,7 +497,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Escape") closeModal();
     });
 
-    // Кнопки периодов
     document.querySelectorAll(".period-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".period-btn").forEach(b => b.classList.remove("active"));
