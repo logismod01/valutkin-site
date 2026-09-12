@@ -6,12 +6,11 @@
     <title>Валюткин — курсы валют онлайн</title>
     <meta name="description" content="Курсы 120+ валют и криптовалют в реальном времени. Telegram-бот Валюткин.">
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
-    <!-- ШАПКА -->
     <header class="header">
         <div class="header-left">
             <img src="assets/logo.png" alt="Валюткин" class="header-logo">
@@ -24,10 +23,8 @@
         </div>
     </header>
 
-    <!-- ГЛАВНЫЙ ЭКРАН -->
     <main class="container">
 
-        <!-- Конвертер -->
         <section class="converter">
             <h2 class="section-title">💱 Конвертер валют</h2>
             <div class="converter-form">
@@ -38,12 +35,10 @@
             <div id="convert-result" class="convert-result"></div>
         </section>
 
-        <!-- Поиск -->
         <section class="search-section">
             <input type="text" id="search" placeholder="🔍 Поиск валюты (USD, Евро, Юань...)" class="search-input">
         </section>
 
-        <!-- Категории -->
         <section class="categories">
             <button class="cat-btn active" data-cat="popular">⭐ Популярные</button>
             <button class="cat-btn" data-cat="asia">🌏 Азия</button>
@@ -56,7 +51,6 @@
             <button class="cat-btn" data-cat="all">📋 Все</button>
         </section>
 
-        <!-- Сортировка -->
         <section class="sort-section">
             <span class="sort-label">Сортировка:</span>
             <button class="sort-btn active" data-sort="none">🔤 По умолчанию</button>
@@ -65,14 +59,12 @@
             <button class="sort-btn" data-sort="price-asc">💸 Дешёвые</button>
         </section>
 
-        <!-- Сетка валют -->
         <section id="currencies-grid" class="grid">
             <div class="loading">Загружаем курсы...</div>
         </section>
 
     </main>
 
-    <!-- ПОДВАЛ -->
     <footer class="footer">
         <div class="footer-content">
             <img src="assets/fox.png" alt="Лис" class="footer-fox">
@@ -87,7 +79,6 @@
         </div>
     </footer>
 
-    <!-- МОДАЛЬНОЕ ОКНО -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <button class="modal-close" id="modal-close">✕</button>
@@ -127,6 +118,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
 </body>
 </html>
