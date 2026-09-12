@@ -190,6 +190,49 @@ a:hover {
 
 
 /* ============================================
+   СОРТИРОВКА
+   ============================================ */
+.sort-section {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 12px 15px;
+    background: rgba(10, 10, 26, 0.5);
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    border-radius: 12px;
+}
+
+.sort-label {
+    font-size: 14px;
+    color: #8888aa;
+    margin-right: 5px;
+}
+
+.sort-btn {
+    background: rgba(10, 10, 26, 0.7);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: #e0e0ff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.sort-btn:hover {
+    border-color: #00d4ff;
+    background: rgba(0, 212, 255, 0.1);
+}
+.sort-btn.active {
+    background: linear-gradient(90deg, #00d4ff, #a855f7);
+    border-color: transparent;
+    color: #fff;
+    font-weight: 600;
+}
+
+
+/* ============================================
    КАТЕГОРИИ
    ============================================ */
 .categories {
