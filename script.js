@@ -3,9 +3,7 @@
 // ============================================
 const API_FIAT_URL = "https://open.er-api.com/v6/latest/USD";
 const API_CRYPTO_URL = "https://api.coingecko.com/api/v3/simple/price";
-const API_HISTORY_FIAT = "https://api.frankfurter.app";
-const API_HISTORY_FIAT_ALT = "https://api.exchangerate.host";
-const API_HISTORY_CRYPTO = "https://api.coingecko.com/api/v3/coins";
+const API_HISTORY = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api";
 
 const CURRENCIES = {
     "USD": ["Доллар США", "🇺🇸", "popular"],
@@ -64,6 +62,11 @@ const CRYPTO_IDS = {
     "USDT": "tether",
     "SOL": "solana",
 };
+
+// Валюта для fawazahmed0 — строчными буквами
+function toLower(code) {
+    return code.toLowerCase();
+}
 
 let state = {
     rates: {},
@@ -311,17 +314,10 @@ async function loadChart(code, days) {
         let history = null;
 
         if (CRYPTO_IDS[code]) {
+            // Крипта — CoinGecko
             history = await loadCryptoHistory(code, days);
-        } else if (code === "RUB") {
-            // Для рубля — плоская линия
-            history = [];
-            for (let i = days; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                history.push({ t: d.toISOString().split("T")[0], v: 1 });
-            }
         } else {
-            // Фиат — через frankfurter, но с fallback
+            // Фиат — fawazahmed0
             history = await loadFiatHistory(code, days);
         }
 
@@ -343,36 +339,59 @@ async function loadChart(code, days) {
 }
 
 async function loadFiatHistory(code, days) {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - days);
-    const startStr = start.toISOString().split("T")[0];
-    const endStr = end.toISOString().split("T")[0];
-
-    // Frankfurter: USD → code (для большинства валют)
-    // Или USD → RUB (для самого USD)
-    const to = (code === "USD") ? "RUB" : code;
-
-    const url = `${API_HISTORY_FIAT}/${startStr}..${endStr}?from=USD&to=${to}`;
-    console.log("Запрашиваю историю:", url);
-
-    const resp = await fetch(url).then(r => r.json());
-    if (!resp.rates) throw new Error("no_rates");
-
-    const points = [];
-    for (const [date, values] of Object.entries(resp.rates)) {
-        const rate = values[to];
-        if (rate !== undefined) {
-            points.push({ t: date, v: rate });
-        }
+    // fawazahmed0: запрашиваем historical данные на каждую дату
+    // Формат: https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@YYYY-MM-DD/v1/currencies/usd.json
+    // Возвращает: { "usd": { "rub": 84.19, "eur": 0.86, ... } }
+    
+    // Нам нужен курс code → RUB. Но fawazahmed0 отдает USD → code.
+    // Значит: RUB за 1 code = rate_usd_to_rub / rate_usd_to_code
+    
+    const dates = [];
+    const today = new Date();
+    
+    // Если дней <= 7, берём каждую дату. Если больше — каждые 3 дня, чтобы не дёргать API 30 раз.
+    const step = days <= 7 ? 1 : (days <= 30 ? 3 : 7);
+    
+    for (let i = days; i >= 0; i -= step) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        dates.push(d.toISOString().split("T")[0]);
     }
-    console.log("Получено точек:", points.length);
+    
+    // Запрашиваем все даты параллельно (Promise.all)
+    const requests = dates.map(date => 
+        fetch(`${API_HISTORY}@${date}/v1/currencies/usd.json`)
+            .then(r => r.json())
+            .then(data => ({ date, data }))
+            .catch(() => null)
+    );
+    
+    const results = await Promise.all(requests);
+    
+    const points = [];
+    const codeLower = code.toLowerCase();
+    
+    for (const r of results) {
+        if (!r || !r.data || !r.data.usd) continue;
+        
+        const usd = r.data.usd;
+        const rubPerUsd = usd.rub;
+        const rateUsdToCode = usd[codeLower];
+        
+        if (!rubPerUsd || !rateUsdToCode) continue;
+        
+        // 1 code = rubPerUsd / rateUsdToCode ₽
+        const rubValue = rubPerUsd / rateUsdToCode;
+        points.push({ t: r.date, v: rubValue });
+    }
+    
+    console.log(`История ${code}: ${points.length} точек`);
     return points;
 }
 
 async function loadCryptoHistory(code, days) {
     const coinId = CRYPTO_IDS[code];
-    const url = `${API_HISTORY_CRYPTO}/${coinId}/market_chart?vs_currency=rub&days=${days}`;
+    const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=rub&days=${days}`;
     const resp = await fetch(url).then(r => r.json());
     if (!resp.prices) throw new Error("no_prices");
     return resp.prices.map(([ts, price]) => ({
