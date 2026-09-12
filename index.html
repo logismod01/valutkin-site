@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Валюткин — курсы валют онлайн</title>
-    <meta name="description" content="Курсы валют и криптовалют в реальном времени. 100+ валют мира. Telegram-бот Валюткин.">
+    <meta name="description" content="Курсы 120+ валют и криптовалют в реальном времени. Telegram-бот Валюткин.">
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -49,10 +49,20 @@
             <button class="cat-btn" data-cat="asia">🌏 Азия</button>
             <button class="cat-btn" data-cat="europe">🌍 Европа</button>
             <button class="cat-btn" data-cat="america">🌎 Америка</button>
-            <button class="cat-btn" data-cat="mena">🏜 Восток и Африка</button>
+            <button class="cat-btn" data-cat="mena">🏜 Ближний Восток</button>
+            <button class="cat-btn" data-cat="africa">🌍 Африка</button>
             <button class="cat-btn" data-cat="oceania">🌊 Океания</button>
             <button class="cat-btn" data-cat="crypto">🪙 Крипта</button>
             <button class="cat-btn" data-cat="all">📋 Все</button>
+        </section>
+
+        <!-- Сортировка -->
+        <section class="sort-section">
+            <span class="sort-label">Сортировка:</span>
+            <button class="sort-btn active" data-sort="none">🔤 По умолчанию</button>
+            <button class="sort-btn" data-sort="alpha">🅰️ A-Z</button>
+            <button class="sort-btn" data-sort="price-desc">💰 Дорогие</button>
+            <button class="sort-btn" data-sort="price-asc">💸 Дешёвые</button>
         </section>
 
         <!-- Сетка валют -->
@@ -67,8 +77,8 @@
         <div class="footer-content">
             <img src="assets/fox.png" alt="Лис" class="footer-fox">
             <div class="footer-text">
-                <p><b>Валюткин</b> — курсы валют в реальном времени</p>
-                <p class="footer-small">Данные: frankfurter.app, exchangerate-api.com, coingecko.com</p>
+                <p><b>Валюткин</b> — курсы 120+ валют в реальном времени</p>
+                <p class="footer-small">Данные: exchangerate-api.com, fawazahmed0, coingecko.com</p>
             </div>
             <div class="footer-links">
                 <a href="https://t.me/Valutkin2026Bot" target="_blank">Telegram-бот</a>
@@ -77,7 +87,7 @@
         </div>
     </footer>
 
-    <!-- МОДАЛЬНОЕ ОКНО С ГРАФИКОМ -->
+    <!-- МОДАЛЬНОЕ ОКНО -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <button class="modal-close" id="modal-close">✕</button>
