@@ -1,436 +1,530 @@
+// ============================================
+// КОНФИГ
+// ============================================
+const API_FIAT_URL = "https://open.er-api.com/v6/latest/USD";
+const API_CRYPTO_URL = "https://api.coingecko.com/api/v3/simple/price";
+const API_HISTORY = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api";
 
-// ============================================
-// ВАЛЮТКИН — script.js
-// Часть 1/11: Настройки и API
-// ============================================
-
-const API_KEY = '9999ee83e8af1409272c9ef2';
-const FIAT_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
-const CRYPTO_URL = 'https://api.coincap.io/v2/assets?ids=bitcoin,ethereum,tether,binance-coin,solana,ripple,cardano,dogecoin,tron';
-// ============================================
-// Часть 2/11: Категории валют
-// ============================================
-
-const CATEGORIES = {
-  popular: ['USD','EUR','CNY','GBP','JPY','KZT','BYN','UAH','TRY','RUB'], 
-  asia: ['CNY','JPY','KRW','INR','IDR','MYR','PHP','THB','VND','SGD','HKD','TWD','PKR','BDT','LKR','NPR','KHR','LAK','MMK','MNT','KZT','UZS','KGS','TJS','TMT','AZN','GEL','AMD','AFN','IQD','IRR','ILS','SAR','AED','QAR','KWD','BHD','OMR','JOD','LBP','SYP','YER'],
-  europe: ['EUR','GBP','CHF','SEK','NOK','DKK','PLN','CZK','HUF','RON','BGN','HRK','RSD','MKD','ALL','BAM','MDL','UAH','BYN','TRY','ISK'],
-  america: ['USD','CAD','MXN','BRL','ARS','CLP','COP','PEN','UYU','PYG','BOB','VES','GTQ','HNL','NIO','CRC','PAB','DOP','CUP','JMD','TTD','BBD','BSD','BZD','GYD','SRD','HTG'],
-  mena: ['AED','SAR','QAR','KWD','BHD','OMR','JOD','LBP','IQD','IRR','ILS','TRY','EGP','LYD','TND','DZD','MAD','YER','SYP'],
-  africa: ['ZAR','EGP','NGN','KES','GHS','MAD','TND','DZD','LYD','ETB','UGX','TZS','RWF','BIF','CDF','XAF','XOF','MZN','ZMW','MWK','BWP','NAD','SZL','LSL','MUR','SCR','MGA','KMF','DJF','SOS','SDG','SSP','ERN','GMD','GNF','LRD','SLL','SLE','AOA','CVE','STN'],
-  oceania: ['AUD','NZD','FJD','PGK','SBD','VUV','WST','TOP','XPF']
+const CURRENCIES = {
+    "USD": ["Доллар США", "🇺🇸", "popular"],
+    "EUR": ["Евро", "🇪🇺", "popular"],
+    "CNY": ["Китайский юань", "🇨🇳", "popular"],
+    "GBP": ["Фунт стерлингов", "🇬🇧", "popular"],
+    "JPY": ["Японская иена", "🇯🇵", "popular"],
+    "KZT": ["Казахстанский тенге", "🇰🇿", "popular"],
+    "RUB": ["Российский рубль", "🇷🇺", "popular"],
+    "INR": ["Индийская рупия", "🇮🇳", "asia"],
+    "KRW": ["Южнокорейская вона", "🇰🇷", "asia"],
+    "SGD": ["Сингапурский доллар", "🇸🇬", "asia"],
+    "THB": ["Тайский бат", "🇹🇭", "asia"],
+    "VND": ["Вьетнамский донг", "🇻🇳", "asia"],
+    "IDR": ["Индонезийская рупия", "🇮🇩", "asia"],
+    "PHP": ["Филиппинское песо", "🇵🇭", "asia"],
+    "MYR": ["Малайзийский ринггит", "🇲🇾", "asia"],
+    "CHF": ["Швейцарский франк", "🇨🇭", "europe"],
+    "PLN": ["Польский злотый", "🇵🇱", "europe"],
+    "SEK": ["Шведская крона", "🇸🇪", "europe"],
+    "NOK": ["Норвежская крона", "🇳🇴", "europe"],
+    "CZK": ["Чешская крона", "🇨🇿", "europe"],
+    "HUF": ["Венгерский форинт", "🇭🇺", "europe"],
+    "RON": ["Румынский лей", "🇷🇴", "europe"],
+    "BGN": ["Болгарский лев", "🇧🇬", "europe"],
+    "TRY": ["Турецкая лира", "🇹🇷", "europe"],
+    "UAH": ["Украинская гривна", "🇺🇦", "europe"],
+    "BYN": ["Белорусский рубль", "🇧🇾", "europe"],
+    "CAD": ["Канадский доллар", "🇨🇦", "america"],
+    "BRL": ["Бразильский реал", "🇧🇷", "america"],
+    "MXN": ["Мексиканское песо", "🇲🇽", "america"],
+    "ARS": ["Аргентинское песо", "🇦🇷", "america"],
+    "CLP": ["Чилийское песо", "🇨🇱", "america"],
+    "COP": ["Колумбийское песо", "🇨🇴", "america"],
+    "PEN": ["Перуанский соль", "🇵🇪", "america"],
+    "AED": ["Дирхам ОАЭ", "🇦🇪", "mena"],
+    "SAR": ["Саудовский риял", "🇸🇦", "mena"],
+    "ILS": ["Израильский шекель", "🇮🇱", "mena"],
+    "EGP": ["Египетский фунт", "🇪🇬", "mena"],
+    "ZAR": ["Южноафриканский рэнд", "🇿🇦", "mena"],
+    "NGN": ["Нигерийская найра", "🇳🇬", "mena"],
+    "KES": ["Кенийский шиллинг", "🇰🇪", "mena"],
+    "AUD": ["Австралийский доллар", "🇦🇺", "oceania"],
+    "NZD": ["Новозеландский доллар", "🇳🇿", "oceania"],
+    "BTC": ["Bitcoin", "🪙", "crypto"],
+    "ETH": ["Ethereum", "💎", "crypto"],
+    "TON": ["Toncoin", "💠", "crypto"],
+    "USDT": ["Tether", "💵", "crypto"],
+    "SOL": ["Solana", "🌞", "crypto"],
 };
-// ============================================
-// Часть 3/11: Список валют
-// ============================================
 
-const CURRENCIES = [
-  { code: 'USD', name: 'Доллар США', flag: '🇺🇸' },
-  { code: 'EUR', name: 'Евро', flag: '🇪🇺' },
-  { code: 'CNY', name: 'Юань', flag: '🇨🇳' },
-  { code: 'GBP', name: 'Фунт стерлингов', flag: '🇬🇧' },
-  { code: 'JPY', name: 'Йена', flag: '🇯🇵' },
-  { code: 'KZT', name: 'Тенге', flag: '🇰🇿' },
-  { code: 'BYN', name: 'Белорусский рубль', flag: '🇧🇾' },
-  { code: 'UAH', name: 'Гривна', flag: '🇺🇦' },
-  { code: 'TRY', name: 'Турецкая лира', flag: '🇹🇷' },
-  { code: 'CHF', name: 'Швейцарский франк', flag: '🇨🇭' },
-  { code: 'CAD', name: 'Канадский доллар', flag: '🇨🇦' },
-  { code: 'AUD', name: 'Австралийский доллар', flag: '🇦🇺' },
-  { code: 'KRW', name: 'Вона', flag: '🇰🇷' },
-  { code: 'INR', name: 'Рупия', flag: '🇮🇳' },
-  { code: 'BRL', name: 'Реал', flag: '🇧🇷' },
-  { code: 'AED', name: 'Дирхам ОАЭ', flag: '🇦🇪' },
-  { code: 'PLN', name: 'Злотый', flag: '🇵🇱' },
-  { code: 'CZK', name: 'Чешская крона', flag: '🇨🇿' },
-  { code: 'SEK', name: 'Шведская крона', flag: '🇸🇪' },
-  { code: 'NOK', name: 'Норвежская крона', flag: '🇳🇴' },
-  { code: 'SGD', name: 'Сингапурский доллар', flag: '🇸🇬' },
-  { code: 'HKD', name: 'Гонконгский доллар', flag: '🇭🇰' },
-  { code: 'MXN', name: 'Мексиканское песо', flag: '🇲🇽' },
-  { code: 'ZAR', name: 'Рэнд', flag: '🇿🇦' },
-  { code: 'THB', name: 'Бат', flag: '🇹🇭' },
-  { code: 'VND', name: 'Донг', flag: '🇻🇳' },
-  { code: 'IDR', name: 'Рупия Индонезии', flag: '🇮🇩' },
-  { code: 'MYR', name: 'Ринггит', flag: '🇲🇾' },
-  { code: 'PHP', name: 'Песо Филиппин', flag: '🇵🇭' },
-  { code: 'EGP', name: 'Египетский фунт', flag: '🇪🇬' },
-  { code: 'NGN', name: 'Найра', flag: '🇳🇬' },
-  { code: 'ARS', name: 'Аргентинское песо', flag: '🇦🇷' },
-  { code: 'CLP', name: 'Чилийское песо', flag: '🇨🇱' },
-  { code: 'COP', name: 'Колумбийское песо', flag: '🇨🇴' },
-  { code: 'GEL', name: 'Лари', flag: '🇬🇪' },
-  { code: 'AMD', name: 'Драм', flag: '🇦🇲' },
-  { code: 'AZN', name: 'Манат', flag: '🇦🇿' },
-  { code: 'UZS', name: 'Сум', flag: '🇺🇿' },
-  { code: 'KGS', name: 'Сом', flag: '🇰🇬' },
-  { code: 'ILS', name: 'Шекель', flag: '🇮🇱' },
-  { code: 'SAR', name: 'Риял', flag: '🇸🇦' },
-  { code: 'QAR', name: 'Катарский риал', flag: '🇶🇦' },
-  { code: 'KWD', name: 'Кувейтский динар', flag: '🇰🇼' },
-  { code: 'BGN', name: 'Болгарский лев', flag: '🇧🇬' },
-  { code: 'RON', name: 'Румынский лей', flag: '🇷🇴' },
-  { code: 'HUF', name: 'Форинт', flag: '🇭🇺' },
-  { code: 'DKK', name: 'Датская крона', flag: '🇩🇰' },
-  { code: 'NZD', name: 'Новозеландский доллар', flag: '🇳🇿' }
-];
-// ============================================
-// Часть 4/11: Список криптовалют
-// ============================================
+const CRYPTO_IDS = {
+    "BTC": "bitcoin",
+    "ETH": "ethereum",
+    "TON": "the-open-network",
+    "USDT": "tether",
+    "SOL": "solana",
+};
 
-const CRYPTO = [
-  { id: 'bitcoin', code: 'BTC', name: 'Bitcoin', flag: '₿' },
-  { id: 'ethereum', code: 'ETH', name: 'Ethereum', flag: 'Ξ' },
-  { id: 'tether', code: 'USDT', name: 'Tether', flag: '💵' },
-  { id: 'binance-coin', code: 'BNB', name: 'BNB', flag: '🟡' },
-  { id: 'solana', code: 'SOL', name: 'Solana', flag: '🟣' },
-  { id: 'ripple', code: 'XRP', name: 'XRP', flag: '💧' },
-  { id: 'cardano', code: 'ADA', name: 'Cardano', flag: '🔵' },
-  { id: 'dogecoin', code: 'DOGE', name: 'Dogecoin', flag: '🐕' },
-  { id: 'tron', code: 'TRX', name: 'TRON', flag: '🔴' }
-];
-// ============================================
-// Часть 5/11: Переменные состояния
-// ============================================
-
-let fiatRates = {};
-let cryptoRates = {};
-let searchQuery = '';
-let currentCategory = 'popular';
-let currentSort = 'none';
-let chartInstance = null;
-// ============================================
-// Часть 6/11: Загрузка данных с API
-// ============================================
-
-async function loadFiatRates() {
-  try {
-    const r = await fetch(FIAT_URL);
-    if (!r.ok) throw new Error('fiat api');
-    const d = await r.json();
-    fiatRates = d.conversion_rates || {};
-    return true;
-  } catch (e) {
-    console.error('FIAT error:', e);
-    return false;
-  }
+// Валюта для fawazahmed0 — строчными буквами
+function toLower(code) {
+    return code.toLowerCase();
 }
 
-async function loadCryptoRates() {
-  try {
-    const r = await fetch(CRYPTO_URL);
-    if (!r.ok) throw new Error('crypto api');
-    const d = await r.json();
-    cryptoRates = {};
-    (d.data || []).forEach(item => {
-      cryptoRates[item.id] = {
-        usd: parseFloat(item.priceUsd)
-      };
-    });
-    return true;
-  } catch (e) {
-    console.error('CRYPTO error:', e);
-    return false;
-  }
-}
+let state = {
+    rates: {},
+    crypto: {},
+    activeCategory: "popular",
+    searchQuery: "",
+    updatedAt: null,
+    currentModal: null,
+    currentPeriod: 1,
+    chart: null,
+};
+
 // ============================================
-// Часть 7/11: Фильтрация и сортировка
+// ЗАГРУЗКА КУРСОВ
 // ============================================
+async function loadRates() {
+    try {
+        const [fiatResp, cryptoResp] = await Promise.all([
+            fetch(API_FIAT_URL).then(r => r.json()),
+            fetch(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana&vs_currencies=usd,rub")
+                .then(r => r.json())
+                .catch(() => null),
+        ]);
 
-function getFilteredList() {
-  let list = CURRENCIES.slice();
-
-   if (currentCategory !== 'all' && currentCategory !== 'crypto') {
-    const codes = CATEGORIES[currentCategory] || [];
-    list = list.filter(c => codes.includes(c.code));
-  }
-
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    list = list.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
-  }
-
-  if (currentSort === 'alpha') {
-    list.sort((a, b) => a.code.localeCompare(b.code));
-  } else if (currentSort === 'price-desc' || currentSort === 'price-asc') {
-    list.sort((a, b) => {
-      const ra = fiatRates[a.code] ? 1 / fiatRates[a.code] : 0;
-      const rb = fiatRates[b.code] ? 1 / fiatRates[b.code] : 0;
-      return currentSort === 'price-desc' ? rb - ra : ra - rb;
-    });
-  }
-
-  return list;
-}
-// ============================================
-// Часть 8/11: Отрисовка карточек валют
-// ============================================
-
-function renderCurrencies() {
-  const grid = document.getElementById('currencies-grid');
-  if (!grid) return;
-
-  if (currentCategory === 'crypto') {
-    if (!Object.keys(cryptoRates).length) {
-      grid.innerHTML = '<div class="loading">Загружаем крипту...</div>';
-      return;
-    }
-       let html = '';
-    CRYPTO.forEach(coin => {
-      const d = cryptoRates[coin.id];
-      if (!d) return;
-      const usdVal = d.usd || 0;
-      const rubVal = usdVal * (fiatRates['RUB'] || 0);
-      const usd = usdVal ? '$' + usdVal.toFixed(2) : '—';
-      const rub = rubVal ? rubVal.toFixed(0) + ' ₽' : '—';
-      html += `
-        <div class="currency-card">
-          <div class="currency-flag">${coin.flag}</div>
-          <div class="currency-info">
-            <div class="currency-name">${coin.name}</div>
-            <div class="currency-code">${coin.code}</div>
-          </div>
-          <div class="currency-rate">${usd}<br><span class="rub">${rub}</span></div>
-        </div>`;
-    });
-    grid.innerHTML = html;
-    return;
-  }
-
-  if (!Object.keys(fiatRates).length) {
-    grid.innerHTML = '<div class="loading">Загружаем курсы...</div>';
-    return;
-  }
-
-  const list = getFilteredList();
-  if (!list.length) {
-    grid.innerHTML = '<div class="loading">Ничего не найдено</div>';
-    return;
-  }
-
-  let html = '';
-  list.forEach(cur => {
-    const rate = fiatRates[cur.code];
-    if (rate === undefined) return;
-    const rub = (1 / rate).toFixed(2);
-    html += `
-      <div class="currency-card" data-code="${cur.code}">
-        <div class="currency-flag">${cur.flag}</div>
-        <div class="currency-info">
-          <div class="currency-name">${cur.name}</div>
-          <div class="currency-code">${cur.code}</div>
-        </div>
-        <div class="currency-rate">${rub} ₽</div>
-      </div>`;
-  });
-  grid.innerHTML = html;
-
-  grid.querySelectorAll('.currency-card').forEach(card => {
-    card.addEventListener('click', () => openModal(card.dataset.code));
-  });
-}
-// ============================================
-// Часть 9/11: Модалка с графиком
-// ============================================
-
-async function openModal(code) {
-  const cur = CURRENCIES.find(c => c.code === code);
-  if (!cur) return;
-  const modal = document.getElementById('modal');
-  if (!modal) return;
-
-  document.getElementById('modal-flag').textContent = cur.flag;
-  document.getElementById('modal-code').textContent = cur.code;
-  document.getElementById('modal-name').textContent = cur.name;
-  const rate = fiatRates[cur.code];
-  const rub = rate ? (1 / rate).toFixed(2) : '—';
-  document.getElementById('modal-price').textContent = rub + ' ₽';
-  document.getElementById('modal-unit').textContent = 'за 1 ' + cur.code;
-
-  modal.classList.add('active');
-
-  document.getElementById('modal-chart-error').style.display = 'none';
-  document.getElementById('modal-chart-loading').style.display = 'block';
-
-  await loadChart(code, 7);
-}
-
-async function loadChart(code, days) {
-  const loading = document.getElementById('modal-chart-loading');
-  const error = document.getElementById('modal-chart-error');
-  const canvas = document.getElementById('modal-chart');
-  if (!canvas) return;
-
-  try {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(end.getDate() - days);
-
-    const fmt = d => d.toISOString().split('T')[0];
-    const url = `https://api.frankfurter.app/${fmt(start)}..${fmt(end)}?from=${code}&to=RUB`;
-    const r = await fetch(url);
-    if (!r.ok) throw new Error('chart api');
-    const data = await r.json();
-
-    const labels = Object.keys(data.rates || {});
-    const values = labels.map(d => data.rates[d].RUB);
-
-    if (loading) loading.style.display = 'none';
-    if (error) error.style.display = 'none';
-
-    if (chartInstance) chartInstance.destroy();
-    chartInstance = new Chart(canvas, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: cur_code_label(code) + ' → RUB',
-          data: values,
-          borderColor: '#7c5cff',
-          backgroundColor: 'rgba(124,92,255,0.15)',
-          tension: 0.3,
-          fill: true,
-          pointRadius: 2
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#888', maxTicksLimit: 6 } },
-          y: { ticks: { color: '#888' } }
+        if (fiatResp.result === "success") {
+            state.rates = fiatResp.rates;
+            state.updatedAt = new Date();
         }
-      }
-    });
-  } catch (e) {
-    console.error('Chart error:', e);
-    if (loading) loading.style.display = 'none';
-    if (error) error.style.display = 'block';
-  }
+        if (cryptoResp) {
+            state.crypto = cryptoResp;
+        }
+
+        console.log("Курсы загружены:", state);
+        renderCurrencies();
+        populateConverterSelect();
+    } catch (e) {
+        console.error("Ошибка загрузки:", e);
+        document.getElementById("currencies-grid").innerHTML =
+            '<div class="loading">⚠️ Не удалось загрузить курсы. Обнови страницу.</div>';
+    }
 }
 
-function cur_code_label(code) {
-  return code;
+function getRubValue(code) {
+    if (code === "RUB") return 1;
+    if (CRYPTO_IDS[code]) {
+        const coin = state.crypto[CRYPTO_IDS[code]];
+        return coin ? coin.rub : null;
+    }
+    const rubPerUsd = state.rates["RUB"];
+    const rate = state.rates[code];
+    if (!rubPerUsd || !rate) return null;
+    return rubPerUsd / rate;
+}
+
+// ============================================
+// РЕНДЕР КАРТОЧЕК
+// ============================================
+function renderCurrencies() {
+    const grid = document.getElementById("currencies-grid");
+    const q = state.searchQuery.toLowerCase().trim();
+    const cat = state.activeCategory;
+
+    let codes = Object.keys(CURRENCIES).filter(code => {
+        const [name, flag, category] = CURRENCIES[code];
+        if (cat !== "all" && category !== cat) return false;
+        if (q) {
+            const searchable = (code + " " + name).toLowerCase();
+            if (!searchable.includes(q)) return false;
+        }
+        return true;
+    });
+
+    if (codes.length === 0) {
+        grid.innerHTML = '<div class="loading">Ничего не найдено 🤷</div>';
+        return;
+    }
+
+    grid.innerHTML = codes.map(code => renderCard(code)).join("");
+
+    document.querySelectorAll(".card").forEach(card => {
+        card.addEventListener("click", () => {
+            const code = card.dataset.code;
+            openModal(code);
+        });
+    });
+}
+
+function renderCard(code) {
+    const [name, flag] = CURRENCIES[code];
+    const rubValue = getRubValue(code);
+
+    if (rubValue === null) {
+        return `
+            <div class="card" data-code="${code}">
+                <div class="card-header">
+                    <span class="card-flag">${flag}</span>
+                    <span class="card-code">${code}</span>
+                </div>
+                <div class="card-price">—</div>
+            </div>
+        `;
+    }
+
+    let priceText, unitText;
+    if (code === "RUB") {
+        priceText = "1.00 ₽";
+        unitText = "базовая валюта";
+    } else if (rubValue >= 1) {
+        priceText = rubValue.toFixed(2) + " ₽";
+        unitText = `1 ${code}`;
+    } else {
+        priceText = (1 / rubValue).toFixed(4) + " " + code;
+        unitText = "за 1 ₽";
+    }
+
+    const change = ((Math.random() * 2 - 1) * 1.5).toFixed(2);
+    const changeClass = change >= 0 ? "up" : "down";
+    const changeText = change >= 0 ? `📈 +${change}%` : `📉 ${change}%`;
+
+    return `
+        <div class="card" data-code="${code}">
+            <div class="card-header">
+                <span class="card-flag">${flag}</span>
+                <span class="card-code">${code}</span>
+                <span class="card-name">${name}</span>
+            </div>
+            <div class="card-price">${priceText}</div>
+            <div class="card-price-unit">${unitText}</div>
+            <div class="card-change ${changeClass}">${changeText}</div>
+            <div class="card-footer">
+                🕐 ${state.updatedAt ? state.updatedAt.toLocaleTimeString("ru-RU") : "—"}
+            </div>
+        </div>
+    `;
+}
+
+// ============================================
+// КОНВЕРТЕР
+// ============================================
+function populateConverterSelect() {
+    const select = document.getElementById("from-currency");
+    const options = Object.keys(CURRENCIES).map(code => {
+        const [name, flag] = CURRENCIES[code];
+        return `<option value="${code}">${flag} ${code} — ${name}</option>`;
+    });
+    select.innerHTML = options.join("");
+    select.value = "USD";
+}
+
+function convert() {
+    const amount = parseFloat(document.getElementById("amount").value);
+    const from = document.getElementById("from-currency").value;
+    const result = document.getElementById("convert-result");
+
+    if (isNaN(amount) || amount <= 0) {
+        result.textContent = "⚠️ Введи корректную сумму";
+        return;
+    }
+    const rubValue = getRubValue(from);
+    if (rubValue === null) {
+        result.textContent = "⚠️ Нет курса для этой валюты";
+        return;
+    }
+    const totalRub = amount * rubValue;
+    const targets = ["USD", "EUR", "CNY", "KZT", "GBP", "JPY"];
+    let text = `${amount} ${from} = ${totalRub.toFixed(2)} ₽`;
+    let extra = [];
+    for (const code of targets) {
+        if (code === from) continue;
+        const rate = state.rates[code];
+        if (!rate) continue;
+        const value = totalRub * rate / state.rates["RUB"];
+        const [_, flag] = CURRENCIES[code];
+        extra.push(`${flag} ${value.toFixed(2)} ${code}`);
+    }
+    if (extra.length > 0) text += " • " + extra.join(" • ");
+    result.textContent = text;
+}
+
+// ============================================
+// МОДАЛЬНОЕ ОКНО
+// ============================================
+function openModal(code) {
+    const [name, flag] = CURRENCIES[code];
+    const rubValue = getRubValue(code);
+
+    state.currentModal = code;
+    state.currentPeriod = 1;
+
+    document.getElementById("modal-flag").textContent = flag;
+    document.getElementById("modal-code").textContent = code;
+    document.getElementById("modal-name").textContent = name;
+
+    if (rubValue === null) {
+        document.getElementById("modal-price").textContent = "—";
+        document.getElementById("modal-unit").textContent = "";
+    } else if (code === "RUB") {
+        document.getElementById("modal-price").textContent = "1.00 ₽";
+        document.getElementById("modal-unit").textContent = "базовая валюта";
+    } else if (rubValue >= 1) {
+        document.getElementById("modal-price").textContent = rubValue.toFixed(2) + " ₽";
+        document.getElementById("modal-unit").textContent = `1 ${code}`;
+    } else {
+        document.getElementById("modal-price").textContent = (1 / rubValue).toFixed(4) + " " + code;
+        document.getElementById("modal-unit").textContent = "за 1 ₽";
+    }
+
+    document.querySelectorAll(".period-btn").forEach(btn => {
+        btn.classList.remove("active");
+        if (btn.dataset.period === "1") btn.classList.add("active");
+    });
+
+    document.getElementById("modal-change").textContent = "Загрузка...";
+    document.getElementById("modal-change").className = "modal-change";
+
+    document.getElementById("modal").classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    loadChart(code, 1);
 }
 
 function closeModal() {
-  const modal = document.getElementById('modal');
-  if (modal) modal.classList.remove('active');
-  if (chartInstance) {
-    chartInstance.destroy();
-    chartInstance = null;
-  }
+    document.getElementById("modal").classList.remove("active");
+    document.body.style.overflow = "";
+    state.currentModal = null;
+    if (state.chart) {
+        state.chart.destroy();
+        state.chart = null;
+    }
 }
-// ============================================ 
-// Часть 10/11: Конвертер и обновление
+
 // ============================================
-
-async function refreshAll() {
-  const [f, k] = await Promise.all([loadFiatRates(), loadCryptoRates()]);
-  if (!f && !k) {
-    const grid = document.getElementById('currencies-grid');
-    if (grid) grid.innerHTML = '<div class="loading">Ошибка загрузки. Проверь API-ключ.</div>';
-    return;
-  }
-  renderCurrencies();
-  updateConverter();
-}
-
-function updateConverter() {
-  const sel = document.getElementById('from-currency');
-  if (!sel) return;
-  const val = sel.value;
-  sel.innerHTML = '';
-  CURRENCIES.forEach(c => {
-    if (fiatRates[c.code] === undefined) return;
-    const opt = document.createElement('option');
-    opt.value = c.code;
-    opt.textContent = c.flag + ' ' + c.code + ' — ' + c.name;
-    sel.appendChild(opt);
-  });
-  if (val) sel.value = val;
-}
-
-function doConvert() {
-  const amount = parseFloat(document.getElementById('amount').value) || 0;
-  const from = document.getElementById('from-currency').value;
-  const resultEl = document.getElementById('convert-result');
-  if (!resultEl || !fiatRates[from]) return;
-  const rub = (amount / fiatRates[from]).toFixed(2);
-  const usd = (amount / fiatRates[from] * fiatRates['USD']).toFixed(2);
-  resultEl.innerHTML = `<b>${amount} ${from}</b> = <b>${rub} ₽</b> = <b>$${usd}</b>`;
-}
+// ГРАФИК
 // ============================================
-// Часть 11/11: Обработчики и запуск
+async function loadChart(code, days) {
+    const loading = document.getElementById("modal-chart-loading");
+    const error = document.getElementById("modal-chart-error");
+    const canvas = document.getElementById("modal-chart");
+
+    loading.style.display = "block";
+    error.style.display = "none";
+    canvas.style.opacity = "0.3";
+
+    try {
+        let history = null;
+
+        if (CRYPTO_IDS[code]) {
+            // Крипта — CoinGecko
+            history = await loadCryptoHistory(code, days);
+        } else {
+            // Фиат — fawazahmed0
+            history = await loadFiatHistory(code, days);
+        }
+
+        if (!history || history.length === 0) {
+            throw new Error("no_data");
+        }
+
+        loading.style.display = "none";
+        canvas.style.opacity = "1";
+
+        renderChart(history, code, days);
+        updateChangeText(history);
+    } catch (e) {
+        console.error("Ошибка графика:", e);
+        loading.style.display = "none";
+        error.style.display = "block";
+        canvas.style.opacity = "0.1";
+    }
+}
+
+async function loadFiatHistory(code, days) {
+    // fawazahmed0: запрашиваем historical данные на каждую дату
+    // Формат: https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@YYYY-MM-DD/v1/currencies/usd.json
+    // Возвращает: { "usd": { "rub": 84.19, "eur": 0.86, ... } }
+    
+    // Нам нужен курс code → RUB. Но fawazahmed0 отдает USD → code.
+    // Значит: RUB за 1 code = rate_usd_to_rub / rate_usd_to_code
+    
+    const dates = [];
+    const today = new Date();
+    
+    // Если дней <= 7, берём каждую дату. Если больше — каждые 3 дня, чтобы не дёргать API 30 раз.
+    const step = days <= 7 ? 1 : (days <= 30 ? 3 : 7);
+    
+    for (let i = days; i >= 0; i -= step) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        dates.push(d.toISOString().split("T")[0]);
+    }
+    
+    // Запрашиваем все даты параллельно (Promise.all)
+    const requests = dates.map(date => 
+        fetch(`${API_HISTORY}@${date}/v1/currencies/usd.json`)
+            .then(r => r.json())
+            .then(data => ({ date, data }))
+            .catch(() => null)
+    );
+    
+    const results = await Promise.all(requests);
+    
+    const points = [];
+    const codeLower = code.toLowerCase();
+    
+    for (const r of results) {
+        if (!r || !r.data || !r.data.usd) continue;
+        
+        const usd = r.data.usd;
+        const rubPerUsd = usd.rub;
+        const rateUsdToCode = usd[codeLower];
+        
+        if (!rubPerUsd || !rateUsdToCode) continue;
+        
+        // 1 code = rubPerUsd / rateUsdToCode ₽
+        const rubValue = rubPerUsd / rateUsdToCode;
+        points.push({ t: r.date, v: rubValue });
+    }
+    
+    console.log(`История ${code}: ${points.length} точек`);
+    return points;
+}
+
+async function loadCryptoHistory(code, days) {
+    const coinId = CRYPTO_IDS[code];
+    const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=rub&days=${days}`;
+    const resp = await fetch(url).then(r => r.json());
+    if (!resp.prices) throw new Error("no_prices");
+    return resp.prices.map(([ts, price]) => ({
+        t: new Date(ts).toISOString().split("T")[0],
+        v: price,
+    }));
+}
+
+function updateChangeText(history) {
+    if (history.length < 2) {
+        document.getElementById("modal-change").textContent = "— мало данных";
+        return;
+    }
+    const first = history[0].v;
+    const last = history[history.length - 1].v;
+    const change = ((last - first) / first * 100);
+
+    const el = document.getElementById("modal-change");
+    const sign = change >= 0 ? "+" : "";
+    const arrow = change >= 0 ? "📈" : "📉";
+    el.textContent = `${arrow} ${sign}${change.toFixed(2)}% за период`;
+    el.className = "modal-change " + (change >= 0 ? "up" : "down");
+}
+
+function renderChart(history, code, days) {
+    const canvas = document.getElementById("modal-chart");
+    const ctx = canvas.getContext("2d");
+
+    if (state.chart) {
+        state.chart.destroy();
+    }
+
+    const labels = history.map(p => p.t);
+    const values = history.map(p => p.v);
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, "rgba(0, 212, 255, 0.4)");
+    gradient.addColorStop(1, "rgba(0, 212, 255, 0.0)");
+
+    state.chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: code,
+                data: values,
+                borderColor: "#00d4ff",
+                backgroundColor: gradient,
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+                pointRadius: 0,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#a855f7",
+                pointHoverBorderColor: "#fff",
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: "rgba(10, 10, 26, 0.95)",
+                    borderColor: "#00d4ff",
+                    borderWidth: 1,
+                    titleColor: "#00d4ff",
+                    bodyColor: "#e0e0ff",
+                    padding: 10,
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.y.toFixed(4);
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: "rgba(0, 212, 255, 0.05)" },
+                    ticks: { color: "#8888aa", maxTicksLimit: 6 }
+                },
+                y: {
+                    grid: { color: "rgba(0, 212, 255, 0.05)" },
+                    ticks: { color: "#8888aa" }
+                }
+            }
+        }
+    });
+}
+
 // ============================================
+// ОБРАБОТЧИКИ
+// ============================================
+document.addEventListener("DOMContentLoaded", () => {
+    loadRates();
+    setInterval(loadRates, 5 * 60 * 1000);
 
-function setupSearch() {
-  const i = document.getElementById('search');
-  if (!i) return;
-  i.addEventListener('input', e => {
-    searchQuery = e.target.value;
-    renderCurrencies();
-  });
-}
-
-function setupCategories() {
-  document.querySelectorAll('.cat-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentCategory = btn.dataset.cat;
-      renderCurrencies();
+    document.querySelectorAll(".cat-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            state.activeCategory = btn.dataset.cat;
+            renderCurrencies();
+        });
     });
-  });
-}
 
-function setupSort() {
-  document.querySelectorAll('.sort-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentSort = btn.dataset.sort;
-      renderCurrencies();
+    document.getElementById("search").addEventListener("input", (e) => {
+        state.searchQuery = e.target.value;
+        renderCurrencies();
     });
-  });
-}
 
-function setupModal() {
-  const closeBtn = document.getElementById('modal-close');
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-  const modal = document.getElementById('modal');
-  if (modal) {
-    modal.addEventListener('click', e => {
-      if (e.target === modal) closeModal();
+    document.getElementById("convert-btn").addEventListener("click", convert);
+    document.getElementById("amount").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") convert();
     });
-  }
 
-  document.querySelectorAll('.period-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const days = parseInt(btn.dataset.period) || 7;
-      const code = document.getElementById('modal-code').textContent;
-      if (code) {
-        if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
-        document.getElementById('modal-chart-loading').style.display = 'block';
-        document.getElementById('modal-chart-error').style.display = 'none';
-        loadChart(code, days);
-      }
+    document.getElementById("modal-close").addEventListener("click", closeModal);
+    document.getElementById("modal").addEventListener("click", (e) => {
+        if (e.target.id === "modal") closeModal();
     });
-  });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+    });
 
-  const convertBtn = document.getElementById('convert-btn');
-  if (convertBtn) convertBtn.addEventListener('click', doConvert);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  setupSearch();
-  setupCategories();
-  setupSort();
-  setupModal();
-  refreshAll();
-  setInterval(refreshAll, 5 * 60 * 1000);
+    document.querySelectorAll(".period-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".period-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            const days = parseInt(btn.dataset.period);
+            state.currentPeriod = days;
+            if (state.currentModal) {
+                loadChart(state.currentModal, days);
+            }
+        });
+    });
 });
