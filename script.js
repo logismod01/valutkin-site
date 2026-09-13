@@ -1,15 +1,18 @@
+
 // ============================================
 // ВАЛЮТКИН — script.js
-// Под index.html версии "2026 full"
+// Часть 1/11: Настройки и API
 // ============================================
 
 const API_KEY = '9999ee83e8af1409272c9ef2';
 const FIAT_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
 const CRYPTO_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network,tether,binancecoin,solana,ripple,cardano,dogecoin,tron&vs_currencies=usd,rub';
+// ============================================
+// Часть 2/11: Категории валют
+// ============================================
 
-// Категории для валют
 const CATEGORIES = {
-  popular: ['USD','EUR','CNY','GBP','JPY','KZT','BYN','UAH','TRY','RUB'],
+  popular: ['USD','EUR','CNY','GBP','JPY','KZT','BYN','UAH','TRY','RUB'], 
   asia: ['CNY','JPY','KRW','INR','IDR','MYR','PHP','THB','VND','SGD','HKD','TWD','PKR','BDT','LKR','NPR','KHR','LAK','MMK','MNT','KZT','UZS','KGS','TJS','TMT','AZN','GEL','AMD','AFN','IQD','IRR','ILS','SAR','AED','QAR','KWD','BHD','OMR','JOD','LBP','SYP','YER'],
   europe: ['EUR','GBP','CHF','SEK','NOK','DKK','PLN','CZK','HUF','RON','BGN','HRK','RSD','MKD','ALL','BAM','MDL','UAH','BYN','TRY','ISK'],
   america: ['USD','CAD','MXN','BRL','ARS','CLP','COP','PEN','UYU','PYG','BOB','VES','GTQ','HNL','NIO','CRC','PAB','DOP','CUP','JMD','TTD','BBD','BSD','BZD','GYD','SRD','HTG'],
@@ -17,57 +20,63 @@ const CATEGORIES = {
   africa: ['ZAR','EGP','NGN','KES','GHS','MAD','TND','DZD','LYD','ETB','UGX','TZS','RWF','BIF','CDF','XAF','XOF','MZN','ZMW','MWK','BWP','NAD','SZL','LSL','MUR','SCR','MGA','KMF','DJF','SOS','SDG','SSP','ERN','GMD','GNF','LRD','SLL','SLE','AOA','CVE','STN'],
   oceania: ['AUD','NZD','FJD','PGK','SBD','VUV','WST','TOP','XPF']
 };
+// ============================================
+// Часть 3/11: Список валют
+// ============================================
 
 const CURRENCIES = [
-  { code: 'USD', name: 'Доллар США', flag: '🇺🇸', premium: false },
-  { code: 'EUR', name: 'Евро', flag: '🇪🇺', premium: false },
-  { code: 'CNY', name: 'Юань', flag: '🇨🇳', premium: false },
-  { code: 'GBP', name: 'Фунт стерлингов', flag: '🇬🇧', premium: false },
-  { code: 'JPY', name: 'Йена', flag: '🇯🇵', premium: false },
-  { code: 'KZT', name: 'Тенге', flag: '🇰🇿', premium: false },
-  { code: 'BYN', name: 'Белорусский рубль', flag: '🇧🇾', premium: false },
-  { code: 'UAH', name: 'Гривна', flag: '🇺🇦', premium: false },
-  { code: 'TRY', name: 'Турецкая лира', flag: '🇹🇷', premium: false },
-  { code: 'CHF', name: 'Швейцарский франк', flag: '🇨🇭', premium: true },
-  { code: 'CAD', name: 'Канадский доллар', flag: '🇨🇦', premium: true },
-  { code: 'AUD', name: 'Австралийский доллар', flag: '🇦🇺', premium: true },
-  { code: 'KRW', name: 'Вона', flag: '🇰🇷', premium: true },
-  { code: 'INR', name: 'Рупия', flag: '🇮🇳', premium: true },
-  { code: 'BRL', name: 'Реал', flag: '🇧🇷', premium: true },
-  { code: 'AED', name: 'Дирхам ОАЭ', flag: '🇦🇪', premium: true },
-  { code: 'PLN', name: 'Злотый', flag: '🇵🇱', premium: true },
-  { code: 'CZK', name: 'Чешская крона', flag: '🇨🇿', premium: true },
-  { code: 'SEK', name: 'Шведская крона', flag: '🇸🇪', premium: true },
-  { code: 'NOK', name: 'Норвежская крона', flag: '🇳🇴', premium: true },
-  { code: 'SGD', name: 'Сингапурский доллар', flag: '🇸🇬', premium: true },
-  { code: 'HKD', name: 'Гонконгский доллар', flag: '🇭🇰', premium: true },
-  { code: 'MXN', name: 'Мексиканское песо', flag: '🇲🇽', premium: true },
-  { code: 'ZAR', name: 'Рэнд', flag: '🇿🇦', premium: true },
-  { code: 'THB', name: 'Бат', flag: '🇹🇭', premium: true },
-  { code: 'VND', name: 'Донг', flag: '🇻🇳', premium: true },
-  { code: 'IDR', name: 'Рупия Индонезии', flag: '🇮🇩', premium: true },
-  { code: 'MYR', name: 'Ринггит', flag: '🇲🇾', premium: true },
-  { code: 'PHP', name: 'Песо Филиппин', flag: '🇵🇭', premium: true },
-  { code: 'EGP', name: 'Египетский фунт', flag: '🇪🇬', premium: true },
-  { code: 'NGN', name: 'Найра', flag: '🇳🇬', premium: true },
-  { code: 'ARS', name: 'Аргентинское песо', flag: '🇦🇷', premium: true },
-  { code: 'CLP', name: 'Чилийское песо', flag: '🇨🇱', premium: true },
-  { code: 'COP', name: 'Колумбийское песо', flag: '🇨🇴', premium: true },
-  { code: 'GEL', name: 'Лари', flag: '🇬🇪', premium: true },
-  { code: 'AMD', name: 'Драм', flag: '🇦🇲', premium: true },
-  { code: 'AZN', name: 'Манат', flag: '🇦🇿', premium: true },
-  { code: 'UZS', name: 'Сум', flag: '🇺🇿', premium: true },
-  { code: 'KGS', name: 'Сом', flag: '🇰🇬', premium: true },
-  { code: 'ILS', name: 'Шекель', flag: '🇮🇱', premium: true },
-  { code: 'SAR', name: 'Риял', flag: '🇸🇦', premium: true },
-  { code: 'QAR', name: 'Катарский риал', flag: '🇶🇦', premium: true },
-  { code: 'KWD', name: 'Кувейтский динар', flag: '🇰🇼', premium: true },
-  { code: 'BGN', name: 'Болгарский лев', flag: '🇧🇬', premium: true },
-  { code: 'RON', name: 'Румынский лей', flag: '🇷🇴', premium: true },
-  { code: 'HUF', name: 'Форинт', flag: '🇭🇺', premium: true },
-  { code: 'DKK', name: 'Датская крона', flag: '🇩🇰', premium: true },
-  { code: 'NZD', name: 'Новозеландский доллар', flag: '🇳🇿', premium: true }
+  { code: 'USD', name: 'Доллар США', flag: '🇺🇸' },
+  { code: 'EUR', name: 'Евро', flag: '🇪🇺' },
+  { code: 'CNY', name: 'Юань', flag: '🇨🇳' },
+  { code: 'GBP', name: 'Фунт стерлингов', flag: '🇬🇧' },
+  { code: 'JPY', name: 'Йена', flag: '🇯🇵' },
+  { code: 'KZT', name: 'Тенге', flag: '🇰🇿' },
+  { code: 'BYN', name: 'Белорусский рубль', flag: '🇧🇾' },
+  { code: 'UAH', name: 'Гривна', flag: '🇺🇦' },
+  { code: 'TRY', name: 'Турецкая лира', flag: '🇹🇷' },
+  { code: 'CHF', name: 'Швейцарский франк', flag: '🇨🇭' },
+  { code: 'CAD', name: 'Канадский доллар', flag: '🇨🇦' },
+  { code: 'AUD', name: 'Австралийский доллар', flag: '🇦🇺' },
+  { code: 'KRW', name: 'Вона', flag: '🇰🇷' },
+  { code: 'INR', name: 'Рупия', flag: '🇮🇳' },
+  { code: 'BRL', name: 'Реал', flag: '🇧🇷' },
+  { code: 'AED', name: 'Дирхам ОАЭ', flag: '🇦🇪' },
+  { code: 'PLN', name: 'Злотый', flag: '🇵🇱' },
+  { code: 'CZK', name: 'Чешская крона', flag: '🇨🇿' },
+  { code: 'SEK', name: 'Шведская крона', flag: '🇸🇪' },
+  { code: 'NOK', name: 'Норвежская крона', flag: '🇳🇴' },
+  { code: 'SGD', name: 'Сингапурский доллар', flag: '🇸🇬' },
+  { code: 'HKD', name: 'Гонконгский доллар', flag: '🇭🇰' },
+  { code: 'MXN', name: 'Мексиканское песо', flag: '🇲🇽' },
+  { code: 'ZAR', name: 'Рэнд', flag: '🇿🇦' },
+  { code: 'THB', name: 'Бат', flag: '🇹🇭' },
+  { code: 'VND', name: 'Донг', flag: '🇻🇳' },
+  { code: 'IDR', name: 'Рупия Индонезии', flag: '🇮🇩' },
+  { code: 'MYR', name: 'Ринггит', flag: '🇲🇾' },
+  { code: 'PHP', name: 'Песо Филиппин', flag: '🇵🇭' },
+  { code: 'EGP', name: 'Египетский фунт', flag: '🇪🇬' },
+  { code: 'NGN', name: 'Найра', flag: '🇳🇬' },
+  { code: 'ARS', name: 'Аргентинское песо', flag: '🇦🇷' },
+  { code: 'CLP', name: 'Чилийское песо', flag: '🇨🇱' },
+  { code: 'COP', name: 'Колумбийское песо', flag: '🇨🇴' },
+  { code: 'GEL', name: 'Лари', flag: '🇬🇪' },
+  { code: 'AMD', name: 'Драм', flag: '🇦🇲' },
+  { code: 'AZN', name: 'Манат', flag: '🇦🇿' },
+  { code: 'UZS', name: 'Сум', flag: '🇺🇿' },
+  { code: 'KGS', name: 'Сом', flag: '🇰🇬' },
+  { code: 'ILS', name: 'Шекель', flag: '🇮🇱' },
+  { code: 'SAR', name: 'Риял', flag: '🇸🇦' },
+  { code: 'QAR', name: 'Катарский риал', flag: '🇶🇦' },
+  { code: 'KWD', name: 'Кувейтский динар', flag: '🇰🇼' },
+  { code: 'BGN', name: 'Болгарский лев', flag: '🇧🇬' },
+  { code: 'RON', name: 'Румынский лей', flag: '🇷🇴' },
+  { code: 'HUF', name: 'Форинт', flag: '🇭🇺' },
+  { code: 'DKK', name: 'Датская крона', flag: '🇩🇰' },
+  { code: 'NZD', name: 'Новозеландский доллар', flag: '🇳🇿' }
 ];
+// ============================================
+// Часть 4/11: Список криптовалют
+// ============================================
 
 const CRYPTO = [
   { id: 'bitcoin', code: 'BTC', name: 'Bitcoin', flag: '₿' },
@@ -81,15 +90,18 @@ const CRYPTO = [
   { id: 'dogecoin', code: 'DOGE', name: 'Dogecoin', flag: '🐕' },
   { id: 'tron', code: 'TRX', name: 'TRON', flag: '🔴' }
 ];
+// ============================================
+// Часть 5/11: Переменные состояния
+// ============================================
 
 let fiatRates = {};
 let cryptoRates = {};
 let searchQuery = '';
 let currentCategory = 'popular';
 let currentSort = 'none';
-
+let chartInstance = null;
 // ============================================
-// ЗАГРУЗКА ДАННЫХ
+// Часть 6/11: Загрузка данных с API
 // ============================================
 
 async function loadFiatRates() {
@@ -116,19 +128,14 @@ async function loadCryptoRates() {
     return false;
   }
 }
-
 // ============================================
-// ФОРМИРОВАНИЕ СПИСКА ПО КАТЕГОРИИ
+// Часть 7/11: Фильтрация и сортировка
 // ============================================
 
 function getFilteredList() {
-  if (currentCategory === 'crypto') return [];
-
   let list = CURRENCIES.slice();
 
-  if (currentCategory === 'all' || currentCategory === 'popular') {
-    // все или популярные — берём как есть
-  } else {
+   if (currentCategory !== 'all' && currentCategory !== 'crypto') {
     const codes = CATEGORIES[currentCategory] || [];
     list = list.filter(c => codes.includes(c.code));
   }
@@ -150,16 +157,14 @@ function getFilteredList() {
 
   return list;
 }
-
 // ============================================
-// ОТРИСОВКА
+// Часть 8/11: Отрисовка карточек валют
 // ============================================
 
 function renderCurrencies() {
   const grid = document.getElementById('currencies-grid');
   if (!grid) return;
 
-  // Если категория крипта — рендерим крипту
   if (currentCategory === 'crypto') {
     if (!Object.keys(cryptoRates).length) {
       grid.innerHTML = '<div class="loading">Загружаем крипту...</div>';
@@ -185,7 +190,6 @@ function renderCurrencies() {
     return;
   }
 
-  // Валюта
   if (!Object.keys(fiatRates).length) {
     grid.innerHTML = '<div class="loading">Загружаем курсы...</div>';
     return;
@@ -214,69 +218,15 @@ function renderCurrencies() {
   });
   grid.innerHTML = html;
 
-  // Клик по карточке — открыть модалку
   grid.querySelectorAll('.currency-card').forEach(card => {
     card.addEventListener('click', () => openModal(card.dataset.code));
   });
 }
-
 // ============================================
-// ОБНОВЛЕНИЕ
-// ============================================
-
-async function refreshAll() {
-  const [f, k] = await Promise.all([loadFiatRates(), loadCryptoRates()]);
-  if (!f && !k) {
-    const grid = document.getElementById('currencies-grid');
-    if (grid) grid.innerHTML = '<div class="loading">Ошибка загрузки. Проверь API-ключ.</div>';
-    return;
-  }
-  renderCurrencies();
-  updateConverter();
-}
-
-// ============================================
-// КОНВЕРТЕР
+// Часть 9/11: Модалка с графиком
 // ============================================
 
-function updateConverter() {
-  const sel = document.getElementById('from-currency');
-  if (!sel) return;
-  const val = sel.value;
-  sel.innerHTML = '';
-  CURRENCIES.forEach(c => {
-    if (fiatRates[c.code] === undefined) return;
-    const opt = document.createElement('option');
-    opt.value = c.code;
-    opt.textContent = c.flag + ' ' + c.code + ' — ' + c.name;
-    sel.appendChild(opt);
-  });
-  if (val) sel.value = val;
-
-  const btn = document.getElementById('convert-btn');
-  if (btn && !btn.dataset.bound) {
-    btn.dataset.bound = '1';
-    btn.addEventListener('click', doConvert);
-  }
-}
-
-function doConvert() {
-  const amount = parseFloat(document.getElementById('amount').value) || 0;
-  const from = document.getElementById('from-currency').value;
-  const resultEl = document.getElementById('convert-result');
-  if (!resultEl || !fiatRates[from]) return;
-  const rub = (amount / fiatRates[from]).toFixed(2);
-  const usd = (amount / fiatRates[from] * fiatRates['USD']).toFixed(2);
-  resultEl.innerHTML = `<b>${amount} ${from}</b> = <b>${rub} ₽</b> = <b>$${usd}</b>`;
-}
-
-// ============================================
-// МОДАЛКА С ГРАФИКОМ
-// ============================================
-
-let chartInstance = null;
-
-function openModal(code) {
+async function openModal(code) {
   const cur = CURRENCIES.find(c => c.code === code);
   if (!cur) return;
   const modal = document.getElementById('modal');
@@ -295,20 +245,117 @@ function openModal(code) {
   document.getElementById('modal-chart-error').style.display = 'none';
   document.getElementById('modal-chart-loading').style.display = 'block';
 
-  // Заглушка графика (реальный API истории требует другой endpoint)
-  setTimeout(() => {
-    document.getElementById('modal-chart-loading').style.display = 'none';
-    document.getElementById('modal-chart-error').style.display = 'block';
-  }, 500);
+  await loadChart(code, 7);
+}
+
+async function loadChart(code, days) {
+  const loading = document.getElementById('modal-chart-loading');
+  const error = document.getElementById('modal-chart-error');
+  const canvas = document.getElementById('modal-chart');
+  if (!canvas) return;
+
+  try {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(end.getDate() - days);
+
+    const fmt = d => d.toISOString().split('T')[0];
+    const url = `https://api.frankfurter.app/${fmt(start)}..${fmt(end)}?from=${code}&to=RUB`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('chart api');
+    const data = await r.json();
+
+    const labels = Object.keys(data.rates || {});
+    const values = labels.map(d => data.rates[d].RUB);
+
+    if (loading) loading.style.display = 'none';
+    if (error) error.style.display = 'none';
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: cur_code_label(code) + ' → RUB',
+          data: values,
+          borderColor: '#7c5cff',
+          backgroundColor: 'rgba(124,92,255,0.15)',
+          tension: 0.3,
+          fill: true,
+          pointRadius: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#888', maxTicksLimit: 6 } },
+          y: { ticks: { color: '#888' } }
+        }
+      }
+    });
+  } catch (e) {
+    console.error('Chart error:', e);
+    if (loading) loading.style.display = 'none';
+    if (error) error.style.display = 'block';
+  }
+}
+
+function cur_code_label(code) {
+  return code;
 }
 
 function closeModal() {
   const modal = document.getElementById('modal');
   if (modal) modal.classList.remove('active');
+  if (chartInstance) {
+    chartInstance.destroy();
+    chartInstance = null;
+  }
+}
+// ============================================ 
+// Часть 10/11: Конвертер и обновление
+// ============================================
+
+async function refreshAll() {
+  const [f, k] = await Promise.all([loadFiatRates(), loadCryptoRates()]);
+  if (!f && !k) {
+    const grid = document.getElementById('currencies-grid');
+    if (grid) grid.innerHTML = '<div class="loading">Ошибка загрузки. Проверь API-ключ.</div>';
+    return;
+  }
+  renderCurrencies();
+  updateConverter();
 }
 
+function updateConverter() {
+  const sel = document.getElementById('from-currency');
+  if (!sel) return;
+  const val = sel.value;
+  sel.innerHTML = '';
+  CURRENCIES.forEach(c => {
+    if (fiatRates[c.code] === undefined) return;
+    const opt = document.createElement('option');
+    opt.value = c.code;
+    opt.textContent = c.flag + ' ' + c.code + ' — ' + c.name;
+    sel.appendChild(opt);
+  });
+  if (val) sel.value = val;
+}
+
+function doConvert() {
+  const amount = parseFloat(document.getElementById('amount').value) || 0;
+  const from = document.getElementById('from-currency').value;
+  const resultEl = document.getElementById('convert-result');
+  if (!resultEl || !fiatRates[from]) return;
+  const rub = (amount / fiatRates[from]).toFixed(2);
+  const usd = (amount / fiatRates[from] * fiatRates['USD']).toFixed(2);
+  resultEl.innerHTML = `<b>${amount} ${from}</b> = <b>${rub} ₽</b> = <b>$${usd}</b>`;
+}
 // ============================================
-// СОБЫТИЯ UI
+// Часть 11/11: Обработчики и запуск
 // ============================================
 
 function setupSearch() {
@@ -357,13 +404,20 @@ function setupModal() {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      const days = parseInt(btn.dataset.period) || 7;
+      const code = document.getElementById('modal-code').textContent;
+      if (code) {
+        if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+        document.getElementById('modal-chart-loading').style.display = 'block';
+        document.getElementById('modal-chart-error').style.display = 'none';
+        loadChart(code, days);
+      }
     });
   });
-}
 
-// ============================================
-// ЗАПУСК
-// ============================================
+  const convertBtn = document.getElementById('convert-btn');
+  if (convertBtn) convertBtn.addEventListener('click', doConvert);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   setupSearch();
