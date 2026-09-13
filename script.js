@@ -6,7 +6,7 @@
 
 const API_KEY = '9999ee83e8af1409272c9ef2';
 const FIAT_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
-const CRYPTO_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network,tether,binancecoin,solana,ripple,cardano,dogecoin,tron&vs_currencies=usd,rub';
+const CRYPTO_URL = 'https://api.coincap.io/v2/assets?ids=bitcoin,ethereum,tether,binance-coin,solana,ripple,cardano,dogecoin,tron';
 // ============================================
 // Часть 2/11: Категории валют
 // ============================================
@@ -81,9 +81,8 @@ const CURRENCIES = [
 const CRYPTO = [
   { id: 'bitcoin', code: 'BTC', name: 'Bitcoin', flag: '₿' },
   { id: 'ethereum', code: 'ETH', name: 'Ethereum', flag: 'Ξ' },
-  { id: 'the-open-network', code: 'TON', name: 'Toncoin', flag: '💎' },
   { id: 'tether', code: 'USDT', name: 'Tether', flag: '💵' },
-  { id: 'binancecoin', code: 'BNB', name: 'BNB', flag: '🟡' },
+  { id: 'binance-coin', code: 'BNB', name: 'BNB', flag: '🟡' },
   { id: 'solana', code: 'SOL', name: 'Solana', flag: '🟣' },
   { id: 'ripple', code: 'XRP', name: 'XRP', flag: '💧' },
   { id: 'cardano', code: 'ADA', name: 'Cardano', flag: '🔵' },
@@ -121,7 +120,13 @@ async function loadCryptoRates() {
   try {
     const r = await fetch(CRYPTO_URL);
     if (!r.ok) throw new Error('crypto api');
-    cryptoRates = await r.json();
+    const d = await r.json();
+    cryptoRates = {};
+    (d.data || []).forEach(item => {
+      cryptoRates[item.id] = {
+        usd: parseFloat(item.priceUsd)
+      };
+    });
     return true;
   } catch (e) {
     console.error('CRYPTO error:', e);
@@ -170,12 +175,14 @@ function renderCurrencies() {
       grid.innerHTML = '<div class="loading">Загружаем крипту...</div>';
       return;
     }
-    let html = '';
+       let html = '';
     CRYPTO.forEach(coin => {
       const d = cryptoRates[coin.id];
       if (!d) return;
-      const usd = d.usd ? '$' + d.usd.toFixed(2) : '—';
-      const rub = d.rub ? d.rub.toFixed(0) + ' ₽' : '—';
+      const usdVal = d.usd || 0;
+      const rubVal = usdVal * (fiatRates['RUB'] || 0);
+      const usd = usdVal ? '$' + usdVal.toFixed(2) : '—';
+      const rub = rubVal ? rubVal.toFixed(0) + ' ₽' : '—';
       html += `
         <div class="currency-card">
           <div class="currency-flag">${coin.flag}</div>
