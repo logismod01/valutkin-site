@@ -537,13 +537,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    loadRates();
-    setInterval(loadRates, 5 * 60 * 1000);
+    // Категории
+    document.querySelectorAll(".cat-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            state.activeCategory = btn.dataset.cat;
+            renderCurrencies();
+        });
+    });
 
+    // Поиск
     document.getElementById("search").addEventListener("input", (e) => {
+        state.searchQuery = e.target.value;
+        renderCurrencies();
+    });
+
+    // Конвертер
+    document.getElementById("convert-btn").addEventListener("click", convert);
+    document.getElementById("amount").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") convert();
+    });
+
+    // Модальное окно
+    document.getElementById("modal-close").addEventListener("click", closeModal);
+    document.getElementById("modal").addEventListener("click", (e) => {
+        if (e.target.id === "modal") closeModal();
+    });
+    document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeModal();
     });
 
+    // Периоды графика
     document.querySelectorAll(".period-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".period-btn").forEach(b => b.classList.remove("active"));
@@ -555,4 +580,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // Загрузка курсов
+    loadRates();
+    setInterval(loadRates, 5 * 60 * 1000);
 });
