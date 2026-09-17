@@ -506,20 +506,34 @@ function renderChart(history, code, days) {
         }
     });
 }
+// ============================================
+// ТЕМЫ
+// ============================================
+function setTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("valutkin_theme", theme);
+    // Активная кнопка
+    document.querySelectorAll(".theme-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.theme === theme);
+    });
+}
+
+function loadTheme() {
+    const saved = localStorage.getItem("valutkin_theme") || "dark";
+    setTheme(saved);
+}
 
 // ============================================
 // ОБРАБОТЧИКИ
 // ============================================
-document.addEventListener("DOMContentLoaded", () => {
-    loadRates();
-    setInterval(loadRates, 5 * 60 * 1000);
 
-    document.querySelectorAll(".cat-btn").forEach(btn => {
+document.addEventListener("DOMContentLoaded", () => {
+    loadTheme();
+
+    // Переключение тем
+    document.querySelectorAll(".theme-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            state.activeCategory = btn.dataset.cat;
-            renderCurrencies();
+            setTheme(btn.dataset.theme);
         });
     });
 
