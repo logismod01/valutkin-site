@@ -89,9 +89,12 @@ let state = {
 // ============================================
 async function loadRates() {
     try {
-        const [fiatResp, cryptoResp] = await Promise.all([
+        const [fiatResp, cryptoResp, metalsResp] = await Promise.all([
             fetch(API_FIAT_URL).then(r => r.json()),
             fetch(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana&vs_currencies=usd,rub")
+                .then(r => r.json())
+                .catch(() => null),
+            fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
                 .then(r => r.json())
                 .catch(() => null),
         ]);
@@ -102,6 +105,15 @@ async function loadRates() {
         }
         if (cryptoResp) {
             state.crypto = cryptoResp;
+        }
+        if (metalsResp && metalsResp.usd) {
+            const usd = metalsResp.usd;
+            ["XAU", "XAG", "XPT", "XPD"].forEach(code => {
+                const lower = code.toLowerCase();
+                if (usd[lower]) {
+                    state.rates[code] = usd[lower];
+                }
+            });
         }
 
         console.log("Курсы загружены:", state);
