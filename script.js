@@ -537,21 +537,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    loadRates();
+    setInterval(loadRates, 5 * 60 * 1000);
+
     document.getElementById("search").addEventListener("input", (e) => {
-        state.searchQuery = e.target.value;
-        renderCurrencies();
-    });
-
-    document.getElementById("convert-btn").addEventListener("click", convert);
-    document.getElementById("amount").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") convert();
-    });
-
-    document.getElementById("modal-close").addEventListener("click", closeModal);
-    document.getElementById("modal").addEventListener("click", (e) => { 
-        if (e.target.id === "modal") closeModal();
-    });
-    document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeModal();
     });
 
