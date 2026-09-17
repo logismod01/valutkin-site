@@ -53,6 +53,11 @@ const CURRENCIES = {
     "TON": ["Toncoin", "💠", "crypto"],
     "USDT": ["Tether", "💵", "crypto"],
     "SOL": ["Solana", "🌞", "crypto"],
+    // ===== МЕТАЛЛЫ =====
+    "XAU": ["Золото", "🥇", "metals"],
+    "XAG": ["Серебро", "🥈", "metals"],
+    "XPT": ["Платина", "🥉", "metals"],
+    "XPD": ["Палладий", "💎", "metals"],
 };
 
 const CRYPTO_IDS = {
@@ -109,6 +114,9 @@ async function loadRates() {
     }
 }
 
+const METALS = ["XAU", "XAG", "XPT", "XPD"];
+const OUNCE_IN_GRAMS = 31.1035;
+
 function getRubValue(code) {
     if (code === "RUB") return 1;
     if (CRYPTO_IDS[code]) {
@@ -118,7 +126,12 @@ function getRubValue(code) {
     const rubPerUsd = state.rates["RUB"];
     const rate = state.rates[code];
     if (!rubPerUsd || !rate) return null;
-    return rubPerUsd / rate;
+    let rubValue = rubPerUsd / rate;
+    // Металлы: цена за унцию → делим на граммы
+    if (METALS.includes(code)) {
+        rubValue = rubValue / OUNCE_IN_GRAMS;
+    }
+    return rubValue;
 }
 
 // ============================================
@@ -509,7 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("modal-close").addEventListener("click", closeModal);
-    document.getElementById("modal").addEventListener("click", (e) => {
+    document.getElementById("modal").addEventListener("click", (e) => { 
         if (e.target.id === "modal") closeModal();
     });
     document.addEventListener("keydown", (e) => {
