@@ -1,111 +1,144 @@
-Config:
-  update_notification: true
-  data_save_time: 5
-  register_commands:
-  - hello
-  to_condition_groups:
-    group1:
-    - '%player_has_permission_conditionalevents.somepermission% == yes'
-Messages:
-  prefix: '&4[&bConditionalEvents&4] '
-  commandReload: '&aКонфигурация перезагружена.'
-  commandNoPermissions: '&cУ вас нет прав на использование этой команды.'
-  commandResetError: '&cИспользуйте &7/ce reset <игрок> <событие>/all'
-  eventDoesNotExists: '&cЭто событие не существует в конфигурации.'
-  eventDataReset: '&aСброс данных для игрока &e%player% &aна событие &e%event%&a!'
-  eventDataResetAll: '&aВсе данные сброшены для игрока &e%player%&a!'
-  eventEnableError: '&cИспользуйте &7/ce enable <событие>'
-  eventDisableError: '&cИспользуйте &7/ce disable <событие>'
-  eventEnabled: '&aСобытие &7%event% &aвключено.'
-  eventDisabled: '&aСобытие &7%event% &aотключено.'
-  commandDebugError: '&cИспользуйте &7/ce debug <событие>'
-  debugEnabled: '&aОтладка теперь включена для события &7%event%&a!'
-  debugDisabled: '&aОтключение отладки для события &7%event%&a!'
-  onlyPlayerCommand: '&cЭта команда может быть использована только игроком.'
-  playerDoesNotExists: '&cУ этого игрока нет никаких данных.'
-  seconds: с
-  minutes: м
-  hours: ч
-  days: д
-  placeholderAPICooldownReady: Готово!
-  placeholderAPICooldownNameError: Нет события с таким названием!
-Events:
-  event1:
-    type: player_join
-    conditions:
-    - '%player% == Ajneb'
-    actions:
-      default:
-      - 'to_all: message: &e&l[ALERT] &f&lAjneb joined the game!'
-  event2:
-    type: block_interact
-    one_time: true
-    conditions:
-    - '%block_x% == 20'
-    - '%block_y% == 60'
-    - '%block_z% == 20'
-    - '%block_world% == lobby'
-    - '%block% == STONE_BUTTON'
-    - '%action_type% == RIGHT_CLICK'
-    - '%player_has_permission_conditionalevents.event.event2% == no execute actions2'
-    actions:
-      default:
-      - 'message: &aYou''ve received $500!'
-      - 'console_command: eco give %player% 500'
-      - 'playsound: ENTITY_PLAYER_LEVELUP;10;2'
-      actions2:
-      - 'message: &cYou need to have a rank to use this button.'
-      one_time:
-      - 'message: &cYou can claim this reward just once!'
-  event3:
-    type: player_attack
-    conditions:
-    - '%victim% == PLAYER'
-    - '%item% == DIAMOND_SWORD'
-    - '%item_name% == Super Sword'
-    - '%random_1-10% >= 8'
-    actions:
-      default:
-      - 'message: &aYour diamond sword poison effect was activated! &6%target:player_name%
-        &ais now poisoned!'
-      - 'to_target: give_potion_effect: POISON;120;1'
-      - 'to_target: message: &cYou were poisoned by &e%player%&c!'
-  event4:
-    type: block_break
-    ignore_with_permission: conditionalevents.ignore.event4
-    conditions:
-    - '%block_world% == spawn'
-    actions:
-      default:
-      - 'cancel_event: true'
-      - 'message: &cYou can''t break blocks on this world.'
-      - 'playsound: BLOCK_NOTE_BLOCK_PLING;10;0.1'
-  event5:
-    type: player_command
-    ignore_with_permission: conditionalevents.ignore.event5
-    conditions:
-    - '%main_command% equalsIgnoreCase //calc or %main_command% equalsIgnoreCase //solve
-      or %main_command% equalsIgnoreCase //eval'
-    actions:
-      default:
-      - 'cancel_event: true'
-      - 'kick: &cWhat are you trying to do?'
-  event6:
-    type: repetitive
-    repetitive_time: 10
-    conditions:
-    - '%player_world% == plotworld'
-    - '%player_gamemode% != CREATIVE'
-    actions:
-      default:
-      - 'gamemode: CREATIVE'
-      - 'actionbar: &6Changing gamemode to creative.;100'
-  event7:
-    type: player_command
-    conditions: 
-    - '%command% == /hello'
-    actions:
-      default:
-      - 'cancel_event: true'
-      - 'message: &7You said hello to nearby players!'
-      - 'to_range: 10;false: message: &e%player% &7says you hello!'
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Валюткин — курсы валют онлайн</title>
+    <meta name="description" content="Курсы валют и криптовалют в реальном времени. 100+ валют мира. Telegram-бот Валюткин.">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0a1a">    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- ШАПКА --> 
+<header class="header">
+    <div class="header-left">
+        <img src="assets/logo.png" alt="Валюткин" class="header-logo">
+        <span class="header-title">Валюткин</span>
+    </div>
+    <div class="header-right">
+        <div class="theme-switcher">
+            <button class="theme-btn" data-theme="dark" title="Тёмная">🌌</button>
+            <button class="theme-btn" data-theme="light" title="Светлая">☀️</button>
+            <button class="theme-btn" data-theme="sunset" title="Закат">🌅</button>
+            <button class="theme-btn" data-theme="ocean" title="Океан">🌊</button>
+            <button class="theme-btn" data-theme="forest" title="Лес">🌲</button>
+        </div>
+        <a href="https://t.me/Valutkin2026Bot" target="_blank" class="btn-telegram">
+            ✈️ Открыть в Telegram
+        </a>
+    </div>
+</header>
+<a href="exchange.html" class="btn-exchange">
+    💱 Где купить
+</a>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <main class="container">
+
+        <!-- Конвертер -->
+        <section class="converter">
+            <h2 class="section-title">💱 Конвертер валют</h2>
+            <div class="converter-form">
+                <input type="number" id="amount" value="100" min="0" step="0.01" class="input">
+                <select id="from-currency" class="select"></select>
+                <button id="convert-btn" class="btn-primary">Конвертировать</button>
+            </div>
+            <div id="convert-result" class="convert-result"></div>
+        </section>
+
+        <!-- Поиск -->
+        <section class="search-section">
+            <input type="text" id="search" placeholder="🔍 Поиск валюты (USD, Евро, Юань...)" class="search-input">
+        </section>
+
+        <!-- Категории -->
+        <section class="categories">
+            <button class="cat-btn active" data-cat="popular">⭐ Популярные</button>
+            <button class="cat-btn" data-cat="asia">🌏 Азия</button>
+            <button class="cat-btn" data-cat="europe">🌍 Европа</button>
+            <button class="cat-btn" data-cat="america">🌎 Америка</button>
+            <button class="cat-btn" data-cat="mena">🏜 Восток и Африка</button>
+            <button class="cat-btn" data-cat="oceania">🌊 Океания</button>
+            <button class="cat-btn" data-cat="crypto">🪙 Крипта</button>
+            <button class="cat-btn" data-cat="metals">🥇 Металлы</button>
+            <button class="cat-btn" data-cat="all">📋 Все</button>
+        </section>
+
+        <!-- Сетка валют -->
+        <section id="currencies-grid" class="grid">
+            <div class="loading">Загружаем курсы...</div>
+        </section>
+
+    </main>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <img src="assets/fox.png" alt="Лис" class="footer-fox">
+            <div class="footer-text">
+                <p><b>Валюткин</b> — курсы валют в реальном времени</p>
+                <p class="footer-small">Данные: frankfurter.app, exchangerate-api.com, coingecko.com</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://t.me/Valutkin2026Bot" target="_blank">Telegram-бот</a>
+                <a href="https://t.me/Yehndhkw" target="_blank">@Yehndhkw</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО С ГРАФИКОМ -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">✕</button>
+
+            <div class="modal-header">
+                <span class="modal-flag" id="modal-flag">🇺🇸</span>
+                <div class="modal-title-group">
+                    <div class="modal-code" id="modal-code">USD</div>
+                    <div class="modal-name" id="modal-name">Доллар США</div>
+                </div>
+            </div>
+
+            <div class="modal-price">
+                <div class="modal-price-value" id="modal-price">—</div>
+                <div class="modal-price-unit" id="modal-unit">—</div>
+            </div>
+
+            <div class="modal-change" id="modal-change">—</div>
+
+            <div class="modal-periods">
+                <button class="period-btn active" data-period="1">24 часа</button>
+                <button class="period-btn" data-period="7">7 дней</button>
+                <button class="period-btn" data-period="30">30 дней</button>
+            </div>
+
+            <div class="modal-chart-wrapper">
+                <canvas id="modal-chart"></canvas>
+                <div id="modal-chart-loading" class="modal-chart-loading">Загружаем график...</div>
+                <div id="modal-chart-error" class="modal-chart-error" style="display:none;">
+                    📊 График для этой валюты недоступен
+                </div>
+            </div>
+
+            <a href="https://t.me/Valutkin2026Bot" target="_blank" class="modal-btn-telegram">
+                ✈️ Открыть в Telegram-боте
+            </a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Регистрация Service Worker
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/valutkin-site/service-worker.js")
+                    .then((reg) => console.log("✅ Service Worker зарегистрирован"))
+                    .catch((err) => console.log("❌ Ошибка Service Worker:", err));
+            });
+        }
+    </script>
+</body>
