@@ -1,1 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Где купить валюту — Валюткин</title>
+    <meta name="description" content="Где выгодно купить валюту: банки, обменники, биржи, крипта.">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="exchange.css">
+</head>
+<body>
 
+    <!-- ШАПКА -->
+    <header class="header">
+        <div class="header-left">
+            <img src="assets/logo.png" alt="Валюткин" class="header-logo">
+            <span class="header-title">Валюткин</span>
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-back">← На главную</a>
+            <a href="https://t.me/Valutkin2026Bot" target="_blank" class="btn-telegram">
+                ✈️ Открыть в Telegram
+            </a>
+        </div>
+    </header>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <main class="container">
+
+        <h1 class="page-title">🏦 Где выгодно купить валюту</h1>
+        <p class="page-subtitle">
+            Список проверенных сервисов: банки, обменники, биржи, крипта.
+        </p>
+
+        <!-- ВЫБОР ВАЛЮТЫ -->
+        <section class="currency-selector">
+            <button class="curr-btn active" data-cur="USD">🇺🇸 USD</button>
+            <button class="curr-btn" data-cur="EUR">🇪🇺 EUR</button>
+            <button class="curr-btn" data-cur="RUB">🇷🇺 RUB</button>
+            <button class="curr-btn" data-cur="KZT">🇰🇿 KZT</button>
+            <button class="curr-btn" data-cur="CNY">🇨🇳 CNY</button>
+            <button class="curr-btn" data-cur="KRW">🇰🇷 KRW</button>
+            <button class="curr-btn" data-cur="MNT">🇲🇳 MNT</button>
+            <button class="curr-btn" data-cur="TRY">🇹🇷 TRY</button>
+            <button class="curr-btn" data-cur="GBP">🇬🇧 GBP</button>
+            <button class="curr-btn" data-cur="JPY">🇯🇵 JPY</button>
+            <button class="curr-btn" data-cur="AED">🇦🇪 AED</button>
+            <button class="curr-btn" data-cur="UAH">🇺🇦 UAH</button>
+        </section>
+
+        <!-- КОНТЕНТ -->
+        <section id="exchange-content" class="exchange-content">
+            <!-- Заполняется через JS -->
+        </section>
+
+        <!-- ДИСКЛЕЙМЕР -->
+        <section class="disclaimer">
+            ⚠️ Мы не несём ответственности за операции.
+            Проверяйте сервисы перед сделкой.
+        </section>
+
+    </main>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <img src="assets/fox.png" alt="Лис" class="footer-fox">
+            <div class="footer-text">
+                <p><b>Валюткин</b> — курсы валют в реальном времени</p>
+                <p class="footer-small">© 2026 Валюткин</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://t.me/Valutkin2026Bot" target="_blank">Telegram-бот</a>
+                <a href="https://t.me/Yehndhkw" target="_blank">@Yehndhkw</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="exchange.js"></script>
+</body>
+</html>
