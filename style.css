@@ -707,3 +707,94 @@ a:hover {
         height: 250px;
     }
 }
+/* ============================================
+   МЕНЮ НАВИГАЦИИ
+   ============================================ */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: #0a0a1a;
+    border-bottom: 1px solid #1a1a3a;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: transparent;
+    color: #8899bb;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.nav-btn:hover {
+    color: #fff;
+    background: #1a1a3a;
+}
+
+.nav-btn.active {
+    background: linear-gradient(90deg, #00d4ff, #7b2fff);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+/* ============================================
+   TELEGRAM-ИКОНКА (квадрат с выезжающим текстом)
+   ============================================ */
+.telegram-icon {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #0088cc, #00d4ff);
+    border-radius: 12px;
+    padding: 12px;
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.4s ease;
+    overflow: hidden;
+    max-width: 50px;
+    box-shadow: 0 0 20px rgba(0, 136, 204, 0.4);
+}
+
+.telegram-icon:hover {
+    max-width: 300px;
+    padding-right: 20px;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.7);
+}
+
+.tg-icon {
+    font-size: 20px;
+    min-width: 26px;
+    text-align: center;
+}
+
+.tg-text {
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s;
+    margin-left: 0;
+}
+
+.telegram-icon:hover .tg-text {
+    opacity: 1;
+    margin-left: 10px;
+}
