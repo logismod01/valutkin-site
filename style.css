@@ -932,3 +932,30 @@ a:hover {
     border-color: #00d4ff;
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
 }
+.theme-picker {
+    display: flex;
+    gap: 6px;
+    background: #1a1a3a;
+    padding: 6px;
+    border-radius: 12px;
+}
+
+.theme-btn {
+    width: 36px;
+    height: 36px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-btn:hover { background: #2a2a5a; }
+.theme-btn.active {
+    border-color: #00d4ff;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+}
