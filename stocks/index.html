@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Акции компаний — Валюткин</title>
+    <meta name="description" content="Котировки акций компаний мира в реальном времени.">
+    <link rel="icon" type="image/png" href="/valutkin-site/assets/logo.png">
+    <link rel="stylesheet" href="/valutkin-site/style.css">
+    <link rel="stylesheet" href="/valutkin-site/stocks/stocks.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <img src="/valutkin-site/assets/logo.png" alt="Валюткин" class="header-logo">
+            <span class="header-title">Валюткин</span>
+        </div>
+        <nav class="header-nav">
+            <a href="/valutkin-site/index.html" class="nav-btn">🏠 Главная</a>
+            <a href="/valutkin-site/exchange/" class="nav-btn">💱 Где купить</a>
+            <a href="/valutkin-site/stocks/" class="nav-btn active">📈 Акции</a>
+        </nav>
+        <div class="header-right">
+            <div class="telegram-wrap">
+                <a href="https://t.me/valutkin_bot" target="_blank" class="telegram-icon">✈️</a>
+                <span class="tg-text">Открыть в Telegram</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">📈 Акции компаний мира</h1>
+        <p class="page-subtitle">Котировки в реальном времени. Данные: Finnhub.</p>
+
+        <section class="stock-categories">
+            <button class="cat-btn active" data-cat="popular">🔥 Популярные</button>
+            <button class="cat-btn" data-cat="tech">💻 Технологии</button>
+            <button class="cat-btn" data-cat="auto">🚗 Авто</button>
+            <button class="cat-btn" data-cat="finance">💰 Финансы</button>
+            <button class="cat-btn" data-cat="russia">🇷🇺 Россия</button>
+        </section>
+
+        <section id="stocks-grid" class="stocks-grid">
+            <div class="loading">Загрузка акций...</div>
+        </section>
+
+        <section class="disclaimer">
+            ⚠️ Данные Finnhub. Не является инвестиционной рекомендацией.
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <img src="/valutkin-site/assets/fox.png" alt="Лис" class="footer-fox">
+            <div class="footer-text">
+                <p><b>Валюткин</b> — курсы валют в реальном времени</p>
+                <p class="footer-small">© 2026 Валюткин</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://t.me/valutkin_bot" target="_blank">Telegram-бот</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/valutkin-site/stocks/stocks.js"></script>
+</body>
+</html>
