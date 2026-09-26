@@ -104,6 +104,141 @@
 .loading {
     grid-column: 1 / -1;
     text-align: center;
+    /* ============================================
+   МОДАЛЬНОЕ ОКНО ГРАФИКА
+   ============================================ */
+.stock-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.stock-modal.active {
+    display: flex;
+}
+
+.stock-modal-content {
+    background: linear-gradient(135deg, #12122a, #1a1a3a);
+    border: 1px solid #2a2a5a;
+    border-radius: 20px;
+    padding: 25px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 0 60px rgba(0, 212, 255, 0.3);
+}
+
+.stock-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #2a2a5a;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.stock-modal-close:hover {
+    background: #ff4466;
+}
+
+.stock-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stock-modal-flag {
+    font-size: 40px;
+}
+
+.stock-modal-symbol {
+    font-size: 20px;
+    font-weight: 700;
+    color: #00d4ff;
+    letter-spacing: 1px;
+}
+
+.stock-modal-name {
+    font-size: 14px;
+    color: #8888aa;
+}
+
+.stock-modal-price {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.stock-modal-change {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.stock-modal-change.up { color: #00ff88; }
+.stock-modal-change.down { color: #ff4466; }
+
+.stock-periods {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.period-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #1a1a3a;
+    border: 2px solid transparent;
+    color: #8899bb;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.period-btn:hover {
+    color: #fff;
+    border-color: #2a2a5a;
+}
+
+.period-btn.active {
+    background: linear-gradient(90deg, #00d4ff, #7b2fff);
+    color: #fff;
+}
+
+.stock-chart-wrap {
+    position: relative;
+    height: 300px;
+    background: #0a0a1a;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.chart-loading {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: #8888aa;
+    font-size: 14px;
+}
     padding: 40px;
     color: #8888aa;
 }
