@@ -151,6 +151,26 @@ async function loadStocks(category) {
 
     grid.innerHTML = results.map(r => renderStockCard(r.stock, r.data)).join("");
 }
+// ============================================
+// АВТООБНОВЛЕНИЕ (каждые 30 сек)
+// ============================================
+let autoRefreshTimer = null;
+let currentCategory = "popular";
+
+function startAutoRefresh() {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+    autoRefreshTimer = setInterval(() => {
+        console.log("🔄 Автообновление акций...");
+        loadStocks(currentCategory);
+    }, 30000); // 30 секунд
+}
+
+function stopAutoRefresh() {
+    if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+    }
+}
 
 function renderStockCard(stock, data) {
     if (!data || !data.c || data.c === 0) {
