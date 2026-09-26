@@ -46,7 +46,31 @@
         <section id="stocks-grid" class="stocks-grid">
             <div class="loading">Загрузка акций...</div>
         </section>
-
+        <!-- МОДАЛЬНОЕ ОКНО ГРАФИКА -->
+        <div id="stock-modal" class="stock-modal">
+            <div class="stock-modal-content">
+                <button class="stock-modal-close" onclick="closeStockModal()">✕</button>
+                <div class="stock-modal-header">
+                    <span class="stock-modal-flag" id="sm-flag">🍎</span>
+                    <div>
+                        <div class="stock-modal-symbol" id="sm-symbol">AAPL</div>
+                        <div class="stock-modal-name" id="sm-name">Apple</div>
+                    </div>
+                </div>
+                <div class="stock-modal-price" id="sm-price">$0.00</div>
+                <div class="stock-modal-change" id="sm-change">—</div>
+                <div class="stock-periods">
+                    <button class="period-btn active" data-days="7">7 дней</button>
+                    <button class="period-btn" data-days="30">30 дней</button>
+                    <button class="period-btn" data-days="90">3 мес</button>
+                    <button class="period-btn" data-days="365">1 год</button>
+                </div>
+                <div class="stock-chart-wrap">
+                    <canvas id="stock-chart"></canvas>
+                    <div class="chart-loading" id="chart-loading">Загрузка графика...</div>
+                </div>
+            </div>
+        </div>
         <section class="disclaimer">
             ⚠️ Данные Finnhub. Не является инвестиционной рекомендацией.
         </section>
