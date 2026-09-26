@@ -127,7 +127,7 @@ const STOCKS = {
 };
 
 // ============================================
-// ЗАГРУЗКА
+// ЗАГРУЗКА (с задержкой — чтобы не было 429)
 // ============================================
 async function loadStocks(category) {
     const grid = document.getElementById("stocks-grid");
@@ -135,14 +135,20 @@ async function loadStocks(category) {
 
     grid.innerHTML = '<div class="loading">Загрузка акций...</div>';
 
-    const promises = list.map(stock =>
-        fetch(`${FINNHUB_URL}?symbol=${stock.symbol}&token=${FINNHUB_KEY}`)
-            .then(r => r.json())
-            .then(data => ({ stock, data }))
-            .catch(() => ({ stock, data: null }))
-    );
+    const results = [];
 
-    const results = await Promise.all(promises);
+    for (const stock of list) {
+        try {
+            const r = await fetch(`${FINNHUB_URL}?symbol=${stock.symbol}&token=${FINNHUB_KEY}`);
+            const data = await r.json();
+            results.push({ stock, data });
+        } catch (e) {
+            results.push({ stock, data: null });
+        }
+        // Пауза 150 мс между запросами
+        await new Promise(resolve => setTimeout(resolve, 150));
+    }
+
     grid.innerHTML = results.map(r => renderStockCard(r.stock, r.data)).join("");
 }
 
