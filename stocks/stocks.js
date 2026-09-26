@@ -207,7 +207,7 @@ function renderStockCard(stock, data) {
     const sign = isUp ? "+" : "";
 
     return `
-        <div class="stock-card" data-symbol="${stock.symbol}" onclick='openStockModal(${JSON.stringify(stock)})'>
+        <div class="stock-card" data-symbol="${stock.symbol}" onclick="openStockModal('${stock.symbol}')">
             <div class="stock-header">
                 <span class="stock-flag">${stock.flag}</span>
                 <span class="stock-symbol">${stock.symbol}</span>
@@ -279,7 +279,10 @@ let stockChart = null;
 let currentStock = null;
 let currentDays = 7;
 
-function openStockModal(stock) {
+function openStockModal(symbol) {
+    // Находим акцию по symbol в текущей категории
+    const stock = STOCKS[currentCategory].find(s => s.symbol === symbol);
+    if (!stock) return;
     currentStock = stock;
     currentDays = 7;
 
