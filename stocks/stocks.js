@@ -213,13 +213,26 @@ function renderStockCard(stock, data) {
 // ОБРАБОТЧИКИ
 // ============================================
 document.addEventListener("DOMContentLoaded", () => {
+    currentCategory = "popular";
     loadStocks("popular");
+    startAutoRefresh();
 
     document.querySelectorAll(".cat-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
-            loadStocks(btn.dataset.cat);
+            currentCategory = btn.dataset.cat;
+            loadStocks(currentCategory);
         });
+    });
+
+    // Останавливаем автообновление, когда вкладка неактивна
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            stopAutoRefresh();
+        } else {
+            startAutoRefresh();
+            loadStocks(currentCategory);
+        }
     });
 });
