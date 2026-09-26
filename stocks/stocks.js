@@ -187,7 +187,7 @@ function stopAutoRefresh() {
 function renderStockCard(stock, data) {
     if (!data || !data.c || data.c === 0) {
         return `
-            <div class="stock-card">
+            <div class="stock-card" data-symbol="${stock.symbol}">
                 <div class="stock-header">
                     <span class="stock-flag">${stock.flag}</span>
                     <span class="stock-symbol">${stock.symbol}</span>
@@ -207,7 +207,7 @@ function renderStockCard(stock, data) {
     const sign = isUp ? "+" : "";
 
     return `
-        <div class="stock-card">
+        <div class="stock-card" data-symbol="${stock.symbol}" onclick='openStockModal(${JSON.stringify(stock)})'>
             <div class="stock-header">
                 <span class="stock-flag">${stock.flag}</span>
                 <span class="stock-symbol">${stock.symbol}</span>
@@ -235,6 +235,30 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.classList.add("active");
             currentCategory = btn.dataset.cat;
             loadStocks(currentCategory);
+        });
+    });
+        // Закрытие модального окна
+    const modal = document.getElementById("stock-modal");
+    if (modal) {
+        modal.addEventListener("click", (e) => {
+            if (e.target.id === "stock-modal") closeStockModal();
+        });
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeStockModal();
+    });
+
+    // Периоды графика
+    document.querySelectorAll(".period-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".period-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            const days = parseInt(btn.dataset.days);
+            currentDays = days;
+            if (currentStock) {
+                loadStockChart(currentStock.symbol, days);
+            }
         });
     });
 
