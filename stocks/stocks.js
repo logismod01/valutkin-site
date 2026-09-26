@@ -3,6 +3,9 @@
 // ============================================
 const FINNHUB_KEY = "dar7h19r01qn6lvcoj9gdar7h19r01qn6lvcoja0";
 const FINNHUB_URL = "https://finnhub.io/api/v1/quote";
+// КЭШ — чтобы не дёргать Finnhub повторно
+const CACHE = {};
+const CACHE_TIME = 60000; // 60 секунд
 
 const STOCKS = {
     "popular": [
@@ -138,15 +141,24 @@ async function loadStocks(category) {
     const results = [];
 
     for (const stock of list) {
-        try {
-            const r = await fetch(`${FINNHUB_URL}?symbol=${stock.symbol}&token=${FINNHUB_KEY}`);
-            const data = await r.json();
-            results.push({ stock, data });
-        } catch (e) {
-            results.push({ stock, data: null });
+        const cacheKey = stock.symbol;
+        const now = Date.now();
+
+        if (CACHE[cacheKey] && (now - CACHE[cacheKey].time) < CACHE_TIME) {
+            // Берём из кэша
+            results.push({ stock, data: CACHE[cacheKey].data });
+        } else {
+            // Запрашиваем Finnhub
+            try {
+                const r = await fetch(`${FINNHUB_URL}?symbol=${stock.symbol}&token=${FINNHUB_KEY}`);
+                const data = await r.json();
+                CACHE[cacheKey] = { data, time: now };
+                results.push({ stock, data });
+            } catch (e) {
+                results.push({ stock, data: null });
+            }
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
-        // Пауза 150 мс между запросами
-        await new Promise(resolve => setTimeout(resolve, 150));
     }
 
     grid.innerHTML = results.map(r => renderStockCard(r.stock, r.data)).join("");
@@ -162,7 +174,7 @@ function startAutoRefresh() {
     autoRefreshTimer = setInterval(() => {
         console.log("🔄 Автообновление акций...");
         loadStocks(currentCategory);
-    }, 30000); // 30 секунд
+    }, 300000); // 5 мин
 }
 
 function stopAutoRefresh() {
