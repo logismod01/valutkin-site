@@ -248,3 +248,150 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+// ============================================
+// ГРАФИК АКЦИИ
+// ============================================
+let stockChart = null;
+let currentStock = null;
+let currentDays = 7;
+
+function openStockModal(stock) {
+    currentStock = stock;
+    currentDays = 7;
+
+    document.getElementById("sm-flag").textContent = stock.flag;
+    document.getElementById("sm-symbol").textContent = stock.symbol;
+    document.getElementById("sm-name").textContent = stock.name;
+
+    // Цена — берём из карточки
+    const card = document.querySelector(`[data-symbol="${stock.symbol}"]`);
+    if (card) {
+        document.getElementById("sm-price").textContent = card.querySelector(".stock-price").textContent;
+        const changeEl = card.querySelector(".stock-change");
+        if (changeEl) {
+            document.getElementById("sm-change").textContent = changeEl.textContent;
+            document.getElementById("sm-change").className = "stock-modal-change " + (changeEl.classList.contains("up") ? "up" : "down");
+        }
+    }
+
+    document.querySelectorAll(".period-btn").forEach(b => b.classList.remove("active"));
+    const activeBtn = document.querySelector('.period-btn[data-days="7"]');
+    if (activeBtn) activeBtn.classList.add("active");
+
+    document.getElementById("stock-modal").classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    loadStockChart(stock.symbol, 7);
+}
+
+function closeStockModal() {
+    document.getElementById("stock-modal").classList.remove("active");
+    document.body.style.overflow = "";
+    currentStock = null;
+    if (stockChart) {
+        stockChart.destroy();
+        stockChart = null;
+    }
+}
+
+async function loadStockChart(symbol, days) {
+    const loading = document.getElementById("chart-loading");
+    const canvas = document.getElementById("stock-chart");
+
+    loading.style.display = "block";
+    loading.textContent = "Загрузка графика...";
+    canvas.style.opacity = "0.3";
+
+    try {
+        const range = days <= 7 ? "5d" : (days <= 30 ? "1mo" : (days <= 90 ? "3mo" : "1y"));
+        const interval = days <= 7 ? "1h" : (days <= 90 ? "1d" : "1wk");
+
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=${range}&interval=${interval}`;
+        const resp = await fetch(url).then(r => r.json());
+
+        const result = resp.chart.result[0];
+        const timestamps = result.timestamp;
+        const prices = result.indicators.quote[0].close;
+
+        const points = [];
+        for (let i = 0; i < timestamps.length; i++) {
+            if (prices[i] !== null) {
+                points.push({
+                    t: new Date(timestamps[i] * 1000).toLocaleDateString("ru-RU"),
+                    v: prices[i],
+                });
+            }
+        }
+
+        loading.style.display = "none";
+        canvas.style.opacity = "1";
+
+        renderStockChart(points, symbol);
+    } catch (e) {
+        console.error("Ошибка графика:", e);
+        loading.textContent = "❌ Не удалось загрузить график";
+    }
+}
+
+function renderStockChart(points, symbol) {
+    const canvas = document.getElementById("stock-chart");
+    const ctx = canvas.getContext("2d");
+
+    if (stockChart) stockChart.destroy();
+
+    const labels = points.map(p => p.t);
+    const values = points.map(p => p.v);
+
+    const isUp = values[values.length - 1] >= values[0];
+    const color = isUp ? "#00ff88" : "#ff4466";
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, isUp ? "rgba(0, 255, 136, 0.3)" : "rgba(255, 68, 102, 0.3)");
+    gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+    stockChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: symbol,
+                data: values,
+                borderColor: color,
+                backgroundColor: gradient,
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+                pointRadius: 0,
+                pointHoverRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: "rgba(10, 10, 26, 0.95)",
+                    borderColor: color,
+                    borderWidth: 1,
+                    titleColor: color,
+                    bodyColor: "#e0e0ff",
+                    padding: 10,
+                    callbacks: {
+                        label: (ctx) => "$" + ctx.parsed.y.toFixed(2)
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: "rgba(0, 212, 255, 0.05)" },
+                    ticks: { color: "#8888aa", maxTicksLimit: 6 }
+                },
+                y: {
+                    grid: { color: "rgba(0, 212, 255, 0.05)" },
+                    ticks: { color: "#8888aa" }
+                }
+            }
+        }
+    });
+}
