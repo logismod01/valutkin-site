@@ -1,17 +1,19 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v14";
+const CACHE_NAME = "valutkin-v15";
 const APP_SHELL = [
-  "./", "./index.html", "./style.css", "./dashboard-settings.css", "./script.js", "./manifest.json",
+  "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./manifest.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
   "./company.html", "./company.css", "./company.js", "./dashboard-settings.js",
   "./compare.html", "./compare.css", "./compare.js", "./profile.html", "./profile.css", "./profile.js",
-  "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png",
+  "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png", "./assets/icon-192.png", "./assets/icon-512.png", "./assets/icon-maskable-512.png",
   "./exchange/", "./exchange/exchange.css", "./exchange/exchange.js",
   "./stocks/", "./stocks/stocks.css", "./stocks/stocks.js"
 ];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
+});
+self.addEventListener("message", event => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 self.addEventListener("activate", event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))));
@@ -23,7 +25,7 @@ async function networkFirst(request) {
     if (response.ok) (await caches.open(CACHE_NAME)).put(request, response.clone());
     return response;
   } catch {
-    return (await caches.match(request)) || (request.mode === "navigate" ? caches.match("./index.html") : Response.error());
+    return (await caches.match(request)) || (request.mode === "navigate" ? caches.match("./offline.html") : Response.error());
   }
 }
 self.addEventListener("fetch", event => {

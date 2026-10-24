@@ -34,6 +34,7 @@
       <div class="drawer-section"><div class="drawer-section-title">Темы <small>крутите колёсико</small></div>
       <div class="drawer-themes" tabindex="0">${themes.map(([id, icon, title]) => `<button data-shell-theme="${id}" title="${title}"><span>${icon}</span>${title}</button>`).join("")}</div></div>
       <div class="drawer-section font-section"><div class="drawer-section-title">Шрифт</div><select id="shell-font"><option value="system">Системный</option><option value="rounded">Мягкий</option><option value="serif">Классический</option><option value="mono">Моноширинный</option></select></div>
+      <button class="drawer-install" type="button">📲 Установить приложение</button>
       <a class="drawer-telegram" href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer">✈️ Открыть в Telegram</a></div>`;
     document.body.appendChild(aside);
     const handle = aside.querySelector(".drawer-handle");
@@ -42,6 +43,19 @@
     aside.querySelectorAll("[data-shell-theme]").forEach(button => button.addEventListener("click", () => setTheme(button.dataset.shellTheme)));
     const scroller = aside.querySelector(".drawer-themes");
     scroller.addEventListener("wheel", e => { e.preventDefault(); scroller.scrollTop += e.deltaY; }, { passive: false });
+    const installButton = aside.querySelector(".drawer-install");
+    let installPrompt = null;
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault(); installPrompt = event; installButton.hidden = false;
+    });
+    installButton.addEventListener("click", async () => {
+      if (installPrompt) { installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; installButton.hidden = true; }
+      else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) showShellToast("На iPhone: Поделиться → На экран «Домой»", "info");
+      else showShellToast("Установка доступна в меню браузера", "info");
+    });
+    window.addEventListener("appinstalled", () => { installButton.hidden = true; showShellToast("Валюткин установлен!", "success"); });
+    if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) installButton.hidden = true;
+
     setTheme(localStorage.getItem("valutkin_theme") || "dark");
     const font = localStorage.getItem("valutkin_font") || "system";
     root.dataset.font = font;
@@ -61,5 +75,18 @@
       const shortcut=document.querySelector(".account-shortcut"); if(shortcut){shortcut.href=`${base}profile.html`;shortcut.innerHTML="<span>👤</span><b>Профиль</b>";}
     }).catch(()=>{});
   }
-  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", mount) : mount();
+  function showShellToast(text, type="info", action) {
+    document.querySelector(".shell-toast")?.remove();
+    const toast=document.createElement("div");toast.className=`shell-toast ${type}`;toast.innerHTML=`<span>${text}</span>${action?'<button type="button">Обновить</button>':''}<button type="button" class="toast-close" aria-label="Закрыть">✕</button>`;document.body.appendChild(toast);
+    toast.querySelector(".toast-close").onclick=()=>toast.remove();if(action)toast.querySelector("button:not(.toast-close)").onclick=action;setTimeout(()=>toast.remove(),action?15000:5000);
+  }
+  async function registerWorker() {
+    if (!("serviceWorker" in navigator)) return;
+    try {
+      const registration=await navigator.serviceWorker.register(`${base}service-worker.js`);
+      registration.addEventListener("updatefound",()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)showShellToast("Доступна новая версия сайта","info",()=>{navigator.serviceWorker.addEventListener("controllerchange",()=>location.reload(),{once:true});worker.postMessage({type:"SKIP_WAITING"});});});});
+      navigator.serviceWorker.addEventListener("controllerchange",()=>console.info("Валюткин обновлён"));
+    } catch(error) { console.warn("Service Worker:",error); }
+  }
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded",()=>{mount();registerWorker();}) : (mount(),registerWorker());
 })();
