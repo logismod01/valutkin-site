@@ -2,19 +2,27 @@ const PROFILE_KEY = "valutkin_profile_data";
 const DEFAULT_DATA = { assets: [], favorites: ["USD", "EUR", "CNY"], notifications: [] };
 const cryptoMeta = { BTC:["Bitcoin","₿","bitcoin"],ETH:["Ethereum","◆","ethereum"],TON:["Toncoin","💎","the-open-network"],SOL:["Solana","◎","solana"],USDT:["Tether","₮","tether"],BNB:["BNB","🟡","binancecoin"],XRP:["XRP","✕","ripple"],ADA:["Cardano","🔷","cardano"],DOGE:["Dogecoin","🐕","dogecoin"],TRX:["TRON","🔺","tron"],DOT:["Polkadot","⚪","polkadot"],AVAX:["Avalanche","🔻","avalanche-2"],LINK:["Chainlink","🔗","chainlink"] };
 const fiatMeta = {USD:["Доллар США","🇺🇸"],EUR:["Евро","🇪🇺"],CNY:["Юань","🇨🇳"],GBP:["Фунт","🇬🇧"],JPY:["Иена","🇯🇵"],KZT:["Тенге","🇰🇿"],AED:["Дирхам","🇦🇪"],TRY:["Лира","🇹🇷"],GEL:["Лари","🇬🇪"]};
-let data; try { data = {...DEFAULT_DATA, ...JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}")}; } catch { data = structuredClone(DEFAULT_DATA); }
+function normalizeProfileData(value) {
+ const source=value&&typeof value==="object"?value:{};
+ return {
+  assets:Array.isArray(source.assets)?source.assets.filter(a=>a&&cryptoMeta[a.code]&&Number.isFinite(+a.amount)&&+a.amount>0).map(a=>({...a,amount:+a.amount,buyPrice:Number.isFinite(+a.buyPrice)?+a.buyPrice:0})):[],
+  favorites:Array.isArray(source.favorites)?[...new Set(source.favorites.filter(code=>fiatMeta[code]))]:[...DEFAULT_DATA.favorites],
+  notifications:Array.isArray(source.notifications)?source.notifications.filter(n=>n&&typeof n.text==="string").slice(0,30):[]
+ };
+}
+let data; try { data=normalizeProfileData(JSON.parse(localStorage.getItem(PROFILE_KEY)||"{}")); } catch { data=normalizeProfileData(DEFAULT_DATA); }
 let market = { crypto:{}, rates:{} };
 let cloudUser = null;
 const $ = id => document.getElementById(id);
 const money = n => new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:2}).format(n || 0);
-function save(){ localStorage.setItem(PROFILE_KEY,JSON.stringify(data)); if(cloudUser) getSupabase().from("user_data").upsert({user_id:cloudUser.id,data,updated_at:new Date().toISOString()}).then(({error})=>{if(error)console.warn("Cloud save:",error.message)}); }
+function save(){ try{localStorage.setItem(PROFILE_KEY,JSON.stringify(data))}catch(error){console.warn("Local profile save:",error)} if(cloudUser) getSupabase().from("user_data").upsert({user_id:cloudUser.id,data,updated_at:new Date().toISOString()}).then(({error})=>{if(error)console.warn("Cloud save:",error.message)}); }
 function notify(text,kind="info"){ data.notifications.unshift({text,kind,time:new Date().toISOString()}); data.notifications=data.notifications.slice(0,30); save(); }
 async function userInfo(){
  try {
   const db=getSupabase(),{data:{user}}=await db.auth.getUser(); cloudUser=user;
   if(!user){$("guest-warning").classList.remove("hidden");return;}
   const [{data:profile},{data:cloud}]=await Promise.all([db.from("profiles").select("name,phone,avatar").eq("id",user.id).maybeSingle(),db.from("user_data").select("data").eq("user_id",user.id).maybeSingle()]);
-  if(cloud?.data&&Object.keys(cloud.data).length){data={...DEFAULT_DATA,...cloud.data};localStorage.setItem(PROFILE_KEY,JSON.stringify(data));render();}
+  if(cloud?.data&&Object.keys(cloud.data).length){data=normalizeProfileData(cloud.data);try{localStorage.setItem(PROFILE_KEY,JSON.stringify(data))}catch(_){}render();}
   $("welcome").textContent=`Здравствуйте, ${profile?.name||user.user_metadata?.name||"пользователь"}`;$("contacts").textContent=`${user.email||""}${profile?.phone?` • ${profile.phone}`:""}`;
  } catch(e){$("guest-warning").classList.remove("hidden");}
 }
