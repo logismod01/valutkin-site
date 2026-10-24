@@ -85,7 +85,8 @@
     try {
       const registration=await navigator.serviceWorker.register(`${base}service-worker.js`);
       registration.addEventListener("updatefound",()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)showShellToast("Доступна новая версия сайта","info",()=>{navigator.serviceWorker.addEventListener("controllerchange",()=>location.reload(),{once:true});worker.postMessage({type:"SKIP_WAITING"});});});});
-      navigator.serviceWorker.addEventListener("controllerchange",()=>console.info("Валюткин обновлён"));
+      navigator.serviceWorker.addEventListener("controllerchange",()=>{if(sessionStorage.getItem("valutkin_sw_reloading"))return;sessionStorage.setItem("valutkin_sw_reloading","1");location.reload();});
+      window.addEventListener("load",()=>sessionStorage.removeItem("valutkin_sw_reloading"),{once:true});
     } catch(error) { console.warn("Service Worker:",error); }
   }
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded",()=>{mount();registerWorker();}) : (mount(),registerWorker());
