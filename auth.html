@@ -32,6 +32,12 @@
    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
    <button class="btn-primary" type="submit">Создать аккаунт</button>
   </form>
+  <form id="new-password-form" class="auth-form hidden">
+   <p>Придумайте новый пароль для аккаунта.</p>
+   <label>Новый пароль<input id="new-password" type="password" minlength="8" autocomplete="new-password" required><small>Минимум 8 символов, буква и цифра</small></label>
+   <label>Повторите пароль<input id="new-password-repeat" type="password" minlength="8" autocomplete="new-password" required></label>
+   <button class="btn-primary" type="submit">Сохранить новый пароль</button>
+  </form>
   <form id="reset-form" class="auth-form hidden">
    <p>Укажите привязанную почту. В демо-режиме новый пароль будет показан на экране.</p>
    <label>Почта<input id="reset-email" type="email" required></label>
@@ -40,7 +46,7 @@
   <section id="profile" class="hidden profile">
    <h2>Ваш аккаунт</h2><div id="profile-data"></div>
    <form id="bind-form" class="auth-form"><label>Привязать новую почту<input id="bind-email" type="email"></label><label>Привязать новый телефон<input id="bind-phone" type="tel"></label><button class="btn-primary">Сохранить контакты</button></form>
-   <a href="profile.html" class="btn-primary" style="text-align:center">Открыть мой профиль →</a><button id="logout-all" class="danger-button">Выйти на всех устройствах</button><button id="delete-cloud-data" class="danger-button">Удалить данные профиля</button><button id="logout" class="danger-button">Выйти</button>
+   <a href="profile.html" class="btn-primary" style="text-align:center">Открыть мой профиль →</a><button id="logout-all" class="danger-button">Выйти на всех устройствах</button><button id="delete-cloud-data" class="danger-button">Очистить данные профиля</button><button id="delete-account" class="danger-button danger-solid">Удалить аккаунт полностью</button><button id="logout" class="danger-button">Выйти</button>
   </section>
   <p class="demo-note">Аккаунт защищён Supabase. Подтвердите адрес по ссылке в письме. SMS-вход станет доступен после подключения SMS-провайдера.</p>
  </section>

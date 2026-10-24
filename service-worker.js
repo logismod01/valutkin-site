@@ -1,5 +1,5 @@
 // Service Worker: свежая версия страниц при навигации, офлайн-кэш для статики.
-const CACHE_NAME = "valutkin-v12";
+const CACHE_NAME = "valutkin-v13";
 const APP_SHELL = [
   "./", "./index.html", "./style.css", "./script.js", "./manifest.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css", "./company.html", "./company.css", "./company.js", "./dashboard-settings.js", "./compare.html", "./compare.css", "./compare.js", "./profile.html", "./profile.css", "./profile.js", "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png", "./exchange/", "./exchange/exchange.css",

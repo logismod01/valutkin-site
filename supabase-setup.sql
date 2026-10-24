@@ -53,3 +53,8 @@ $$;
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created after insert on auth.users
 for each row execute procedure public.handle_new_user();
+
+
+-- Удаление самой учётной записи выполняет Edge Function из
+-- supabase/functions/delete-account/index.ts. Разверните её командой:
+-- supabase functions deploy delete-account
