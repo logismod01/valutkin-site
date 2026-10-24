@@ -1,43 +1,48 @@
-// Service Worker: свежая версия страниц при навигации, офлайн-кэш для статики.
-const CACHE_NAME = "valutkin-v13";
+// Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
+const CACHE_NAME = "valutkin-v16";
 const APP_SHELL = [
-  "./", "./index.html", "./style.css", "./script.js", "./manifest.json",
-  "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css", "./company.html", "./company.css", "./company.js", "./dashboard-settings.js", "./compare.html", "./compare.css", "./compare.js", "./profile.html", "./profile.css", "./profile.js", "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png", "./exchange/", "./exchange/exchange.css",
-  "./exchange/exchange.js", "./stocks/", "./stocks/stocks.css", "./stocks/stocks.js"
+  "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./manifest.json",
+  "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
+  "./game.html", "./game.css", "./game.js", "./company.html", "./company.css", "./company.js", "./dashboard-settings.js",
+  "./compare.html", "./compare.css", "./compare.js", "./profile.html", "./profile.css", "./profile.js",
+  "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png", "./assets/icon-192.png", "./assets/icon-512.png", "./assets/icon-maskable-512.png",
+  "./exchange/", "./exchange/exchange.css", "./exchange/exchange.js",
+  "./stocks/", "./stocks/stocks.css", "./stocks/stocks.js"
 ];
-
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
 });
-
+self.addEventListener("message", event => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
+});
 self.addEventListener("activate", event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(
-    keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-  )));
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))));
   self.clients.claim();
 });
-
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) (await caches.open(CACHE_NAME)).put(request, response.clone());
+    return response;
+  } catch {
+    return (await caches.match(request)) || (request.mode === "navigate" ? caches.match("./offline.html") : Response.error());
+  }
+}
 self.addEventListener("fetch", event => {
-  const { request } = event;
+  const request = event.request;
   if (request.method !== "GET" || new URL(request.url).origin !== location.origin) return;
-
-  // Документы всегда сначала берём из сети: это устраняет показ прошлой версии.
-  if (request.mode === "navigate") {
-    event.respondWith(fetch(request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-      return response;
-    }).catch(() => caches.match(request).then(r => r || caches.match("./index.html"))));
+  const destination = request.destination;
+  // HTML, CSS и JS должны обновляться вместе — иначе новый JS может открыться со старым CSS.
+  if (request.mode === "navigate" || destination === "style" || destination === "script") {
+    event.respondWith(networkFirst(request));
     return;
   }
-
-  // Статика показывается сразу из кэша и обновляется в фоне.
+  // Изображения показываем мгновенно из кэша и обновляем в фоне.
   event.respondWith(caches.match(request).then(cached => {
-    const network = fetch(request).then(response => {
-      if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
+    const fresh = fetch(request).then(async response => {
+      if (response.ok) (await caches.open(CACHE_NAME)).put(request, response.clone());
       return response;
-    }).catch(() => cached);
-    return cached || network;
+    }).catch(() => cached || Response.error());
+    return cached || fresh;
   }));
 });

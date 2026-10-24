@@ -4,9 +4,9 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Аккаунт — Валюткин</title>
   <script>document.documentElement.dataset.theme=localStorage.getItem("valutkin_theme")||"dark"</script>
-  <link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="auth.css">
-  <script defer src="https://www.google.com/recaptcha/api.js"></script>
+  <link rel="icon" type="image/png" href="assets/icon-192.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="shell.css">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a0a1a">
 </head>
 <body>
 <header class="header">
@@ -29,7 +29,8 @@
    <label>Телефон<input id="reg-phone" type="tel" autocomplete="tel" placeholder="+7 999 000-00-00" required></label>
    <label>Пароль<input id="reg-password" type="password" autocomplete="new-password" minlength="8" required><small>Минимум 8 символов, буква и цифра</small></label>
    <label class="check"><input id="terms" type="checkbox" required> Я принимаю правила сервиса</label>
-   <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+   <label class="website-field" aria-hidden="true">Сайт<input id="reg-website" type="text" tabindex="-1" autocomplete="off"></label>
+   <p class="security-hint">🛡️ Регистрация защищена ограничениями Supabase. CAPTCHA будет включена после подключения провайдера.</p>
    <button class="btn-primary" type="submit">Создать аккаунт</button>
   </form>
   <form id="new-password-form" class="auth-form hidden">

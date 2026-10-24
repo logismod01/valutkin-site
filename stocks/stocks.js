@@ -9,6 +9,10 @@ const CACHE_TIME = 60000; // 60 секунд
 
 const STOCKS = {
     "popular": [
+        { symbol: "PLTR", name: "Palantir", flag: "🔮" },
+        { symbol: "AVGO", name: "Broadcom", flag: "🔌" },
+        { symbol: "ORCL", name: "Oracle", flag: "🔴" },
+
         { symbol: "V", name: "Visa", flag: "💳" },
         { symbol: "JPM", name: "JPMorgan", flag: "🏦" },
         { symbol: "WMT", name: "Walmart", flag: "🛒" },
@@ -34,6 +38,11 @@ const STOCKS = {
         { symbol: "SBUX", name: "Starbucks", flag: "☕" },
     ],
     "tech": [
+        { symbol: "UBER", name: "Uber", flag: "🚕" },
+        { symbol: "ABNB", name: "Airbnb", flag: "🏠" },
+        { symbol: "DELL", name: "Dell", flag: "💻" },
+        { symbol: "APP", name: "AppLovin", flag: "📱" },
+
         { symbol: "NOW", name: "ServiceNow", flag: "☁️" },
         { symbol: "INTU", name: "Intuit", flag: "🧾" },
         { symbol: "AMAT", name: "Applied Materials", flag: "🔧" },
@@ -59,6 +68,10 @@ const STOCKS = {
         { symbol: "ASML", name: "ASML", flag: "🇳🇱" },
     ],
     "auto": [
+        { symbol: "BYDDY", name: "BYD", flag: "🔋" },
+        { symbol: "MBLY", name: "Mobileye", flag: "👁️" },
+        { symbol: "PAG", name: "Penske Automotive", flag: "🚙" },
+
         { symbol: "MBGYY", name: "Mercedes-Benz", flag: "⭐" },
         { symbol: "VWAGY", name: "Volkswagen", flag: "🇩🇪" },
         { symbol: "POAHY", name: "Porsche", flag: "🏎️" },
@@ -84,6 +97,10 @@ const STOCKS = {
         { symbol: "VLVLY", name: "Volvo", flag: "🇸🇪" },
     ],
     "finance": [
+        { symbol: "HOOD", name: "Robinhood", flag: "🏹" },
+        { symbol: "SOFI", name: "SoFi", flag: "💰" },
+        { symbol: "NU", name: "Nu Holdings", flag: "🟣" },
+
         { symbol: "COF", name: "Capital One", flag: "💳" },
         { symbol: "BK", name: "BNY Mellon", flag: "🏦" },
         { symbol: "TROW", name: "T. Rowe Price", flag: "📊" },
@@ -109,6 +126,10 @@ const STOCKS = {
         { symbol: "PNC", name: "PNC Financial", flag: "💰" },
     ],
     "food": [
+        { symbol: "CAVA", name: "Cava", flag: "🥙" },
+        { symbol: "CELH", name: "Celsius", flag: "⚡" },
+        { symbol: "BROS", name: "Dutch Bros", flag: "☕" },
+
         { symbol: "MNST", name: "Monster Beverage", flag: "⚡" },
         { symbol: "KDP", name: "Keurig Dr Pepper", flag: "🥤" },
         { symbol: "TSN", name: "Tyson Foods", flag: "🍗" },
@@ -134,6 +155,10 @@ const STOCKS = {
         { symbol: "TAP", name: "Molson Coors", flag: "🍺" },
     ],
     "entertainment": [
+        { symbol: "DUOL", name: "Duolingo", flag: "🦉" },
+        { symbol: "U", name: "Unity", flag: "🎮" },
+        { symbol: "SE", name: "Sea Limited", flag: "🌊" },
+
         { symbol: "ROKU", name: "Roku", flag: "📺" },
         { symbol: "TKO", name: "TKO Group", flag: "🥊" },
         { symbol: "CMCSA", name: "Comcast", flag: "📡" },
@@ -180,6 +205,10 @@ const STOCKS = {
         { symbol: "JD", name: "JD.com", flag: "🛒" }, { symbol: "MELI", name: "MercadoLibre", flag: "💛" },
     ],
     "china": [
+        { symbol: "MNSO", name: "MINISO", flag: "🛍️" },
+        { symbol: "QFIN", name: "Qifu Technology", flag: "💳" },
+        { symbol: "FINV", name: "FinVolution", flag: "💰" },
+
         { symbol: "ZTO", name: "ZTO Express", flag: "📦" },
         { symbol: "YUMC", name: "Yum China", flag: "🍜" },
         { symbol: "BEKE", name: "KE Holdings", flag: "🏠" },
