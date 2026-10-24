@@ -959,3 +959,24 @@ a:hover {
     border-color: #00d4ff;
     box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
 }
+
+
+/* Theme compatibility and shared variable-based surfaces */
+[data-theme="dark"], [data-theme="cyberpunk"] {
+    --bg-gradient: linear-gradient(135deg, #000 0%, #0a0a1a 40%, #1a0033 100%);
+}
+[data-theme="blue"] {
+    --bg-gradient: linear-gradient(135deg, #001225 0%, #062d52 55%, #064b72 100%);
+    --text-color: #e7f7ff; --text-muted: #91b8ce; --accent: #38bdf8; --accent-2: #2563eb;
+    --card-bg: rgba(3, 30, 55, .82); --card-border: rgba(56, 189, 248, .25);
+    --header-bg: rgba(2, 24, 45, .9); --header-border: rgba(56, 189, 248, .28);
+    --footer-bg: rgba(2, 20, 38, .7); --input-bg: rgba(1, 18, 34, .75); --input-border: rgba(56, 189, 248, .35);
+}
+.header { background: var(--header-bg); border-color: var(--header-border); }
+.converter, .search-input, .cat-btn, .card { background: var(--card-bg); border-color: var(--card-border); color: var(--text-color); }
+.input, .select { background: var(--input-bg); border-color: var(--input-border); color: var(--text-color); }
+.section-title, .convert-result { color: var(--accent); }
+.theme-picker { background: var(--card-bg); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

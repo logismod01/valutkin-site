@@ -132,36 +132,31 @@ const STOCKS = {
 // ============================================
 // ЗАГРУЗКА (с задержкой — чтобы не было 429)
 // ============================================
+let loadRequestId = 0;
 async function loadStocks(category) {
     const grid = document.getElementById("stocks-grid");
-    const list = STOCKS[category];
-
+    const list = STOCKS[category] || [];
+    const requestId = ++loadRequestId;
+    grid.setAttribute("aria-busy", "true");
     grid.innerHTML = '<div class="loading">Загрузка акций...</div>';
 
-    const results = [];
+    // Запросы выполняются параллельно. Раньше 15 карточек грузились по очереди ~8 секунд.
+    const results = await Promise.all(list.map(async stock => {
+        const cached = CACHE[stock.symbol];
+        if (cached && Date.now() - cached.time < CACHE_TIME) return { stock, data: cached.data };
+        try {
+            const r = await fetch(`${FINNHUB_URL}?symbol=${encodeURIComponent(stock.symbol)}&token=${FINNHUB_KEY}`);
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            const data = await r.json();
+            CACHE[stock.symbol] = { data, time: Date.now() };
+            return { stock, data };
+        } catch (_) { return { stock, data: cached?.data || null }; }
+    }));
 
-    for (const stock of list) {
-        const cacheKey = stock.symbol;
-        const now = Date.now();
-
-        if (CACHE[cacheKey] && (now - CACHE[cacheKey].time) < CACHE_TIME) {
-            // Берём из кэша
-            results.push({ stock, data: CACHE[cacheKey].data });
-        } else {
-            // Запрашиваем Finnhub
-            try {
-                const r = await fetch(`${FINNHUB_URL}?symbol=${stock.symbol}&token=${FINNHUB_KEY}`);
-                const data = await r.json();
-                CACHE[cacheKey] = { data, time: now };
-                results.push({ stock, data });
-            } catch (e) {
-                results.push({ stock, data: null });
-            }
-            await new Promise(resolve => setTimeout(resolve, 500));
-        }
-    }
-
+    // Не даём запоздавшему ответу прошлой категории затереть новую страницу.
+    if (requestId !== loadRequestId || category !== currentCategory) return;
     grid.innerHTML = results.map(r => renderStockCard(r.stock, r.data)).join("");
+    grid.setAttribute("aria-busy", "false");
 }
 // ============================================
 // АВТООБНОВЛЕНИЕ (каждые 30 сек)

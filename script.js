@@ -87,42 +87,63 @@ let state = {
 // ============================================
 // ЗАГРУЗКА КУРСОВ
 // ============================================
-async function loadRates() {
+const RATES_CACHE_KEY = "valutkin_rates_v2";
+const fetchJson = (url, timeout = 8000) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    return fetch(url, { signal: controller.signal })
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+        .finally(() => clearTimeout(timer));
+};
+
+function restoreCachedRates() {
     try {
-        const [fiatResp, cryptoResp, metalsResp] = await Promise.all([
-            fetch(API_FIAT_URL).then(r => r.json()),
-            fetch(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana&vs_currencies=usd,rub")
-                .then(r => r.json())
-                .catch(() => null),
-            fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
-                .then(r => r.json())
-                .catch(() => null),
-        ]);
-
-        if (fiatResp.result === "success") {
-            state.rates = fiatResp.rates;
-            state.updatedAt = new Date();
-        }
-        if (cryptoResp) {
-            state.crypto = cryptoResp;
-        }
-        if (metalsResp && metalsResp.usd) {
-            const usd = metalsResp.usd;
-            ["XAU", "XAG", "XPT", "XPD"].forEach(code => {
-                const lower = code.toLowerCase();
-                if (usd[lower]) {
-                    state.rates[code] = usd[lower];
-                }
-            });
-        }
-
-        console.log("Курсы загружены:", state);
+        const cached = JSON.parse(localStorage.getItem(RATES_CACHE_KEY));
+        if (!cached || !cached.rates) return false;
+        state.rates = cached.rates;
+        state.crypto = cached.crypto || {};
+        state.updatedAt = new Date(cached.updatedAt);
         renderCurrencies();
         populateConverterSelect();
-    } catch (e) {
-        console.error("Ошибка загрузки:", e);
+        return true;
+    } catch (_) { return false; }
+}
+
+async function loadRates() {
+    const requests = await Promise.allSettled([
+        fetchJson(API_FIAT_URL),
+        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana&vs_currencies=usd,rub"),
+        fetchJson("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
+    ]);
+    const [fiatResult, cryptoResult, metalsResult] = requests;
+    let changed = false;
+
+    if (fiatResult.status === "fulfilled" && fiatResult.value.result === "success") {
+        state.rates = fiatResult.value.rates;
+        state.updatedAt = new Date();
+        changed = true;
+    }
+    if (cryptoResult.status === "fulfilled") {
+        state.crypto = cryptoResult.value;
+        changed = true;
+    }
+    if (metalsResult.status === "fulfilled" && metalsResult.value.usd) {
+        ["XAU", "XAG", "XPT", "XPD"].forEach(code => {
+            const rate = metalsResult.value.usd[code.toLowerCase()];
+            if (rate) state.rates[code] = rate;
+        });
+        changed = true;
+    }
+
+    if (changed && Object.keys(state.rates).length) {
+        localStorage.setItem(RATES_CACHE_KEY, JSON.stringify({
+            rates: state.rates, crypto: state.crypto, updatedAt: state.updatedAt || new Date()
+        }));
+        renderCurrencies();
+        populateConverterSelect();
+    } else if (!Object.keys(state.rates).length) {
         document.getElementById("currencies-grid").innerHTML =
-            '<div class="loading">⚠️ Не удалось загрузить курсы. Обнови страницу.</div>';
+            '<div class="loading">⚠️ Сервис курсов временно недоступен. Попробуйте ещё раз позже.</div>';
     }
 }
 
@@ -207,9 +228,6 @@ function renderCard(code) {
         unitText = "за 1 ₽";
     }
 
-    const change = ((Math.random() * 2 - 1) * 1.5).toFixed(2);
-    const changeClass = change >= 0 ? "up" : "down";
-    const changeText = change >= 0 ? `📈 +${change}%` : `📉 ${change}%`;
 
     return `
         <div class="card" data-code="${code}">
@@ -220,7 +238,6 @@ function renderCard(code) {
             </div>
             <div class="card-price">${priceText}</div>
             <div class="card-price-unit">${unitText}</div>
-            <div class="card-change ${changeClass}">${changeText}</div>
             <div class="card-footer">
                 🕐 ${state.updatedAt ? state.updatedAt.toLocaleTimeString("ru-RU") : "—"}
             </div>
@@ -367,49 +384,49 @@ async function loadFiatHistory(code, days) {
     // fawazahmed0: запрашиваем historical данные на каждую дату
     // Формат: https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@YYYY-MM-DD/v1/currencies/usd.json
     // Возвращает: { "usd": { "rub": 84.19, "eur": 0.86, ... } }
-    
+
     // Нам нужен курс code → RUB. Но fawazahmed0 отдает USD → code.
     // Значит: RUB за 1 code = rate_usd_to_rub / rate_usd_to_code
-    
+
     const dates = [];
     const today = new Date();
-    
+
     // Если дней <= 7, берём каждую дату. Если больше — каждые 3 дня, чтобы не дёргать API 30 раз.
     const step = days <= 7 ? 1 : (days <= 30 ? 3 : 7);
-    
+
     for (let i = days; i >= 0; i -= step) {
         const d = new Date();
         d.setDate(d.getDate() - i);
         dates.push(d.toISOString().split("T")[0]);
     }
-    
+
     // Запрашиваем все даты параллельно (Promise.all)
-    const requests = dates.map(date => 
+    const requests = dates.map(date =>
         fetch(`${API_HISTORY}@${date}/v1/currencies/usd.json`)
             .then(r => r.json())
             .then(data => ({ date, data }))
             .catch(() => null)
     );
-    
+
     const results = await Promise.all(requests);
-    
+
     const points = [];
     const codeLower = code.toLowerCase();
-    
+
     for (const r of results) {
         if (!r || !r.data || !r.data.usd) continue;
-        
+
         const usd = r.data.usd;
         const rubPerUsd = usd.rub;
         const rateUsdToCode = usd[codeLower];
-        
+
         if (!rubPerUsd || !rateUsdToCode) continue;
-        
+
         // 1 code = rubPerUsd / rateUsdToCode ₽
         const rubValue = rubPerUsd / rateUsdToCode;
         points.push({ t: r.date, v: rubValue });
     }
-    
+
     console.log(`История ${code}: ${points.length} точек`);
     return points;
 }
@@ -581,7 +598,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Загрузка курсов
+    // Сначала мгновенно показываем последний успешный результат, затем обновляем его.
+    restoreCachedRates();
     loadRates();
     setInterval(loadRates, 5 * 60 * 1000);
 });
