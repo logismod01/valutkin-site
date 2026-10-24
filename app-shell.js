@@ -9,7 +9,8 @@
   const themes = [
     ["dark", "🌙", "Тёмная"], ["light", "☀️", "Светлая"],
     ["blue", "💙", "Океан"], ["cyberpunk", "🌈", "Киберпанк"],
-    ["forest", "🌲", "Лес"], ["sunset", "🌅", "Закат"], ["violet", "🔮", "Фиолетовая"]
+    ["forest", "🌲", "Лес"], ["sunset", "🌅", "Закат"], ["violet", "🔮", "Фиолетовая"],
+    ["aurora", "🌌", "Аврора"], ["coffee", "☕", "Кофе"], ["mono", "◼️", "Моно"], ["rose", "🌸", "Сакура"]
   ];
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
@@ -32,6 +33,7 @@
       <nav class="drawer-links">${links.map(([url, icon, text]) => `<a href="${url}"><span>${icon}</span>${text}</a>`).join("")}</nav>
       <div class="drawer-section"><div class="drawer-section-title">Темы <small>крутите колёсико</small></div>
       <div class="drawer-themes" tabindex="0">${themes.map(([id, icon, title]) => `<button data-shell-theme="${id}" title="${title}"><span>${icon}</span>${title}</button>`).join("")}</div></div>
+      <div class="drawer-section font-section"><div class="drawer-section-title">Шрифт</div><select id="shell-font"><option value="system">Системный</option><option value="rounded">Мягкий</option><option value="serif">Классический</option><option value="mono">Моноширинный</option></select></div>
       <a class="drawer-telegram" href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer">✈️ Открыть в Telegram</a></div>`;
     document.body.appendChild(aside);
     const handle = aside.querySelector(".drawer-handle");
@@ -41,6 +43,10 @@
     const scroller = aside.querySelector(".drawer-themes");
     scroller.addEventListener("wheel", e => { e.preventDefault(); scroller.scrollTop += e.deltaY; }, { passive: false });
     setTheme(localStorage.getItem("valutkin_theme") || "dark");
+    const font = localStorage.getItem("valutkin_font") || "system";
+    root.dataset.font = font;
+    const fontSelect = aside.querySelector("#shell-font"); fontSelect.value = font;
+    fontSelect.addEventListener("change", () => { root.dataset.font = fontSelect.value; localStorage.setItem("valutkin_font", fontSelect.value); });
 
     const right = document.querySelector(".header-right");
     if (right && !right.querySelector(".account-shortcut")) {

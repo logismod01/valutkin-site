@@ -27,6 +27,9 @@ const CURRENCIES = {
     "PKR": ["Пакистанская рупия", "🇵🇰", "asia"],
     "BDT": ["Бангладешская така", "🇧🇩", "asia"],
     "LKR": ["Шри-ланкийская рупия", "🇱🇰", "asia"],
+    "AFN": ["Афганский афгани", "🇦🇫", "asia"],
+    "AMD": ["Армянский драм", "🇦🇲", "asia"],
+    "AZN": ["Азербайджанский манат", "🇦🇿", "asia"],
     "CHF": ["Швейцарский франк", "🇨🇭", "europe"],
     "PLN": ["Польский злотый", "🇵🇱", "europe"],
     "SEK": ["Шведская крона", "🇸🇪", "europe"],
@@ -42,6 +45,10 @@ const CURRENCIES = {
     "ISK": ["Исландская крона", "🇮🇸", "europe"],
     "RSD": ["Сербский динар", "🇷🇸", "europe"],
     "GEL": ["Грузинский лари", "🇬🇪", "europe"],
+    "MDL": ["Молдавский лей", "🇲🇩", "europe"],
+    "ALL": ["Албанский лек", "🇦🇱", "europe"],
+    "MKD": ["Македонский денар", "🇲🇰", "europe"],
+    "BAM": ["Конвертируемая марка", "🇧🇦", "europe"],
     "CAD": ["Канадский доллар", "🇨🇦", "america"],
     "BRL": ["Бразильский реал", "🇧🇷", "america"],
     "MXN": ["Мексиканское песо", "🇲🇽", "america"],
@@ -53,6 +60,9 @@ const CURRENCIES = {
     "BOB": ["Боливийский боливиано", "🇧🇴", "america"],
     "CRC": ["Коста-риканский колон", "🇨🇷", "america"],
     "DOP": ["Доминиканское песо", "🇩🇴", "america"],
+    "JMD": ["Ямайский доллар", "🇯🇲", "america"],
+    "TTD": ["Доллар Тринидада", "🇹🇹", "america"],
+    "BBD": ["Барбадосский доллар", "🇧🇧", "america"],
     "AED": ["Дирхам ОАЭ", "🇦🇪", "mena"],
     "SAR": ["Саудовский риял", "🇸🇦", "mena"],
     "ILS": ["Израильский шекель", "🇮🇱", "mena"],
@@ -74,6 +84,14 @@ const CURRENCIES = {
     "TON": ["Toncoin", "💠", "crypto"],
     "USDT": ["Tether", "💵", "crypto"],
     "SOL": ["Solana", "🌞", "crypto"],
+    "BNB": ["BNB", "🟡", "crypto"],
+    "XRP": ["XRP", "✕", "crypto"],
+    "ADA": ["Cardano", "🔷", "crypto"],
+    "DOGE": ["Dogecoin", "🐕", "crypto"],
+    "TRX": ["TRON", "🔺", "crypto"],
+    "DOT": ["Polkadot", "⚪", "crypto"],
+    "AVAX": ["Avalanche", "🔻", "crypto"],
+    "LINK": ["Chainlink", "🔗", "crypto"],
     // ===== МЕТАЛЛЫ =====
     "XAU": ["Золото", "🥇", "metals"],
     "XAG": ["Серебро", "🥈", "metals"],
@@ -87,6 +105,8 @@ const CRYPTO_IDS = {
     "TON": "the-open-network",
     "USDT": "tether",
     "SOL": "solana",
+    "BNB": "binancecoin", "XRP": "ripple", "ADA": "cardano", "DOGE": "dogecoin",
+    "TRX": "tron", "DOT": "polkadot", "AVAX": "avalanche-2", "LINK": "chainlink",
 };
 
 // Валюта для fawazahmed0 — строчными буквами
@@ -133,7 +153,7 @@ function restoreCachedRates() {
 async function loadRates() {
     const requests = await Promise.allSettled([
         fetchJson(API_FIAT_URL),
-        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana&vs_currencies=usd,rub"),
+        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink&vs_currencies=usd,rub"),
         fetchJson("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
     ]);
     const [fiatResult, cryptoResult, metalsResult] = requests;
@@ -198,7 +218,9 @@ function renderCurrencies() {
 
     let codes = Object.keys(CURRENCIES).filter(code => {
         const [name, flag, category] = CURRENCIES[code];
-        if (cat !== "all" && category !== cat) return false;
+        const favorites = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]");
+        if (cat === "favorites" && !favorites.includes(code)) return false;
+        if (cat !== "all" && cat !== "favorites" && category !== cat) return false;
         if (q) {
             const searchable = (code + " " + name).toLowerCase();
             if (!searchable.includes(q)) return false;
@@ -213,6 +235,17 @@ function renderCurrencies() {
 
     grid.innerHTML = codes.map(code => renderCard(code)).join("");
 
+    document.querySelectorAll(".favorite-btn").forEach(button => {
+        button.addEventListener("click", event => {
+            event.stopPropagation();
+            const list = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]");
+            const code = button.dataset.favorite;
+            const index = list.indexOf(code);
+            index >= 0 ? list.splice(index, 1) : list.push(code);
+            localStorage.setItem("valutkin_favorite_currencies", JSON.stringify(list));
+            renderCurrencies();
+        });
+    });
     document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", () => {
             const code = card.dataset.code;
@@ -224,10 +257,13 @@ function renderCurrencies() {
 function renderCard(code) {
     const [name, flag] = CURRENCIES[code];
     const rubValue = getRubValue(code);
+    const isFavorite = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]").includes(code);
+    const favoriteButton = `<button class="favorite-btn ${isFavorite ? "active" : ""}" data-favorite="${code}" title="${isFavorite ? "Убрать из избранного" : "В избранное"}">★</button>`;
 
     if (rubValue === null) {
         return `
             <div class="card" data-code="${code}">
+                ${favoriteButton}
                 <div class="card-header">
                     <span class="card-flag">${flag}</span>
                     <span class="card-code">${code}</span>
@@ -252,6 +288,7 @@ function renderCard(code) {
 
     return `
         <div class="card" data-code="${code}">
+            ${favoriteButton}
             <div class="card-header">
                 <span class="card-flag">${flag}</span>
                 <span class="card-code">${code}</span>

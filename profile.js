@@ -1,6 +1,6 @@
 const PROFILE_KEY = "valutkin_profile_data";
 const DEFAULT_DATA = { assets: [], favorites: ["USD", "EUR", "CNY"], notifications: [] };
-const cryptoMeta = { BTC:["Bitcoin","₿","bitcoin"],ETH:["Ethereum","◆","ethereum"],TON:["Toncoin","💎","the-open-network"],SOL:["Solana","◎","solana"],USDT:["Tether","₮","tether"] };
+const cryptoMeta = { BTC:["Bitcoin","₿","bitcoin"],ETH:["Ethereum","◆","ethereum"],TON:["Toncoin","💎","the-open-network"],SOL:["Solana","◎","solana"],USDT:["Tether","₮","tether"],BNB:["BNB","🟡","binancecoin"],XRP:["XRP","✕","ripple"],ADA:["Cardano","🔷","cardano"],DOGE:["Dogecoin","🐕","dogecoin"],TRX:["TRON","🔺","tron"],DOT:["Polkadot","⚪","polkadot"],AVAX:["Avalanche","🔻","avalanche-2"],LINK:["Chainlink","🔗","chainlink"] };
 const fiatMeta = {USD:["Доллар США","🇺🇸"],EUR:["Евро","🇪🇺"],CNY:["Юань","🇨🇳"],GBP:["Фунт","🇬🇧"],JPY:["Иена","🇯🇵"],KZT:["Тенге","🇰🇿"],AED:["Дирхам","🇦🇪"],TRY:["Лира","🇹🇷"],GEL:["Лари","🇬🇪"]};
 let data; try { data = {...DEFAULT_DATA, ...JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}")}; } catch { data = structuredClone(DEFAULT_DATA); }
 let market = { crypto:{}, rates:{} };
@@ -43,4 +43,16 @@ function renderFavorites(){
 function renderNotifications(){$("notification-count").textContent=data.notifications.length;$("notifications-list").innerHTML=data.notifications.map(n=>`<div class="notification"><span>${n.kind==="up"?"📈":n.kind==="down"?"📉":"🔔"}</span><div>${n.text}<time>${new Date(n.time).toLocaleString("ru-RU")}</time></div></div>`).join("")||'<div class="empty-state">Новых уведомлений пока нет</div>';}
 $("add-asset").onclick=()=>$("asset-form").classList.toggle("hidden");$("save-asset").onclick=()=>{const code=$("asset-code").value,amount=+$('asset-amount').value;if(!(amount>0))return;const existing=data.assets.find(x=>x.code===code);existing?existing.amount=amount:data.assets.push({code,amount});notify(`В портфель добавлено ${amount} ${code}`);save();$("asset-form").classList.add("hidden");render();};
 $("choose-currencies").onclick=()=>$("currency-picker").classList.toggle("hidden");$("clear-notifications").onclick=()=>{data.notifications=[];save();renderNotifications();};
+const avatars = ["🦊","🐻","🐼","🐯","🦁","🐸","🐧","🦄","🐺","🐱","🐶","🐵"];
+const avatarPicker = $("avatar-picker");
+$("avatar-button").textContent = localStorage.getItem("valutkin_avatar") || "🦊";
+avatarPicker.querySelector("div").innerHTML = avatars.map(a => `<span data-avatar="${a}">${a}</span>`).join("");
+$("avatar-button").onclick = () => avatarPicker.classList.toggle("hidden");
+avatarPicker.querySelectorAll("[data-avatar]").forEach(x => x.onclick = () => { localStorage.setItem("valutkin_avatar", x.dataset.avatar); $("avatar-button").textContent=x.dataset.avatar; avatarPicker.classList.add("hidden"); });
+let financesHidden = localStorage.getItem("valutkin_hide_finances") === "true";
+let identityHidden = localStorage.getItem("valutkin_hide_identity") === "true";
+function applyPrivacy(){ document.body.classList.toggle("finances-hidden",financesHidden);document.body.classList.toggle("identity-hidden",identityHidden);$("privacy-toggle").textContent=financesHidden?"👁️ Показать финансы":"🙈 Скрыть финансы";$("identity-toggle").textContent=identityHidden?"👁️ Показать аккаунт":"🕶️ Скрыть аккаунт"; }
+$("privacy-toggle").onclick=()=>{financesHidden=!financesHidden;localStorage.setItem("valutkin_hide_finances",financesHidden);applyPrivacy();};
+$("identity-toggle").onclick=()=>{identityHidden=!identityHidden;localStorage.setItem("valutkin_hide_identity",identityHidden);applyPrivacy();};
+applyPrivacy();
 userInfo();render();loadMarket();
