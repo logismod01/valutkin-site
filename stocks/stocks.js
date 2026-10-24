@@ -379,6 +379,7 @@ function openStockModal(symbol) {
     if (!stock) return;
     currentStock = stock;
     currentDays = 7;
+    document.getElementById("company-details-link").href = `../company.html?symbol=${encodeURIComponent(stock.symbol)}&name=${encodeURIComponent(stock.name)}&icon=${encodeURIComponent(stock.flag)}`;
 
     document.getElementById("sm-flag").textContent = stock.flag;
     document.getElementById("sm-symbol").textContent = stock.symbol;
@@ -409,58 +410,68 @@ function closeStockModal() {
     document.getElementById("stock-modal").classList.remove("active");
     document.body.style.overflow = "";
     currentStock = null;
+    stockChartRequestId++;
     if (stockChart) {
         stockChart.destroy();
         stockChart = null;
     }
 }
 
-async function loadStockChart(symbol, days) {
-    const loading = document.getElementById("chart-loading");
-    const canvas = document.getElementById("stock-chart");
+let stockChartRequestId = 0;
+const STOCK_CHART_CACHE_MS = 6 * 60 * 60 * 1000;
 
-    loading.style.display = "block";
-    loading.textContent = "Загрузка графика...";
-    canvas.style.opacity = "0.3";
-
-    try {
-        const range = days <= 7 ? "5d" : (days <= 30 ? "1mo" : (days <= 90 ? "3mo" : "1y"));
-        const interval = days <= 7 ? "1h" : (days <= 90 ? "1d" : "1wk");
-
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=${range}&interval=${interval}`;
-        const resp = await fetch(url).then(r => r.json());
-
-        const result = resp.chart.result[0];
-        const timestamps = result.timestamp;
-        const prices = result.indicators.quote[0].close;
-
-        const points = [];
-        for (let i = 0; i < timestamps.length; i++) {
-            if (prices[i] !== null) {
-                points.push({
-                    t: new Date(timestamps[i] * 1000).toLocaleDateString("ru-RU"),
-                    v: prices[i],
-                });
-            }
-        }
-
-        loading.style.display = "none";
-        canvas.style.opacity = "1";
-
-        renderStockChart(points, symbol);
-    } catch (e) {
-        console.error("Ошибка графика:", e);
-        loading.textContent = "❌ Не удалось загрузить график";
-    }
+function chartCacheKey(symbol, days) { return `valutkin_stock_chart_${symbol}_${days}`; }
+function readChartCache(symbol, days, allowExpired=false) {
+    try { const item=JSON.parse(localStorage.getItem(chartCacheKey(symbol,days))); return item&&(allowExpired||Date.now()-item.time<STOCK_CHART_CACHE_MS)?item:null; } catch { return null; }
 }
+function saveChartCache(symbol, days, points, source) {
+    try { localStorage.setItem(chartCacheKey(symbol,days),JSON.stringify({time:Date.now(),points,source})); } catch (_) {}
+}
+async function fetchFinnhubHistory(symbol, days) {
+    const to=Math.floor(Date.now()/1000),from=to-days*86400;
+    const resolution=days<=7?"60":days<=90?"D":"W";
+    const url=`https://finnhub.io/api/v1/stock/candle?symbol=${encodeURIComponent(symbol)}&resolution=${resolution}&from=${from}&to=${to}&token=${FINNHUB_KEY}`;
+    const r=await fetch(url); if(!r.ok)throw new Error(`Finnhub ${r.status}`); const x=await r.json();
+    if(x.s!=="ok"||!Array.isArray(x.c))throw new Error("Finnhub no_data");
+    return x.c.map((v,i)=>({t:x.t[i]*1000,v})).filter(p=>Number.isFinite(p.v));
+}
+async function fetchYahooHistory(symbol, days) {
+    const yahooSymbol=symbol.replace(".","-");
+    const range=days<=7?"5d":days<=30?"1mo":days<=90?"3mo":"1y";
+    const interval=days<=7?"1h":days<=90?"1d":"1wk";
+    const r=await fetch(`https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahooSymbol)}?range=${range}&interval=${interval}`);
+    if(!r.ok)throw new Error(`Yahoo ${r.status}`);const x=await r.json(),result=x.chart?.result?.[0];if(!result)throw new Error("Yahoo no_data");
+    return result.timestamp.map((t,i)=>({t:t*1000,v:result.indicators.quote[0].close[i]})).filter(p=>Number.isFinite(p.v));
+}
+async function fetchStooqHistory(symbol, days) {
+    const end=new Date(),start=new Date(Date.now()-days*86400000); const date=d=>d.toISOString().slice(0,10).replaceAll("-","");
+    const stooqSymbol=symbol.toLowerCase().replace(".","-")+".us";
+    const r=await fetch(`https://stooq.com/q/d/l/?s=${encodeURIComponent(stooqSymbol)}&d1=${date(start)}&d2=${date(end)}&i=d`);
+    if(!r.ok)throw new Error(`Stooq ${r.status}`);const text=await r.text();
+    return text.trim().split(/\r?\n/).slice(1).map(row=>{const c=row.split(",");return{t:new Date(c[0]+"T12:00:00Z").getTime(),v:Number(c[4])}}).filter(p=>Number.isFinite(p.t)&&Number.isFinite(p.v));
+}
+async function loadStockChart(symbol, days, force=false) {
+    const requestId=++stockChartRequestId,loading=document.getElementById("chart-loading"),canvas=document.getElementById("stock-chart"),meta=document.getElementById("stock-chart-meta");
+    loading.classList.remove("error");loading.style.display="grid";loading.textContent="Загрузка графика…";canvas.style.opacity="0.25";meta.innerHTML="";
+    if(!force){const cached=readChartCache(symbol,days);if(cached?.points?.length>1){renderStockChart(cached.points,symbol);showStockChartMeta(cached.points,`${cached.source} • из кэша`);loading.style.display="none";canvas.style.opacity="1";return;}}
+    const providers=[["Finnhub",fetchFinnhubHistory],["Yahoo Finance",fetchYahooHistory],["Stooq",fetchStooqHistory]];let lastError;
+    for(const [name,provider] of providers){
+      try{const points=await provider(symbol,days);if(requestId!==stockChartRequestId||currentStock?.symbol!==symbol)return;if(points.length<2)throw new Error("Мало данных");saveChartCache(symbol,days,points,name);renderStockChart(points,symbol);showStockChartMeta(points,name);loading.style.display="none";canvas.style.opacity="1";return;}catch(e){lastError=e;console.warn(`${name}:`,e.message);}
+    }
+    if(requestId!==stockChartRequestId)return;const stale=readChartCache(symbol,days,true);
+    if(stale?.points?.length>1){renderStockChart(stale.points,symbol);showStockChartMeta(stale.points,`${stale.source} • сохранённые данные`);loading.style.display="none";canvas.style.opacity="1";return;}
+    loading.classList.add("error");loading.innerHTML=`<div><b>График временно недоступен</b><span>Источники котировок не ответили</span><button type="button" id="retry-stock-chart">Повторить</button></div>`;document.getElementById("retry-stock-chart").onclick=()=>loadStockChart(symbol,days,true);console.error("Все источники графика недоступны",lastError);
+}
+function showStockChartMeta(points,source){const values=points.map(p=>p.v),first=values[0],last=values.at(-1),change=(last/first-1)*100;document.getElementById("stock-chart-meta").innerHTML=`<span>Мин. <b>$${Math.min(...values).toFixed(2)}</b></span><span>Макс. <b>$${Math.max(...values).toFixed(2)}</b></span><span>Период <b class="${change>=0?"up":"down"}">${change>=0?"+":""}${change.toFixed(2)}%</b></span><small>${source}</small>`;}
 
 function renderStockChart(points, symbol) {
+    if (typeof Chart === "undefined") throw new Error("Chart.js не загрузился");
     const canvas = document.getElementById("stock-chart");
     const ctx = canvas.getContext("2d");
 
     if (stockChart) stockChart.destroy();
 
-    const labels = points.map(p => p.t);
+    const labels = points.map(p => new Date(p.t).toLocaleDateString("ru-RU", { day:"2-digit", month:"short", year: currentDays >= 365 ? "2-digit" : undefined }));
     const values = points.map(p => p.v);
 
     const isUp = values[values.length - 1] >= values[0];
