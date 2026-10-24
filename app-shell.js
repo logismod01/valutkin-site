@@ -14,7 +14,7 @@
   ];
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
-    [`${base}stocks/`, "📈", "Акции"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", session ? "Мой профиль" : "Войти"],
+    [`${base}stocks/`, "📈", "Акции"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", session ? "Мой профиль" : "Войти"],
     [`${base}profile.html`, "🔔", "Портфель и уведомления"]
   ];
 
