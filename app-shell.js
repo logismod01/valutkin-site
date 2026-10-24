@@ -55,6 +55,11 @@
       account.innerHTML = `<span>👤</span><b>${session ? "Профиль" : "Войти"}</b>`;
       right.appendChild(account);
     }
+    if (window.getSupabase) getSupabase().auth.getSession().then(({data}) => {
+      if (!data.session) return;
+      aside.querySelectorAll(`a[href$="auth.html"]`).forEach(a => { a.href=`${base}profile.html`; a.innerHTML="<span>👤</span>Мой профиль"; });
+      const shortcut=document.querySelector(".account-shortcut"); if(shortcut){shortcut.href=`${base}profile.html`;shortcut.innerHTML="<span>👤</span><b>Профиль</b>";}
+    }).catch(()=>{});
   }
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", mount) : mount();
 })();
