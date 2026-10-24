@@ -162,3 +162,11 @@
     font-size: 14px;
     margin-top: 30px;
 }
+
+/* Theme-aware exchange page */
+.page-title{color:var(--text-color);font-size:clamp(27px,4vw,38px)}.page-subtitle{color:var(--text-muted)}
+.currency-selector,.map-block{background:var(--card-bg);border:1px solid var(--card-border)}
+.curr-btn{background:var(--input-bg);border:1px solid var(--card-border);color:var(--text-color)}.curr-btn:hover{border-color:var(--accent);transform:translateY(-2px)}.curr-btn.active{background:linear-gradient(105deg,var(--accent-2),var(--accent));border-color:transparent;color:#fff}
+.exchange-header{background:linear-gradient(120deg,var(--accent-2),var(--accent));box-shadow:0 14px 35px color-mix(in srgb,var(--accent) 18%,transparent)}.service-group h3,.map-block h3{color:var(--accent);border-color:var(--card-border)}
+.service-card{background:var(--card-bg);border:1px solid var(--card-border);color:var(--text-color);box-shadow:0 10px 25px rgba(0,0,0,.08)}.service-card:hover{border-color:var(--accent);box-shadow:0 16px 35px rgba(0,0,0,.14)}.service-name{color:var(--text-color)}.service-desc{color:var(--text-muted)}
+.map-btn{background:linear-gradient(105deg,var(--accent-2),var(--accent))}.disclaimer{background:rgba(255,184,0,.1);border-color:#ffc107;color:var(--text-muted)}

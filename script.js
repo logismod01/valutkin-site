@@ -21,6 +21,15 @@ const CURRENCIES = {
     "IDR": ["Индонезийская рупия", "🇮🇩", "asia"],
     "PHP": ["Филиппинское песо", "🇵🇭", "asia"],
     "MYR": ["Малайзийский ринггит", "🇲🇾", "asia"],
+    "HKD": ["Гонконгский доллар", "🇭🇰", "asia"],
+    "TWD": ["Новый тайваньский доллар", "🇹🇼", "asia"],
+    "MNT": ["Монгольский тугрик", "🇲🇳", "asia"],
+    "PKR": ["Пакистанская рупия", "🇵🇰", "asia"],
+    "BDT": ["Бангладешская така", "🇧🇩", "asia"],
+    "LKR": ["Шри-ланкийская рупия", "🇱🇰", "asia"],
+    "AFN": ["Афганский афгани", "🇦🇫", "asia"],
+    "AMD": ["Армянский драм", "🇦🇲", "asia"],
+    "AZN": ["Азербайджанский манат", "🇦🇿", "asia"],
     "CHF": ["Швейцарский франк", "🇨🇭", "europe"],
     "PLN": ["Польский злотый", "🇵🇱", "europe"],
     "SEK": ["Шведская крона", "🇸🇪", "europe"],
@@ -32,6 +41,14 @@ const CURRENCIES = {
     "TRY": ["Турецкая лира", "🇹🇷", "europe"],
     "UAH": ["Украинская гривна", "🇺🇦", "europe"],
     "BYN": ["Белорусский рубль", "🇧🇾", "europe"],
+    "DKK": ["Датская крона", "🇩🇰", "europe"],
+    "ISK": ["Исландская крона", "🇮🇸", "europe"],
+    "RSD": ["Сербский динар", "🇷🇸", "europe"],
+    "GEL": ["Грузинский лари", "🇬🇪", "europe"],
+    "MDL": ["Молдавский лей", "🇲🇩", "europe"],
+    "ALL": ["Албанский лек", "🇦🇱", "europe"],
+    "MKD": ["Македонский денар", "🇲🇰", "europe"],
+    "BAM": ["Конвертируемая марка", "🇧🇦", "europe"],
     "CAD": ["Канадский доллар", "🇨🇦", "america"],
     "BRL": ["Бразильский реал", "🇧🇷", "america"],
     "MXN": ["Мексиканское песо", "🇲🇽", "america"],
@@ -39,6 +56,13 @@ const CURRENCIES = {
     "CLP": ["Чилийское песо", "🇨🇱", "america"],
     "COP": ["Колумбийское песо", "🇨🇴", "america"],
     "PEN": ["Перуанский соль", "🇵🇪", "america"],
+    "UYU": ["Уругвайское песо", "🇺🇾", "america"],
+    "BOB": ["Боливийский боливиано", "🇧🇴", "america"],
+    "CRC": ["Коста-риканский колон", "🇨🇷", "america"],
+    "DOP": ["Доминиканское песо", "🇩🇴", "america"],
+    "JMD": ["Ямайский доллар", "🇯🇲", "america"],
+    "TTD": ["Доллар Тринидада", "🇹🇹", "america"],
+    "BBD": ["Барбадосский доллар", "🇧🇧", "america"],
     "AED": ["Дирхам ОАЭ", "🇦🇪", "mena"],
     "SAR": ["Саудовский риял", "🇸🇦", "mena"],
     "ILS": ["Израильский шекель", "🇮🇱", "mena"],
@@ -46,13 +70,28 @@ const CURRENCIES = {
     "ZAR": ["Южноафриканский рэнд", "🇿🇦", "mena"],
     "NGN": ["Нигерийская найра", "🇳🇬", "mena"],
     "KES": ["Кенийский шиллинг", "🇰🇪", "mena"],
+    "QAR": ["Катарский риал", "🇶🇦", "mena"],
+    "KWD": ["Кувейтский динар", "🇰🇼", "mena"],
+    "BHD": ["Бахрейнский динар", "🇧🇭", "mena"],
+    "OMR": ["Оманский риал", "🇴🇲", "mena"],
+    "MAD": ["Марокканский дирхам", "🇲🇦", "mena"],
+    "GHS": ["Ганский седи", "🇬🇭", "mena"],
     "AUD": ["Австралийский доллар", "🇦🇺", "oceania"],
     "NZD": ["Новозеландский доллар", "🇳🇿", "oceania"],
+    "FJD": ["Доллар Фиджи", "🇫🇯", "oceania"],
     "BTC": ["Bitcoin", "🪙", "crypto"],
     "ETH": ["Ethereum", "💎", "crypto"],
     "TON": ["Toncoin", "💠", "crypto"],
     "USDT": ["Tether", "💵", "crypto"],
     "SOL": ["Solana", "🌞", "crypto"],
+    "BNB": ["BNB", "🟡", "crypto"],
+    "XRP": ["XRP", "✕", "crypto"],
+    "ADA": ["Cardano", "🔷", "crypto"],
+    "DOGE": ["Dogecoin", "🐕", "crypto"],
+    "TRX": ["TRON", "🔺", "crypto"],
+    "DOT": ["Polkadot", "⚪", "crypto"],
+    "AVAX": ["Avalanche", "🔻", "crypto"],
+    "LINK": ["Chainlink", "🔗", "crypto"],
     // ===== МЕТАЛЛЫ =====
     "XAU": ["Золото", "🥇", "metals"],
     "XAG": ["Серебро", "🥈", "metals"],
@@ -66,6 +105,8 @@ const CRYPTO_IDS = {
     "TON": "the-open-network",
     "USDT": "tether",
     "SOL": "solana",
+    "BNB": "binancecoin", "XRP": "ripple", "ADA": "cardano", "DOGE": "dogecoin",
+    "TRX": "tron", "DOT": "polkadot", "AVAX": "avalanche-2", "LINK": "chainlink",
 };
 
 // Валюта для fawazahmed0 — строчными буквами
@@ -82,47 +123,69 @@ let state = {
     currentModal: null,
     currentPeriod: 1,
     chart: null,
+    chartRequestId: 0,
 };
 
 // ============================================
 // ЗАГРУЗКА КУРСОВ
 // ============================================
-async function loadRates() {
+const RATES_CACHE_KEY = "valutkin_rates_v2";
+const fetchJson = (url, timeout = 8000) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    return fetch(url, { signal: controller.signal })
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+        .finally(() => clearTimeout(timer));
+};
+
+function restoreCachedRates() {
     try {
-        const [fiatResp, cryptoResp, metalsResp] = await Promise.all([
-            fetch(API_FIAT_URL).then(r => r.json()),
-            fetch(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana&vs_currencies=usd,rub")
-                .then(r => r.json())
-                .catch(() => null),
-            fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
-                .then(r => r.json())
-                .catch(() => null),
-        ]);
-
-        if (fiatResp.result === "success") {
-            state.rates = fiatResp.rates;
-            state.updatedAt = new Date();
-        }
-        if (cryptoResp) {
-            state.crypto = cryptoResp;
-        }
-        if (metalsResp && metalsResp.usd) {
-            const usd = metalsResp.usd;
-            ["XAU", "XAG", "XPT", "XPD"].forEach(code => {
-                const lower = code.toLowerCase();
-                if (usd[lower]) {
-                    state.rates[code] = usd[lower];
-                }
-            });
-        }
-
-        console.log("Курсы загружены:", state);
+        const cached = JSON.parse(localStorage.getItem(RATES_CACHE_KEY));
+        if (!cached || !cached.rates) return false;
+        state.rates = cached.rates;
+        state.crypto = cached.crypto || {};
+        state.updatedAt = new Date(cached.updatedAt);
         renderCurrencies();
         populateConverterSelect();
-    } catch (e) {
-        console.error("Ошибка загрузки:", e);
+        return true;
+    } catch (_) { return false; }
+}
+
+async function loadRates() {
+    const requests = await Promise.allSettled([
+        fetchJson(API_FIAT_URL),
+        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink&vs_currencies=usd,rub"),
+        fetchJson("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
+    ]);
+    const [fiatResult, cryptoResult, metalsResult] = requests;
+    let changed = false;
+
+    if (fiatResult.status === "fulfilled" && fiatResult.value.result === "success") {
+        state.rates = fiatResult.value.rates;
+        state.updatedAt = new Date();
+        changed = true;
+    }
+    if (cryptoResult.status === "fulfilled") {
+        state.crypto = cryptoResult.value;
+        changed = true;
+    }
+    if (metalsResult.status === "fulfilled" && metalsResult.value.usd) {
+        ["XAU", "XAG", "XPT", "XPD"].forEach(code => {
+            const rate = metalsResult.value.usd[code.toLowerCase()];
+            if (rate) state.rates[code] = rate;
+        });
+        changed = true;
+    }
+
+    if (changed && Object.keys(state.rates).length) {
+        localStorage.setItem(RATES_CACHE_KEY, JSON.stringify({
+            rates: state.rates, crypto: state.crypto, updatedAt: state.updatedAt || new Date()
+        }));
+        renderCurrencies();
+        populateConverterSelect();
+    } else if (!Object.keys(state.rates).length) {
         document.getElementById("currencies-grid").innerHTML =
-            '<div class="loading">⚠️ Не удалось загрузить курсы. Обнови страницу.</div>';
+            '<div class="loading">⚠️ Сервис курсов временно недоступен. Попробуйте ещё раз позже.</div>';
     }
 }
 
@@ -156,7 +219,9 @@ function renderCurrencies() {
 
     let codes = Object.keys(CURRENCIES).filter(code => {
         const [name, flag, category] = CURRENCIES[code];
-        if (cat !== "all" && category !== cat) return false;
+        const favorites = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]");
+        if (cat === "favorites" && !favorites.includes(code)) return false;
+        if (cat !== "all" && cat !== "favorites" && category !== cat) return false;
         if (q) {
             const searchable = (code + " " + name).toLowerCase();
             if (!searchable.includes(q)) return false;
@@ -171,6 +236,17 @@ function renderCurrencies() {
 
     grid.innerHTML = codes.map(code => renderCard(code)).join("");
 
+    document.querySelectorAll(".favorite-btn").forEach(button => {
+        button.addEventListener("click", event => {
+            event.stopPropagation();
+            const list = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]");
+            const code = button.dataset.favorite;
+            const index = list.indexOf(code);
+            index >= 0 ? list.splice(index, 1) : list.push(code);
+            localStorage.setItem("valutkin_favorite_currencies", JSON.stringify(list));
+            renderCurrencies();
+        });
+    });
     document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", () => {
             const code = card.dataset.code;
@@ -182,10 +258,13 @@ function renderCurrencies() {
 function renderCard(code) {
     const [name, flag] = CURRENCIES[code];
     const rubValue = getRubValue(code);
+    const isFavorite = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]").includes(code);
+    const favoriteButton = `<button class="favorite-btn ${isFavorite ? "active" : ""}" data-favorite="${code}" title="${isFavorite ? "Убрать из избранного" : "В избранное"}">★</button>`;
 
     if (rubValue === null) {
         return `
             <div class="card" data-code="${code}">
+                ${favoriteButton}
                 <div class="card-header">
                     <span class="card-flag">${flag}</span>
                     <span class="card-code">${code}</span>
@@ -207,12 +286,10 @@ function renderCard(code) {
         unitText = "за 1 ₽";
     }
 
-    const change = ((Math.random() * 2 - 1) * 1.5).toFixed(2);
-    const changeClass = change >= 0 ? "up" : "down";
-    const changeText = change >= 0 ? `📈 +${change}%` : `📉 ${change}%`;
 
     return `
         <div class="card" data-code="${code}">
+            ${favoriteButton}
             <div class="card-header">
                 <span class="card-flag">${flag}</span>
                 <span class="card-code">${code}</span>
@@ -220,7 +297,6 @@ function renderCard(code) {
             </div>
             <div class="card-price">${priceText}</div>
             <div class="card-price-unit">${unitText}</div>
-            <div class="card-change ${changeClass}">${changeText}</div>
             <div class="card-footer">
                 🕐 ${state.updatedAt ? state.updatedAt.toLocaleTimeString("ru-RU") : "—"}
             </div>
@@ -317,6 +393,7 @@ function closeModal() {
     document.getElementById("modal").classList.remove("active");
     document.body.style.overflow = "";
     state.currentModal = null;
+    state.chartRequestId++;
     if (state.chart) {
         state.chart.destroy();
         state.chart = null;
@@ -327,6 +404,7 @@ function closeModal() {
 // ГРАФИК
 // ============================================
 async function loadChart(code, days) {
+    const requestId = ++state.chartRequestId;
     const loading = document.getElementById("modal-chart-loading");
     const error = document.getElementById("modal-chart-error");
     const canvas = document.getElementById("modal-chart");
@@ -346,9 +424,8 @@ async function loadChart(code, days) {
             history = await loadFiatHistory(code, days);
         }
 
-        if (!history || history.length === 0) {
-            throw new Error("no_data");
-        }
+        if (!history || history.length < 2) throw new Error("no_data");
+        if (requestId !== state.chartRequestId || state.currentModal !== code) return;
 
         loading.style.display = "none";
         canvas.style.opacity = "1";
@@ -356,6 +433,7 @@ async function loadChart(code, days) {
         renderChart(history, code, days);
         updateChangeText(history);
     } catch (e) {
+        if (requestId !== state.chartRequestId) return;
         console.error("Ошибка графика:", e);
         loading.style.display = "none";
         error.style.display = "block";
@@ -367,49 +445,50 @@ async function loadFiatHistory(code, days) {
     // fawazahmed0: запрашиваем historical данные на каждую дату
     // Формат: https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@YYYY-MM-DD/v1/currencies/usd.json
     // Возвращает: { "usd": { "rub": 84.19, "eur": 0.86, ... } }
-    
+
     // Нам нужен курс code → RUB. Но fawazahmed0 отдает USD → code.
     // Значит: RUB за 1 code = rate_usd_to_rub / rate_usd_to_code
-    
+
     const dates = [];
     const today = new Date();
-    
+
     // Если дней <= 7, берём каждую дату. Если больше — каждые 3 дня, чтобы не дёргать API 30 раз.
-    const step = days <= 7 ? 1 : (days <= 30 ? 3 : 7);
-    
+    const step = days <= 7 ? 1 : (days <= 30 ? 3 : (days <= 90 ? 7 : 30));
+
     for (let i = days; i >= 0; i -= step) {
         const d = new Date();
-        d.setDate(d.getDate() - i);
+        d.setDate(d.getDate() - i - 1);
         dates.push(d.toISOString().split("T")[0]);
     }
-    
+
     // Запрашиваем все даты параллельно (Promise.all)
-    const requests = dates.map(date => 
+    const requests = dates.map(date =>
         fetch(`${API_HISTORY}@${date}/v1/currencies/usd.json`)
-            .then(r => r.json())
+            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
             .then(data => ({ date, data }))
             .catch(() => null)
     );
-    
+
     const results = await Promise.all(requests);
-    
+
     const points = [];
     const codeLower = code.toLowerCase();
-    
+
     for (const r of results) {
         if (!r || !r.data || !r.data.usd) continue;
-        
+
         const usd = r.data.usd;
         const rubPerUsd = usd.rub;
         const rateUsdToCode = usd[codeLower];
-        
+
         if (!rubPerUsd || !rateUsdToCode) continue;
-        
+
         // 1 code = rubPerUsd / rateUsdToCode ₽
-        const rubValue = rubPerUsd / rateUsdToCode;
+        let rubValue = rubPerUsd / rateUsdToCode;
+        if (METALS.includes(code)) rubValue /= OUNCE_IN_GRAMS;
         points.push({ t: r.date, v: rubValue });
     }
-    
+
     console.log(`История ${code}: ${points.length} точек`);
     return points;
 }
@@ -441,7 +520,12 @@ function updateChangeText(history) {
     el.className = "modal-change " + (change >= 0 ? "up" : "down");
 }
 
+function formatChartPrice(value) {
+    return new Intl.NumberFormat("ru-RU", { maximumFractionDigits: value < 1 ? 4 : 2 }).format(value);
+}
+
 function renderChart(history, code, days) {
+    if (typeof Chart === "undefined") throw new Error("chart_library_unavailable");
     const canvas = document.getElementById("modal-chart");
     const ctx = canvas.getContext("2d");
 
@@ -449,11 +533,15 @@ function renderChart(history, code, days) {
         state.chart.destroy();
     }
 
-    const labels = history.map(p => p.t);
+    const labels = history.map(p => new Date(p.t).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: days > 90 ? "2-digit" : undefined }));
     const values = history.map(p => p.v);
+    const min = Math.min(...values), max = Math.max(...values), average = values.reduce((a,b) => a+b,0)/values.length;
+    document.getElementById("modal-chart-stats").innerHTML = `<span>Минимум <b>${formatChartPrice(min)} ₽</b></span><span>Среднее <b>${formatChartPrice(average)} ₽</b></span><span>Максимум <b>${formatChartPrice(max)} ₽</b></span>`;
 
+    const styles = getComputedStyle(document.documentElement);
+    const accent = styles.getPropertyValue("--accent").trim() || "#00d4ff";
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, "rgba(0, 212, 255, 0.4)");
+    gradient.addColorStop(0, `${accent}66`);
     gradient.addColorStop(1, "rgba(0, 212, 255, 0.0)");
 
     state.chart = new Chart(ctx, {
@@ -463,7 +551,7 @@ function renderChart(history, code, days) {
             datasets: [{
                 label: code,
                 data: values,
-                borderColor: "#00d4ff",
+                borderColor: accent,
                 backgroundColor: gradient,
                 borderWidth: 2,
                 fill: true,
@@ -481,14 +569,14 @@ function renderChart(history, code, days) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: "rgba(10, 10, 26, 0.95)",
-                    borderColor: "#00d4ff",
+                    borderColor: accent,
                     borderWidth: 1,
                     titleColor: "#00d4ff",
                     bodyColor: "#e0e0ff",
                     padding: 10,
                     callbacks: {
                         label: function(context) {
-                            return context.parsed.y.toFixed(4);
+                            return formatChartPrice(context.parsed.y) + " ₽";
                         }
                     }
                 }
@@ -500,7 +588,7 @@ function renderChart(history, code, days) {
                 },
                 y: {
                     grid: { color: "rgba(0, 212, 255, 0.05)" },
-                    ticks: { color: "#8888aa" }
+                    ticks: { color: "#8888aa", callback: value => formatChartPrice(value) + " ₽" }
                 }
             }
         }
@@ -581,7 +669,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Загрузка курсов
+    // Сначала мгновенно показываем последний успешный результат, затем обновляем его.
+    restoreCachedRates();
     loadRates();
     setInterval(loadRates, 5 * 60 * 1000);
 });

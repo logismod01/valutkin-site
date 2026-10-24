@@ -4,29 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Валюткин — курсы валют онлайн</title>
+    <script>document.documentElement.dataset.theme = localStorage.getItem("valutkin_theme") || "dark";</script>
     <meta name="description" content="Курсы валют и криптовалют в реальном времени. 100+ валют мира. Telegram-бот Валюткин.">
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0a0a1a">    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <meta name="theme-color" content="#0a0a1a">
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="shell.css">
 </head>
 <body>
 
-    <!-- ШАПКА --> 
+    <!-- ШАПКА -->
 <header class="header">
     <div class="header-left">
-        <img src="/valutkin-site/assets/logo.png" alt="Валюткин" class="header-logo">
+        <img src="assets/logo.png" alt="Валюткин" class="header-logo">
         <span class="header-title">Валюткин</span>
     </div>
     <nav class="header-nav">
-        <a href="/valutkin-site/index.html" class="nav-btn active">🏠 Главная</a>
-        <a href="/valutkin-site/exchange/" class="nav-btn">💱 Где купить</a>
-        <a href="/valutkin-site/stocks/" class="nav-btn">📈 Акции</a>
+        <a href="./" class="nav-btn active">🏠 Главная</a>
+        <a href="exchange/" class="nav-btn">💱 Где купить</a>
+        <a href="stocks/" class="nav-btn">📈 Акции</a>
     </nav>
     <div class="header-right">
         <div class="telegram-wrap">
-            <a href="https://t.me/valutkin_bot" target="_blank" class="telegram-icon">✈️</a>
+            <a href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer" class="telegram-icon">✈️</a>
             <span class="tg-text">Открыть в Telegram</span>
         </div>
  <div class="theme-picker">
@@ -34,6 +36,9 @@
     <button class="theme-btn" data-theme="light" title="Светлая">☀️</button>
     <button class="theme-btn" data-theme="blue" title="Синяя">💙</button>
     <button class="theme-btn" data-theme="cyberpunk" title="Киберпанк">🌈</button>
+    <button class="theme-btn" data-theme="forest" title="Лес">🌲</button>
+    <button class="theme-btn" data-theme="sunset" title="Закат">🌅</button>
+    <button class="theme-btn" data-theme="violet" title="Фиолетовая">🔮</button>
 </div>
     </div>
 </header>
@@ -59,6 +64,7 @@
         <!-- Категории -->
         <section class="categories">
             <button class="cat-btn active" data-cat="popular">⭐ Популярные</button>
+            <button class="cat-btn" data-cat="favorites">💛 Избранное</button>
             <button class="cat-btn" data-cat="asia">🌏 Азия</button>
             <button class="cat-btn" data-cat="europe">🌍 Европа</button>
             <button class="cat-btn" data-cat="america">🌎 Америка</button>
@@ -85,8 +91,8 @@
                 <p class="footer-small">Данные: frankfurter.app, exchangerate-api.com, coingecko.com</p>
             </div>
             <div class="footer-links">
-                <a href="https://t.me/valutkin_bot" target="_blank">Telegram-бот</a>
-                <a href="https://t.me/Yehndhkw" target="_blank">@Yehndhkw</a>
+                <a href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer">Telegram-бот</a>
+                <a href="https://t.me/Yehndhkw" target="_blank" rel="noopener noreferrer">@Yehndhkw</a>
             </div>
         </div>
     </footer>
@@ -115,8 +121,11 @@
                 <button class="period-btn active" data-period="1">24 часа</button>
                 <button class="period-btn" data-period="7">7 дней</button>
                 <button class="period-btn" data-period="30">30 дней</button>
+                <button class="period-btn" data-period="90">3 месяца</button>
+                <button class="period-btn" data-period="365">1 год</button>
             </div>
 
+            <div id="modal-chart-stats" class="chart-stats"></div>
             <div class="modal-chart-wrapper">
                 <canvas id="modal-chart"></canvas>
                 <div id="modal-chart-loading" class="modal-chart-loading">Загружаем график...</div>
@@ -125,7 +134,7 @@
                 </div>
             </div>
 
-            <a href="https://t.me/valutkin_bot" target="_blank" class="modal-btn-telegram">
+            <a href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer" class="modal-btn-telegram">
                 ✈️ Открыть в Telegram-боте
             </a>
         </div>
@@ -136,10 +145,11 @@
         // Регистрация Service Worker
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {
-                navigator.serviceWorker.register("/valutkin-site/service-worker.js")
+                navigator.serviceWorker.register("service-worker.js")
                     .then((reg) => console.log("✅ Service Worker зарегистрирован"))
                     .catch((err) => console.log("❌ Ошибка Service Worker:", err));
             });
         }
     </script>
+<script src="app-shell.js"></script>
 </body>

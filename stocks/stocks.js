@@ -9,6 +9,14 @@ const CACHE_TIME = 60000; // 60 секунд
 
 const STOCKS = {
     "popular": [
+        { symbol: "V", name: "Visa", flag: "💳" },
+        { symbol: "JPM", name: "JPMorgan", flag: "🏦" },
+        { symbol: "WMT", name: "Walmart", flag: "🛒" },
+        { symbol: "XOM", name: "Exxon Mobil", flag: "🛢️" },
+        { symbol: "LLY", name: "Eli Lilly", flag: "💊" },
+        { symbol: "COST", name: "Costco", flag: "🏬" },
+        { symbol: "UBER", name: "Uber", flag: "🚕" },
+
         { symbol: "AAPL", name: "Apple", flag: "🍎" },
         { symbol: "TSLA", name: "Tesla", flag: "🚗" },
         { symbol: "MSFT", name: "Microsoft", flag: "🪟" },
@@ -26,6 +34,14 @@ const STOCKS = {
         { symbol: "SBUX", name: "Starbucks", flag: "☕" },
     ],
     "tech": [
+        { symbol: "NOW", name: "ServiceNow", flag: "☁️" },
+        { symbol: "INTU", name: "Intuit", flag: "🧾" },
+        { symbol: "AMAT", name: "Applied Materials", flag: "🔧" },
+        { symbol: "MU", name: "Micron", flag: "💾" },
+        { symbol: "PANW", name: "Palo Alto Networks", flag: "🔐" },
+        { symbol: "SNOW", name: "Snowflake", flag: "❄️" },
+        { symbol: "SHOP", name: "Shopify", flag: "🛍️" },
+
         { symbol: "AAPL", name: "Apple", flag: "🍎" },
         { symbol: "MSFT", name: "Microsoft", flag: "🪟" },
         { symbol: "GOOGL", name: "Google", flag: "🔍" },
@@ -43,13 +59,21 @@ const STOCKS = {
         { symbol: "ASML", name: "ASML", flag: "🇳🇱" },
     ],
     "auto": [
+        { symbol: "MBGYY", name: "Mercedes-Benz", flag: "⭐" },
+        { symbol: "VWAGY", name: "Volkswagen", flag: "🇩🇪" },
+        { symbol: "POAHY", name: "Porsche", flag: "🏎️" },
+        { symbol: "HYMTF", name: "Hyundai", flag: "🇰🇷" },
+        { symbol: "KIMTF", name: "Kia", flag: "🇰🇷" },
+        { symbol: "PSNY", name: "Polestar", flag: "⚡" },
+        { symbol: "ZK", name: "Zeekr", flag: "🔋" },
+
         { symbol: "TSLA", name: "Tesla", flag: "🚗" },
         { symbol: "F", name: "Ford", flag: "🔵" },
         { symbol: "GM", name: "General Motors", flag: "🔷" },
         { symbol: "TM", name: "Toyota", flag: "🇯🇵" },
         { symbol: "HMC", name: "Honda", flag: "🏍️" },
         { symbol: "RIVN", name: "Rivian", flag: "⚡" },
-        { symbol: "FERRARI", name: "Ferrari", flag: "🏎️" },
+        { symbol: "RACE", name: "Ferrari", flag: "🏎️" },
         { symbol: "BMWYY", name: "BMW", flag: "🇩🇪" },
         { symbol: "STLA", name: "Stellantis", flag: "🚙" },
         { symbol: "NSANY", name: "Nissan", flag: "🇯🇵" },
@@ -57,9 +81,17 @@ const STOCKS = {
         { symbol: "NIO", name: "NIO", flag: "🔋" },
         { symbol: "XPEV", name: "XPeng", flag: "🚘" },
         { symbol: "LI", name: "Li Auto", flag: "🏎️" },
-        { symbol: "RACE", name: "Ferrari NV", flag: "🐎" },
+        { symbol: "VLVLY", name: "Volvo", flag: "🇸🇪" },
     ],
     "finance": [
+        { symbol: "COF", name: "Capital One", flag: "💳" },
+        { symbol: "BK", name: "BNY Mellon", flag: "🏦" },
+        { symbol: "TROW", name: "T. Rowe Price", flag: "📊" },
+        { symbol: "ICE", name: "Intercontinental Exchange", flag: "📈" },
+        { symbol: "CME", name: "CME Group", flag: "📉" },
+        { symbol: "SPGI", name: "S&P Global", flag: "📋" },
+        { symbol: "MCO", name: "Moody’s", flag: "📑" },
+
         { symbol: "JPM", name: "JPMorgan", flag: "🏦" },
         { symbol: "BAC", name: "Bank of America", flag: "🏛️" },
         { symbol: "WFC", name: "Wells Fargo", flag: "🦅" },
@@ -77,6 +109,14 @@ const STOCKS = {
         { symbol: "PNC", name: "PNC Financial", flag: "💰" },
     ],
     "food": [
+        { symbol: "MNST", name: "Monster Beverage", flag: "⚡" },
+        { symbol: "KDP", name: "Keurig Dr Pepper", flag: "🥤" },
+        { symbol: "TSN", name: "Tyson Foods", flag: "🍗" },
+        { symbol: "CAG", name: "Conagra", flag: "🥫" },
+        { symbol: "SJM", name: "J.M. Smucker", flag: "🍓" },
+        { symbol: "HRL", name: "Hormel Foods", flag: "🥩" },
+        { symbol: "MKC", name: "McCormick", flag: "🌶️" },
+
         { symbol: "MCD", name: "McDonald's", flag: "🍔" },
         { symbol: "KO", name: "Coca-Cola", flag: "🥤" },
         { symbol: "PEP", name: "PepsiCo", flag: "🥤" },
@@ -94,15 +134,23 @@ const STOCKS = {
         { symbol: "TAP", name: "Molson Coors", flag: "🍺" },
     ],
     "entertainment": [
+        { symbol: "ROKU", name: "Roku", flag: "📺" },
+        { symbol: "TKO", name: "TKO Group", flag: "🥊" },
+        { symbol: "CMCSA", name: "Comcast", flag: "📡" },
+        { symbol: "NWSA", name: "News Corp", flag: "📰" },
+        { symbol: "MTCH", name: "Match Group", flag: "💘" },
+        { symbol: "PINS", name: "Pinterest", flag: "📌" },
+        { symbol: "RDDT", name: "Reddit", flag: "👽" },
+
         { symbol: "NFLX", name: "Netflix", flag: "🎬" },
         { symbol: "DIS", name: "Disney", flag: "🏰" },
         { symbol: "WBD", name: "Warner Bros", flag: "🎥" },
         { symbol: "SONY", name: "Sony", flag: "🎮" },
         { symbol: "SPOT", name: "Spotify", flag: "🎵" },
         { symbol: "EA", name: "Electronic Arts", flag: "🎮" },
-        { symbol: "ATVI", name: "Activision", flag: "🔫" },
+        { symbol: "TTWO", name: "Take-Two", flag: "🎮" },
         { symbol: "RBLX", name: "Roblox", flag: "🧱" },
-        { symbol: "TTWO", name: "Take-Two", flag: "🚗" },
+        { symbol: "DKNG", name: "DraftKings", flag: "🏀" },
         { symbol: "LYV", name: "Live Nation", flag: "🎤" },
         { symbol: "PARA", name: "Paramount", flag: "🎞️" },
         { symbol: "FOXA", name: "Fox Corp", flag: "📺" },
@@ -110,7 +158,36 @@ const STOCKS = {
         { symbol: "IMAX", name: "IMAX", flag: "🎬" },
         { symbol: "WMG", name: "Warner Music", flag: "🎶" },
     ],
+    "energy": [
+        { symbol: "XOM", name: "Exxon Mobil", flag: "🛢️" }, { symbol: "CVX", name: "Chevron", flag: "⛽" },
+        { symbol: "SHEL", name: "Shell", flag: "🐚" }, { symbol: "BP", name: "BP", flag: "🟢" },
+        { symbol: "COP", name: "ConocoPhillips", flag: "🛢️" }, { symbol: "SLB", name: "SLB", flag: "⚙️" },
+        { symbol: "NEE", name: "NextEra Energy", flag: "🌬️" }, { symbol: "ENPH", name: "Enphase", flag: "☀️" },
+        { symbol: "FSLR", name: "First Solar", flag: "🔆" }, { symbol: "OXY", name: "Occidental", flag: "🏭" },
+    ],
+    "health": [
+        { symbol: "LLY", name: "Eli Lilly", flag: "💊" }, { symbol: "JNJ", name: "Johnson & Johnson", flag: "🩺" },
+        { symbol: "UNH", name: "UnitedHealth", flag: "🏥" }, { symbol: "PFE", name: "Pfizer", flag: "💉" },
+        { symbol: "MRK", name: "Merck", flag: "🧬" }, { symbol: "ABBV", name: "AbbVie", flag: "🔬" },
+        { symbol: "TMO", name: "Thermo Fisher", flag: "🧪" }, { symbol: "ISRG", name: "Intuitive Surgical", flag: "🤖" },
+        { symbol: "AMGN", name: "Amgen", flag: "🧫" }, { symbol: "GILD", name: "Gilead", flag: "🧬" },
+    ],
+    "retail": [
+        { symbol: "WMT", name: "Walmart", flag: "🛒" }, { symbol: "COST", name: "Costco", flag: "🏬" },
+        { symbol: "HD", name: "Home Depot", flag: "🛠️" }, { symbol: "TGT", name: "Target", flag: "🎯" },
+        { symbol: "LOW", name: "Lowe's", flag: "🏠" }, { symbol: "EBAY", name: "eBay", flag: "📦" },
+        { symbol: "ETSY", name: "Etsy", flag: "🧶" }, { symbol: "BABA", name: "Alibaba", flag: "🛍️" },
+        { symbol: "JD", name: "JD.com", flag: "🛒" }, { symbol: "MELI", name: "MercadoLibre", flag: "💛" },
+    ],
     "china": [
+        { symbol: "ZTO", name: "ZTO Express", flag: "📦" },
+        { symbol: "YUMC", name: "Yum China", flag: "🍜" },
+        { symbol: "BEKE", name: "KE Holdings", flag: "🏠" },
+        { symbol: "FUTU", name: "Futu", flag: "📈" },
+        { symbol: "VIPS", name: "Vipshop", flag: "🛍️" },
+        { symbol: "BILI", name: "Bilibili", flag: "📺" },
+        { symbol: "ZLAB", name: "Zai Lab", flag: "🧬" },
+
         { symbol: "BABA", name: "Alibaba", flag: "🇨🇳" },
         { symbol: "TCEHY", name: "Tencent", flag: "🐧" },
         { symbol: "BIDU", name: "Baidu", flag: "🔍" },
@@ -132,36 +209,31 @@ const STOCKS = {
 // ============================================
 // ЗАГРУЗКА (с задержкой — чтобы не было 429)
 // ============================================
+let loadRequestId = 0;
 async function loadStocks(category) {
     const grid = document.getElementById("stocks-grid");
-    const list = STOCKS[category];
-
+    const list = STOCKS[category] || [];
+    const requestId = ++loadRequestId;
+    grid.setAttribute("aria-busy", "true");
     grid.innerHTML = '<div class="loading">Загрузка акций...</div>';
 
-    const results = [];
+    // Запросы выполняются параллельно. Раньше 15 карточек грузились по очереди ~8 секунд.
+    const results = await Promise.all(list.map(async stock => {
+        const cached = CACHE[stock.symbol];
+        if (cached && Date.now() - cached.time < CACHE_TIME) return { stock, data: cached.data };
+        try {
+            const r = await fetch(`${FINNHUB_URL}?symbol=${encodeURIComponent(stock.symbol)}&token=${FINNHUB_KEY}`);
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            const data = await r.json();
+            CACHE[stock.symbol] = { data, time: Date.now() };
+            return { stock, data };
+        } catch (_) { return { stock, data: cached?.data || null }; }
+    }));
 
-    for (const stock of list) {
-        const cacheKey = stock.symbol;
-        const now = Date.now();
-
-        if (CACHE[cacheKey] && (now - CACHE[cacheKey].time) < CACHE_TIME) {
-            // Берём из кэша
-            results.push({ stock, data: CACHE[cacheKey].data });
-        } else {
-            // Запрашиваем Finnhub
-            try {
-                const r = await fetch(`${FINNHUB_URL}?symbol=${stock.symbol}&token=${FINNHUB_KEY}`);
-                const data = await r.json();
-                CACHE[cacheKey] = { data, time: now };
-                results.push({ stock, data });
-            } catch (e) {
-                results.push({ stock, data: null });
-            }
-            await new Promise(resolve => setTimeout(resolve, 500));
-        }
-    }
-
+    // Не даём запоздавшему ответу прошлой категории затереть новую страницу.
+    if (requestId !== loadRequestId || category !== currentCategory) return;
     grid.innerHTML = results.map(r => renderStockCard(r.stock, r.data)).join("");
+    grid.setAttribute("aria-busy", "false");
 }
 // ============================================
 // АВТООБНОВЛЕНИЕ (каждые 30 сек)
