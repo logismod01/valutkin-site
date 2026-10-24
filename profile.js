@@ -45,10 +45,17 @@ $("add-asset").onclick=()=>$("asset-form").classList.toggle("hidden");$("save-as
 $("choose-currencies").onclick=()=>$("currency-picker").classList.toggle("hidden");$("clear-notifications").onclick=()=>{data.notifications=[];save();renderNotifications();};
 const avatars = ["🦊","🐻","🐼","🐯","🦁","🐸","🐧","🦄","🐺","🐱","🐶","🐵"];
 const avatarPicker = $("avatar-picker");
-$("avatar-button").textContent = localStorage.getItem("valutkin_avatar") || "🦊";
+const savedPhoto = localStorage.getItem("valutkin_avatar_photo");
+$("avatar-button").textContent = savedPhoto ? "" : (localStorage.getItem("valutkin_avatar") || "🦊");
+if (savedPhoto) $("avatar-button").style.backgroundImage = `url(${savedPhoto})`;
 avatarPicker.querySelector("div").innerHTML = avatars.map(a => `<span data-avatar="${a}">${a}</span>`).join("");
 $("avatar-button").onclick = () => avatarPicker.classList.toggle("hidden");
-avatarPicker.querySelectorAll("[data-avatar]").forEach(x => x.onclick = () => { localStorage.setItem("valutkin_avatar", x.dataset.avatar); $("avatar-button").textContent=x.dataset.avatar; avatarPicker.classList.add("hidden"); });
+avatarPicker.querySelectorAll("[data-avatar]").forEach(x => x.onclick = () => { localStorage.setItem("valutkin_avatar", x.dataset.avatar); localStorage.removeItem("valutkin_avatar_photo"); $("avatar-button").style.backgroundImage=""; $("avatar-button").textContent=x.dataset.avatar; avatarPicker.classList.add("hidden"); });
+$("avatar-file").addEventListener("change", event => {
+  const file = event.target.files[0]; if (!file) return;
+  if (file.size > 2 * 1024 * 1024) return alert("Фото должно быть меньше 2 МБ");
+  const reader = new FileReader(); reader.onload = () => { localStorage.setItem("valutkin_avatar_photo", reader.result); $("avatar-button").textContent=""; $("avatar-button").style.backgroundImage=`url(${reader.result})`; avatarPicker.classList.add("hidden"); }; reader.readAsDataURL(file);
+});
 let financesHidden = localStorage.getItem("valutkin_hide_finances") === "true";
 let identityHidden = localStorage.getItem("valutkin_hide_identity") === "true";
 function applyPrivacy(){ document.body.classList.toggle("finances-hidden",financesHidden);document.body.classList.toggle("identity-hidden",identityHidden);$("privacy-toggle").textContent=financesHidden?"👁️ Показать финансы":"🙈 Скрыть финансы";$("identity-toggle").textContent=identityHidden?"👁️ Показать аккаунт":"🕶️ Скрыть аккаунт"; }

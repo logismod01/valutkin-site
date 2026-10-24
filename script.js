@@ -123,6 +123,7 @@ let state = {
     currentModal: null,
     currentPeriod: 1,
     chart: null,
+    chartRequestId: 0,
 };
 
 // ============================================
@@ -392,6 +393,7 @@ function closeModal() {
     document.getElementById("modal").classList.remove("active");
     document.body.style.overflow = "";
     state.currentModal = null;
+    state.chartRequestId++;
     if (state.chart) {
         state.chart.destroy();
         state.chart = null;
@@ -402,6 +404,7 @@ function closeModal() {
 // ГРАФИК
 // ============================================
 async function loadChart(code, days) {
+    const requestId = ++state.chartRequestId;
     const loading = document.getElementById("modal-chart-loading");
     const error = document.getElementById("modal-chart-error");
     const canvas = document.getElementById("modal-chart");
@@ -421,9 +424,8 @@ async function loadChart(code, days) {
             history = await loadFiatHistory(code, days);
         }
 
-        if (!history || history.length === 0) {
-            throw new Error("no_data");
-        }
+        if (!history || history.length < 2) throw new Error("no_data");
+        if (requestId !== state.chartRequestId || state.currentModal !== code) return;
 
         loading.style.display = "none";
         canvas.style.opacity = "1";
@@ -431,6 +433,7 @@ async function loadChart(code, days) {
         renderChart(history, code, days);
         updateChangeText(history);
     } catch (e) {
+        if (requestId !== state.chartRequestId) return;
         console.error("Ошибка графика:", e);
         loading.style.display = "none";
         error.style.display = "block";
@@ -450,18 +453,18 @@ async function loadFiatHistory(code, days) {
     const today = new Date();
 
     // Если дней <= 7, берём каждую дату. Если больше — каждые 3 дня, чтобы не дёргать API 30 раз.
-    const step = days <= 7 ? 1 : (days <= 30 ? 3 : 7);
+    const step = days <= 7 ? 1 : (days <= 30 ? 3 : (days <= 90 ? 7 : 30));
 
     for (let i = days; i >= 0; i -= step) {
         const d = new Date();
-        d.setDate(d.getDate() - i);
+        d.setDate(d.getDate() - i - 1);
         dates.push(d.toISOString().split("T")[0]);
     }
 
     // Запрашиваем все даты параллельно (Promise.all)
     const requests = dates.map(date =>
         fetch(`${API_HISTORY}@${date}/v1/currencies/usd.json`)
-            .then(r => r.json())
+            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
             .then(data => ({ date, data }))
             .catch(() => null)
     );
@@ -481,7 +484,8 @@ async function loadFiatHistory(code, days) {
         if (!rubPerUsd || !rateUsdToCode) continue;
 
         // 1 code = rubPerUsd / rateUsdToCode ₽
-        const rubValue = rubPerUsd / rateUsdToCode;
+        let rubValue = rubPerUsd / rateUsdToCode;
+        if (METALS.includes(code)) rubValue /= OUNCE_IN_GRAMS;
         points.push({ t: r.date, v: rubValue });
     }
 
@@ -516,7 +520,12 @@ function updateChangeText(history) {
     el.className = "modal-change " + (change >= 0 ? "up" : "down");
 }
 
+function formatChartPrice(value) {
+    return new Intl.NumberFormat("ru-RU", { maximumFractionDigits: value < 1 ? 4 : 2 }).format(value);
+}
+
 function renderChart(history, code, days) {
+    if (typeof Chart === "undefined") throw new Error("chart_library_unavailable");
     const canvas = document.getElementById("modal-chart");
     const ctx = canvas.getContext("2d");
 
@@ -524,11 +533,15 @@ function renderChart(history, code, days) {
         state.chart.destroy();
     }
 
-    const labels = history.map(p => p.t);
+    const labels = history.map(p => new Date(p.t).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: days > 90 ? "2-digit" : undefined }));
     const values = history.map(p => p.v);
+    const min = Math.min(...values), max = Math.max(...values), average = values.reduce((a,b) => a+b,0)/values.length;
+    document.getElementById("modal-chart-stats").innerHTML = `<span>Минимум <b>${formatChartPrice(min)} ₽</b></span><span>Среднее <b>${formatChartPrice(average)} ₽</b></span><span>Максимум <b>${formatChartPrice(max)} ₽</b></span>`;
 
+    const styles = getComputedStyle(document.documentElement);
+    const accent = styles.getPropertyValue("--accent").trim() || "#00d4ff";
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, "rgba(0, 212, 255, 0.4)");
+    gradient.addColorStop(0, `${accent}66`);
     gradient.addColorStop(1, "rgba(0, 212, 255, 0.0)");
 
     state.chart = new Chart(ctx, {
@@ -538,7 +551,7 @@ function renderChart(history, code, days) {
             datasets: [{
                 label: code,
                 data: values,
-                borderColor: "#00d4ff",
+                borderColor: accent,
                 backgroundColor: gradient,
                 borderWidth: 2,
                 fill: true,
@@ -556,14 +569,14 @@ function renderChart(history, code, days) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: "rgba(10, 10, 26, 0.95)",
-                    borderColor: "#00d4ff",
+                    borderColor: accent,
                     borderWidth: 1,
                     titleColor: "#00d4ff",
                     bodyColor: "#e0e0ff",
                     padding: 10,
                     callbacks: {
                         label: function(context) {
-                            return context.parsed.y.toFixed(4);
+                            return formatChartPrice(context.parsed.y) + " ₽";
                         }
                     }
                 }
@@ -575,7 +588,7 @@ function renderChart(history, code, days) {
                 },
                 y: {
                     grid: { color: "rgba(0, 212, 255, 0.05)" },
-                    ticks: { color: "#8888aa" }
+                    ticks: { color: "#8888aa", callback: value => formatChartPrice(value) + " ₽" }
                 }
             }
         }
