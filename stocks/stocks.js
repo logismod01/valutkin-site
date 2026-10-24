@@ -379,6 +379,7 @@ function openStockModal(symbol) {
     if (!stock) return;
     currentStock = stock;
     currentDays = 7;
+    document.getElementById("company-details-link").href = `../company.html?symbol=${encodeURIComponent(stock.symbol)}&name=${encodeURIComponent(stock.name)}&icon=${encodeURIComponent(stock.flag)}`;
 
     document.getElementById("sm-flag").textContent = stock.flag;
     document.getElementById("sm-symbol").textContent = stock.symbol;
