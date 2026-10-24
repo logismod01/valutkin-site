@@ -42,9 +42,9 @@
    <form id="bind-form" class="auth-form"><label>Привязать новую почту<input id="bind-email" type="email"></label><label>Привязать новый телефон<input id="bind-phone" type="tel"></label><button class="btn-primary">Сохранить контакты</button></form>
    <a href="profile.html" class="btn-primary" style="text-align:center">Открыть мой профиль →</a><button id="logout" class="danger-button">Выйти</button>
   </section>
-  <p class="demo-note">Демо-режим: данные хранятся только в этом браузере. Для публикации потребуется подключить защищённый сервер авторизации.</p>
+  <p class="demo-note">Аккаунт защищён Supabase. Подтвердите адрес по ссылке в письме. SMS-вход станет доступен после подключения SMS-провайдера.</p>
  </section>
 </main>
-<script src="auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="auth.js"></script>
 <script src="app-shell.js"></script>
 </body></html>

@@ -210,12 +210,13 @@ const STOCKS = {
 // ЗАГРУЗКА (с задержкой — чтобы не было 429)
 // ============================================
 let loadRequestId = 0;
+let visibleStockResults = [];
 async function loadStocks(category) {
     const grid = document.getElementById("stocks-grid");
     const list = STOCKS[category] || [];
     const requestId = ++loadRequestId;
     grid.setAttribute("aria-busy", "true");
-    grid.innerHTML = '<div class="loading">Загрузка акций...</div>';
+    grid.innerHTML = Array.from({length: 8}, () => '<div class="stock-skeleton"><i></i><b></b><span></span><em></em></div>').join("");
 
     // Запросы выполняются параллельно. Раньше 15 карточек грузились по очереди ~8 секунд.
     const results = await Promise.all(list.map(async stock => {
@@ -232,8 +233,24 @@ async function loadStocks(category) {
 
     // Не даём запоздавшему ответу прошлой категории затереть новую страницу.
     if (requestId !== loadRequestId || category !== currentCategory) return;
-    grid.innerHTML = results.map(r => renderStockCard(r.stock, r.data)).join("");
+    visibleStockResults = results;
+    renderStocksView();
     grid.setAttribute("aria-busy", "false");
+}
+
+function stockFavorites() { return JSON.parse(localStorage.getItem("valutkin_favorite_stocks") || "[]"); }
+function toggleStockFavorite(symbol) { const list=stockFavorites(),i=list.indexOf(symbol);i>=0?list.splice(i,1):list.push(symbol);localStorage.setItem("valutkin_favorite_stocks",JSON.stringify(list));renderStocksView(); }
+function renderStocksView() {
+    const grid=document.getElementById("stocks-grid"); if(!grid)return;
+    const q=(document.getElementById("stock-search")?.value||"").trim().toLowerCase();
+    const only=document.getElementById("stocks-favorites-only")?.checked, fav=stockFavorites();
+    let rows=visibleStockResults.filter(r=>(!q||`${r.stock.symbol} ${r.stock.name}`.toLowerCase().includes(q))&&(!only||fav.includes(r.stock.symbol)));
+    const sort=document.getElementById("stock-sort")?.value;
+    if(sort==="growth")rows.sort((a,b)=>(b.data?.dp||-Infinity)-(a.data?.dp||-Infinity));
+    if(sort==="decline")rows.sort((a,b)=>(a.data?.dp||Infinity)-(b.data?.dp||Infinity));
+    if(sort==="price-high")rows.sort((a,b)=>(b.data?.c||0)-(a.data?.c||0));
+    if(sort==="name")rows.sort((a,b)=>a.stock.name.localeCompare(b.stock.name,"ru"));
+    grid.innerHTML=rows.length?rows.map(r=>renderStockCard(r.stock,r.data)).join(""):'<div class="loading">Ничего не найдено</div>';
 }
 // ============================================
 // АВТООБНОВЛЕНИЕ (каждые 30 сек)
@@ -260,6 +277,7 @@ function renderStockCard(stock, data) {
     if (!data || !data.c || data.c === 0) {
         return `
             <div class="stock-card" data-symbol="${stock.symbol}">
+                <button class="stock-favorite ${stockFavorites().includes(stock.symbol)?"active":""}" onclick="event.stopPropagation();toggleStockFavorite('${stock.symbol}')" title="В избранное">★</button>
                 <div class="stock-header">
                     <span class="stock-flag">${stock.flag}</span>
                     <span class="stock-symbol">${stock.symbol}</span>
@@ -280,6 +298,7 @@ function renderStockCard(stock, data) {
 
     return `
         <div class="stock-card" data-symbol="${stock.symbol}" onclick="openStockModal('${stock.symbol}')">
+            <button class="stock-favorite ${stockFavorites().includes(stock.symbol)?"active":""}" onclick="event.stopPropagation();toggleStockFavorite('${stock.symbol}')" title="В избранное">★</button>
             <div class="stock-header">
                 <span class="stock-flag">${stock.flag}</span>
                 <span class="stock-symbol">${stock.symbol}</span>
@@ -298,6 +317,9 @@ function renderStockCard(stock, data) {
 // ============================================
 document.addEventListener("DOMContentLoaded", () => {
     currentCategory = "popular";
+    document.getElementById("stock-search")?.addEventListener("input", renderStocksView);
+    document.getElementById("stock-sort")?.addEventListener("change", renderStocksView);
+    document.getElementById("stocks-favorites-only")?.addEventListener("change", renderStocksView);
     loadStocks("popular");
     startAutoRefresh();
 

@@ -4,13 +4,19 @@ const cryptoMeta = { BTC:["Bitcoin","₿","bitcoin"],ETH:["Ethereum","◆","ethe
 const fiatMeta = {USD:["Доллар США","🇺🇸"],EUR:["Евро","🇪🇺"],CNY:["Юань","🇨🇳"],GBP:["Фунт","🇬🇧"],JPY:["Иена","🇯🇵"],KZT:["Тенге","🇰🇿"],AED:["Дирхам","🇦🇪"],TRY:["Лира","🇹🇷"],GEL:["Лари","🇬🇪"]};
 let data; try { data = {...DEFAULT_DATA, ...JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}")}; } catch { data = structuredClone(DEFAULT_DATA); }
 let market = { crypto:{}, rates:{} };
+let cloudUser = null;
 const $ = id => document.getElementById(id);
 const money = n => new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:2}).format(n || 0);
-function save(){ localStorage.setItem(PROFILE_KEY,JSON.stringify(data)); }
+function save(){ localStorage.setItem(PROFILE_KEY,JSON.stringify(data)); if(cloudUser) getSupabase().from("user_data").upsert({user_id:cloudUser.id,data,updated_at:new Date().toISOString()}).then(({error})=>{if(error)console.warn("Cloud save:",error.message)}); }
 function notify(text,kind="info"){ data.notifications.unshift({text,kind,time:new Date().toISOString()}); data.notifications=data.notifications.slice(0,30); save(); }
-function userInfo(){
- const email=localStorage.getItem("valutkin_demo_session"); const users=JSON.parse(localStorage.getItem("valutkin_demo_users")||"[]"); const user=users.find(x=>x.email===email);
- if(user){$("welcome").textContent=`Здравствуйте, ${user.name}`;$("contacts").textContent=`${user.email} • ${user.phone}`;} else $("guest-warning").classList.remove("hidden");
+async function userInfo(){
+ try {
+  const db=getSupabase(),{data:{user}}=await db.auth.getUser(); cloudUser=user;
+  if(!user){$("guest-warning").classList.remove("hidden");return;}
+  const [{data:profile},{data:cloud}]=await Promise.all([db.from("profiles").select("name,phone,avatar").eq("id",user.id).maybeSingle(),db.from("user_data").select("data").eq("user_id",user.id).maybeSingle()]);
+  if(cloud?.data&&Object.keys(cloud.data).length){data={...DEFAULT_DATA,...cloud.data};localStorage.setItem(PROFILE_KEY,JSON.stringify(data));render();}
+  $("welcome").textContent=`Здравствуйте, ${profile?.name||user.user_metadata?.name||"пользователь"}`;$("contacts").textContent=`${user.email||""}${profile?.phone?` • ${profile.phone}`:""}`;
+ } catch(e){$("guest-warning").classList.remove("hidden");}
 }
 async function loadMarket(){
  const ids=Object.values(cryptoMeta).map(x=>x[2]).join(",");
@@ -28,7 +34,7 @@ function render(){ renderPortfolio();renderFavorites();renderNotifications(); }
 function renderPortfolio(){
  let total=0; const list=$("portfolio-list");
  if(!data.assets.length)list.innerHTML='<div class="empty-state">Добавьте BTC, ETH, TON или другую криптовалюту</div>';
- else list.innerHTML=data.assets.map((a,i)=>{const m=cryptoMeta[a.code],quote=market.crypto[m[2]]||{},value=a.amount*(quote.rub||0);total+=value;const ch=quote.rub_24h_change||0;return `<div class="data-row"><span class="data-icon">${m[1]}</span><div><b>${m[0]}</b><small>${a.amount} ${a.code}</small></div><div class="data-value"><b>${quote.rub?money(value):"—"}</b><small class="${ch>=0?"positive":"negative"}">${ch>=0?"+":""}${ch.toFixed(2)}%</small><button class="remove-item" data-remove="${i}" title="Удалить">✕</button></div></div>`}).join("");
+ else list.innerHTML=data.assets.map((a,i)=>{const m=cryptoMeta[a.code],quote=market.crypto[m[2]]||{},value=a.amount*(quote.rub||0),invested=a.amount*(a.buyPrice||0),profit=invested?value-invested:0,profitPct=invested?profit/invested*100:0;total+=value;const ch=quote.rub_24h_change||0;return `<div class="data-row"><span class="data-icon">${m[1]}</span><div><b>${m[0]}</b><small>${a.amount} ${a.code}${a.buyDate?` • ${new Date(a.buyDate).toLocaleDateString("ru-RU")}`:""}</small>${invested?`<small>Вложено: ${money(invested)}</small>`:""}</div><div class="data-value"><b>${quote.rub?money(value):"—"}</b>${invested?`<small class="${profit>=0?"positive":"negative"}">${profit>=0?"+":""}${money(profit)} (${profitPct.toFixed(1)}%)</small>`:`<small class="${ch>=0?"positive":"negative"}">${ch>=0?"+":""}${ch.toFixed(2)}% за сутки</small>`}<button class="remove-item" data-remove="${i}" title="Удалить">✕</button></div></div>`}).join("");
  $("portfolio-total").textContent=money(total);$("asset-count").textContent=data.assets.length;
  const changes=data.assets.map(a=>market.crypto[cryptoMeta[a.code][2]]?.rub_24h_change).filter(Number.isFinite);const avg=changes.length?changes.reduce((a,b)=>a+b,0)/changes.length:0;$("portfolio-change").textContent=changes.length?`${avg>=0?"▲":"▼"} ${Math.abs(avg).toFixed(2)}% за 24 часа`:"Ожидаем котировки";$("portfolio-change").className=avg>=0?"positive":"negative";
  list.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>{data.assets.splice(+b.dataset.remove,1);save();render();});
@@ -41,7 +47,7 @@ function renderFavorites(){
  document.querySelectorAll("[data-currency]").forEach(b=>b.onclick=()=>{const c=b.dataset.currency,i=data.favorites.indexOf(c);i>=0?data.favorites.splice(i,1):data.favorites.push(c);save();renderFavorites();});
 }
 function renderNotifications(){$("notification-count").textContent=data.notifications.length;$("notifications-list").innerHTML=data.notifications.map(n=>`<div class="notification"><span>${n.kind==="up"?"📈":n.kind==="down"?"📉":"🔔"}</span><div>${n.text}<time>${new Date(n.time).toLocaleString("ru-RU")}</time></div></div>`).join("")||'<div class="empty-state">Новых уведомлений пока нет</div>';}
-$("add-asset").onclick=()=>$("asset-form").classList.toggle("hidden");$("save-asset").onclick=()=>{const code=$("asset-code").value,amount=+$('asset-amount').value;if(!(amount>0))return;const existing=data.assets.find(x=>x.code===code);existing?existing.amount=amount:data.assets.push({code,amount});notify(`В портфель добавлено ${amount} ${code}`);save();$("asset-form").classList.add("hidden");render();};
+$("add-asset").onclick=()=>$("asset-form").classList.toggle("hidden");$("save-asset").onclick=()=>{const code=$("asset-code").value,amount=+$("asset-amount").value,buyPrice=+$("asset-buy-price").value||0,buyDate=$("asset-buy-date").value;if(!(amount>0))return;const existing=data.assets.find(x=>x.code===code);const record={code,amount,buyPrice,buyDate};existing?Object.assign(existing,record):data.assets.push(record);notify(`В портфель добавлено ${amount} ${code}`);save();$("asset-form").classList.add("hidden");render();};
 $("choose-currencies").onclick=()=>$("currency-picker").classList.toggle("hidden");$("clear-notifications").onclick=()=>{data.notifications=[];save();renderNotifications();};
 const avatars = ["🦊","🐻","🐼","🐯","🦁","🐸","🐧","🦄","🐺","🐱","🐶","🐵"];
 const avatarPicker = $("avatar-picker");
@@ -62,4 +68,4 @@ function applyPrivacy(){ document.body.classList.toggle("finances-hidden",financ
 $("privacy-toggle").onclick=()=>{financesHidden=!financesHidden;localStorage.setItem("valutkin_hide_finances",financesHidden);applyPrivacy();};
 $("identity-toggle").onclick=()=>{identityHidden=!identityHidden;localStorage.setItem("valutkin_hide_identity",identityHidden);applyPrivacy();};
 applyPrivacy();
-userInfo();render();loadMarket();
+render();loadMarket();userInfo();
