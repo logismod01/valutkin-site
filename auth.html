@@ -6,6 +6,7 @@
   <script>document.documentElement.dataset.theme=localStorage.getItem("valutkin_theme")||"dark"</script>
   <link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="auth.css">
   <script defer src="https://www.google.com/recaptcha/api.js"></script>
+    <link rel="stylesheet" href="shell.css">
 </head>
 <body>
 <header class="header">
@@ -39,10 +40,11 @@
   <section id="profile" class="hidden profile">
    <h2>Ваш аккаунт</h2><div id="profile-data"></div>
    <form id="bind-form" class="auth-form"><label>Привязать новую почту<input id="bind-email" type="email"></label><label>Привязать новый телефон<input id="bind-phone" type="tel"></label><button class="btn-primary">Сохранить контакты</button></form>
-   <button id="logout" class="danger-button">Выйти</button>
+   <a href="profile.html" class="btn-primary" style="text-align:center">Открыть мой профиль →</a><button id="logout" class="danger-button">Выйти</button>
   </section>
   <p class="demo-note">Демо-режим: данные хранятся только в этом браузере. Для публикации потребуется подключить защищённый сервер авторизации.</p>
  </section>
 </main>
 <script src="auth.js"></script>
+<script src="app-shell.js"></script>
 </body></html>
