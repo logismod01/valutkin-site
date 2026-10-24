@@ -9,6 +9,10 @@ const CACHE_TIME = 60000; // 60 секунд
 
 const STOCKS = {
     "popular": [
+        { symbol: "CRWD", name: "CrowdStrike", flag: "🛡️" },
+        { symbol: "MSTR", name: "Strategy", flag: "₿" },
+        { symbol: "ARM", name: "Arm Holdings", flag: "🦾" },
+
         { symbol: "PLTR", name: "Palantir", flag: "🔮" },
         { symbol: "AVGO", name: "Broadcom", flag: "🔌" },
         { symbol: "ORCL", name: "Oracle", flag: "🔴" },
@@ -38,6 +42,11 @@ const STOCKS = {
         { symbol: "SBUX", name: "Starbucks", flag: "☕" },
     ],
     "tech": [
+        { symbol: "NET", name: "Cloudflare", flag: "☁️" },
+        { symbol: "DDOG", name: "Datadog", flag: "🐕" },
+        { symbol: "MDB", name: "MongoDB", flag: "🍃" },
+        { symbol: "ZS", name: "Zscaler", flag: "🔐" },
+
         { symbol: "UBER", name: "Uber", flag: "🚕" },
         { symbol: "ABNB", name: "Airbnb", flag: "🏠" },
         { symbol: "DELL", name: "Dell", flag: "💻" },
@@ -68,6 +77,10 @@ const STOCKS = {
         { symbol: "ASML", name: "ASML", flag: "🇳🇱" },
     ],
     "auto": [
+        { symbol: "ALV", name: "Autoliv", flag: "🛡️" },
+        { symbol: "APTV", name: "Aptiv", flag: "🔌" },
+        { symbol: "GNTX", name: "Gentex", flag: "🪞" },
+
         { symbol: "BYDDY", name: "BYD", flag: "🔋" },
         { symbol: "MBLY", name: "Mobileye", flag: "👁️" },
         { symbol: "PAG", name: "Penske Automotive", flag: "🚙" },
@@ -97,6 +110,11 @@ const STOCKS = {
         { symbol: "VLVLY", name: "Volvo", flag: "🇸🇪" },
     ],
     "finance": [
+        { symbol: "IBKR", name: "Interactive Brokers", flag: "📊" },
+        { symbol: "AFRM", name: "Affirm", flag: "💳" },
+        { symbol: "UPST", name: "Upstart", flag: "🤖" },
+        { symbol: "OWL", name: "Blue Owl", flag: "🦉" },
+
         { symbol: "HOOD", name: "Robinhood", flag: "🏹" },
         { symbol: "SOFI", name: "SoFi", flag: "💰" },
         { symbol: "NU", name: "Nu Holdings", flag: "🟣" },
@@ -126,6 +144,10 @@ const STOCKS = {
         { symbol: "PNC", name: "PNC Financial", flag: "💰" },
     ],
     "food": [
+        { symbol: "WING", name: "Wingstop", flag: "🍗" },
+        { symbol: "SHAK", name: "Shake Shack", flag: "🍔" },
+        { symbol: "TXRH", name: "Texas Roadhouse", flag: "🥩" },
+
         { symbol: "CAVA", name: "Cava", flag: "🥙" },
         { symbol: "CELH", name: "Celsius", flag: "⚡" },
         { symbol: "BROS", name: "Dutch Bros", flag: "☕" },
@@ -155,6 +177,10 @@ const STOCKS = {
         { symbol: "TAP", name: "Molson Coors", flag: "🍺" },
     ],
     "entertainment": [
+        { symbol: "CHTR", name: "Charter", flag: "📺" },
+        { symbol: "NYT", name: "New York Times", flag: "📰" },
+        { symbol: "LVS", name: "Las Vegas Sands", flag: "🎰" },
+
         { symbol: "DUOL", name: "Duolingo", flag: "🦉" },
         { symbol: "U", name: "Unity", flag: "🎮" },
         { symbol: "SE", name: "Sea Limited", flag: "🌊" },
@@ -184,6 +210,11 @@ const STOCKS = {
         { symbol: "WMG", name: "Warner Music", flag: "🎶" },
     ],
     "energy": [
+        { symbol: "VST", name: "Vistra", flag: "⚡" },
+        { symbol: "CEG", name: "Constellation Energy", flag: "⚛️" },
+        { symbol: "OKLO", name: "Oklo", flag: "☢️" },
+        { symbol: "SMR", name: "NuScale Power", flag: "🔋" },
+
         { symbol: "XOM", name: "Exxon Mobil", flag: "🛢️" }, { symbol: "CVX", name: "Chevron", flag: "⛽" },
         { symbol: "SHEL", name: "Shell", flag: "🐚" }, { symbol: "BP", name: "BP", flag: "🟢" },
         { symbol: "COP", name: "ConocoPhillips", flag: "🛢️" }, { symbol: "SLB", name: "SLB", flag: "⚙️" },
@@ -191,6 +222,11 @@ const STOCKS = {
         { symbol: "FSLR", name: "First Solar", flag: "🔆" }, { symbol: "OXY", name: "Occidental", flag: "🏭" },
     ],
     "health": [
+        { symbol: "VRTX", name: "Vertex", flag: "🧬" },
+        { symbol: "REGN", name: "Regeneron", flag: "🔬" },
+        { symbol: "DXCM", name: "Dexcom", flag: "🩸" },
+        { symbol: "HIMS", name: "Hims & Hers", flag: "🩺" },
+
         { symbol: "LLY", name: "Eli Lilly", flag: "💊" }, { symbol: "JNJ", name: "Johnson & Johnson", flag: "🩺" },
         { symbol: "UNH", name: "UnitedHealth", flag: "🏥" }, { symbol: "PFE", name: "Pfizer", flag: "💉" },
         { symbol: "MRK", name: "Merck", flag: "🧬" }, { symbol: "ABBV", name: "AbbVie", flag: "🔬" },
@@ -198,6 +234,11 @@ const STOCKS = {
         { symbol: "AMGN", name: "Amgen", flag: "🧫" }, { symbol: "GILD", name: "Gilead", flag: "🧬" },
     ],
     "retail": [
+        { symbol: "CVNA", name: "Carvana", flag: "🚘" },
+        { symbol: "CHWY", name: "Chewy", flag: "🐾" },
+        { symbol: "BURL", name: "Burlington", flag: "🧥" },
+        { symbol: "ULTA", name: "Ulta Beauty", flag: "💄" },
+
         { symbol: "WMT", name: "Walmart", flag: "🛒" }, { symbol: "COST", name: "Costco", flag: "🏬" },
         { symbol: "HD", name: "Home Depot", flag: "🛠️" }, { symbol: "TGT", name: "Target", flag: "🎯" },
         { symbol: "LOW", name: "Lowe's", flag: "🏠" }, { symbol: "EBAY", name: "eBay", flag: "📦" },
@@ -205,6 +246,10 @@ const STOCKS = {
         { symbol: "JD", name: "JD.com", flag: "🛒" }, { symbol: "MELI", name: "MercadoLibre", flag: "💛" },
     ],
     "china": [
+        { symbol: "HTHT", name: "H World", flag: "🏨" },
+        { symbol: "TIGR", name: "UP Fintech", flag: "🐯" },
+        { symbol: "KC", name: "Kingsoft Cloud", flag: "☁️" },
+
         { symbol: "MNSO", name: "MINISO", flag: "🛍️" },
         { symbol: "QFIN", name: "Qifu Technology", flag: "💳" },
         { symbol: "FINV", name: "FinVolution", flag: "💰" },
@@ -240,6 +285,10 @@ const STOCKS = {
 // ============================================
 let loadRequestId = 0;
 let visibleStockResults = [];
+let stockLoadController = null;
+const STOCK_DISK_CACHE_KEY = "valutkin_stock_quotes_v2";
+try { Object.assign(CACHE, JSON.parse(localStorage.getItem(STOCK_DISK_CACHE_KEY) || "{}")); } catch { localStorage.removeItem(STOCK_DISK_CACHE_KEY); }
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function loadStocks(category) {
     const grid = document.getElementById("stocks-grid");
     const list = STOCKS[category] || [];
@@ -247,18 +296,32 @@ async function loadStocks(category) {
     grid.setAttribute("aria-busy", "true");
     grid.innerHTML = Array.from({length: 8}, () => '<div class="stock-skeleton"><i></i><b></b><span></span><em></em></div>').join("");
 
-    // Запросы выполняются параллельно. Раньше 15 карточек грузились по очереди ~8 секунд.
-    const results = await Promise.all(list.map(async stock => {
-        const cached = CACHE[stock.symbol];
-        if (cached && Date.now() - cached.time < CACHE_TIME) return { stock, data: cached.data };
-        try {
-            const r = await fetch(`${FINNHUB_URL}?symbol=${encodeURIComponent(stock.symbol)}&token=${FINNHUB_KEY}`);
-            if (!r.ok) throw new Error(`HTTP ${r.status}`);
-            const data = await r.json();
-            CACHE[stock.symbol] = { data, time: Date.now() };
-            return { stock, data };
-        } catch (_) { return { stock, data: cached?.data || null }; }
-    }));
+    // Загружаем небольшими пачками: расширенный каталог не должен получать HTTP 429.
+    stockLoadController?.abort();
+    stockLoadController = new AbortController();
+    const results = [];
+    for (let offset = 0; offset < list.length; offset += 6) {
+        if (requestId !== loadRequestId) return;
+        const batch = list.slice(offset, offset + 6);
+        const batchResults = await Promise.all(batch.map(async stock => {
+            const cached = CACHE[stock.symbol];
+            if (cached && Date.now() - cached.time < 5 * 60 * 1000) return { stock, data: cached.data };
+            try {
+                const r = await fetch(`${FINNHUB_URL}?symbol=${encodeURIComponent(stock.symbol)}&token=${FINNHUB_KEY}`, { signal: stockLoadController.signal });
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                const data = await r.json();
+                if (!data || !Number.isFinite(data.c) || data.c <= 0) throw new Error("no_data");
+                CACHE[stock.symbol] = { data, time: Date.now() };
+                return { stock, data };
+            } catch (error) {
+                if (error.name === "AbortError") return { stock, data: cached?.data || null };
+                return { stock, data: cached?.data || null };
+            }
+        }));
+        results.push(...batchResults);
+        if (offset + 6 < list.length) await wait(220);
+    }
+    try { localStorage.setItem(STOCK_DISK_CACHE_KEY, JSON.stringify(CACHE)); } catch (_) {}
 
     // Не даём запоздавшему ответу прошлой категории затереть новую страницу.
     if (requestId !== loadRequestId || category !== currentCategory) return;
@@ -267,7 +330,7 @@ async function loadStocks(category) {
     grid.setAttribute("aria-busy", "false");
 }
 
-function stockFavorites() { return JSON.parse(localStorage.getItem("valutkin_favorite_stocks") || "[]"); }
+function stockFavorites() { try { const value=JSON.parse(localStorage.getItem("valutkin_favorite_stocks") || "[]"); return Array.isArray(value)?value:[]; } catch { localStorage.removeItem("valutkin_favorite_stocks"); return []; } }
 function toggleStockFavorite(symbol) { const list=stockFavorites(),i=list.indexOf(symbol);i>=0?list.splice(i,1):list.push(symbol);localStorage.setItem("valutkin_favorite_stocks",JSON.stringify(list));renderStocksView(); }
 function renderStocksView() {
     const grid=document.getElementById("stocks-grid"); if(!grid)return;

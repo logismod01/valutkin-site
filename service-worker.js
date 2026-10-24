@@ -1,5 +1,5 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v16";
+const CACHE_NAME = "valutkin-v18";
 const APP_SHELL = [
   "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./manifest.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
