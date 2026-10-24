@@ -42,6 +42,11 @@
         <h1 class="page-title">📈 Акции компаний мира</h1>
         <p class="page-subtitle">Котировки в реальном времени. Данные: Finnhub.</p>
 
+<section class="stock-tools">
+  <label class="stock-search">🔎 <input id="stock-search" type="search" placeholder="Поиск компании или тикера"></label>
+  <select id="stock-sort" aria-label="Сортировка"><option value="default">По умолчанию</option><option value="growth">Сначала растущие</option><option value="decline">Сначала падающие</option><option value="price-high">Цена: сначала дорогие</option><option value="name">По названию</option></select>
+  <label class="favorites-only"><input id="stocks-favorites-only" type="checkbox"> Только избранные</label>
+</section>
 <section class="stock-categories">
     <button class="cat-btn active" data-cat="popular">🔥 Популярные</button>
     <button class="cat-btn" data-cat="tech">💻 Технологии</button>
