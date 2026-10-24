@@ -22,6 +22,14 @@
             <a href="./" class="nav-btn active">📈 Акции</a>
         </nav>
         <div class="header-right">
+            <div class="theme-picker" aria-label="Выбор темы">
+                <button class="theme-btn" data-theme="dark" title="Тёмная">🌙</button>
+                <button class="theme-btn" data-theme="light" title="Светлая">☀️</button>
+                <button class="theme-btn" data-theme="blue" title="Океан">💙</button>
+                <button class="theme-btn" data-theme="forest" title="Лес">🌲</button>
+                <button class="theme-btn" data-theme="sunset" title="Закат">🌅</button>
+                <button class="theme-btn" data-theme="violet" title="Фиолетовая">🔮</button>
+            </div>
             <div class="telegram-wrap">
                 <a href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer" class="telegram-icon">✈️</a>
                 <span class="tg-text">Открыть в Telegram</span>
@@ -41,6 +49,9 @@
     <button class="cat-btn" data-cat="food">🍔 Еда</button>
     <button class="cat-btn" data-cat="entertainment">🎬 Развлечения</button>
     <button class="cat-btn" data-cat="china">🇨🇳 Китай</button>
+    <button class="cat-btn" data-cat="energy">⚡ Энергетика</button>
+    <button class="cat-btn" data-cat="health">🩺 Медицина</button>
+    <button class="cat-btn" data-cat="retail">🛒 Ритейл</button>
 </section>
 
         <section id="stocks-grid" class="stocks-grid">
@@ -90,6 +101,7 @@
     </footer>
     
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script defer src="../theme.js"></script>
     <script defer src="stocks.js"></script>
 </body>
 </html>

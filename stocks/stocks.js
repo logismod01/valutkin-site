@@ -110,6 +110,27 @@ const STOCKS = {
         { symbol: "IMAX", name: "IMAX", flag: "🎬" },
         { symbol: "WMG", name: "Warner Music", flag: "🎶" },
     ],
+    "energy": [
+        { symbol: "XOM", name: "Exxon Mobil", flag: "🛢️" }, { symbol: "CVX", name: "Chevron", flag: "⛽" },
+        { symbol: "SHEL", name: "Shell", flag: "🐚" }, { symbol: "BP", name: "BP", flag: "🟢" },
+        { symbol: "COP", name: "ConocoPhillips", flag: "🛢️" }, { symbol: "SLB", name: "SLB", flag: "⚙️" },
+        { symbol: "NEE", name: "NextEra Energy", flag: "🌬️" }, { symbol: "ENPH", name: "Enphase", flag: "☀️" },
+        { symbol: "FSLR", name: "First Solar", flag: "🔆" }, { symbol: "OXY", name: "Occidental", flag: "🏭" },
+    ],
+    "health": [
+        { symbol: "LLY", name: "Eli Lilly", flag: "💊" }, { symbol: "JNJ", name: "Johnson & Johnson", flag: "🩺" },
+        { symbol: "UNH", name: "UnitedHealth", flag: "🏥" }, { symbol: "PFE", name: "Pfizer", flag: "💉" },
+        { symbol: "MRK", name: "Merck", flag: "🧬" }, { symbol: "ABBV", name: "AbbVie", flag: "🔬" },
+        { symbol: "TMO", name: "Thermo Fisher", flag: "🧪" }, { symbol: "ISRG", name: "Intuitive Surgical", flag: "🤖" },
+        { symbol: "AMGN", name: "Amgen", flag: "🧫" }, { symbol: "GILD", name: "Gilead", flag: "🧬" },
+    ],
+    "retail": [
+        { symbol: "WMT", name: "Walmart", flag: "🛒" }, { symbol: "COST", name: "Costco", flag: "🏬" },
+        { symbol: "HD", name: "Home Depot", flag: "🛠️" }, { symbol: "TGT", name: "Target", flag: "🎯" },
+        { symbol: "LOW", name: "Lowe's", flag: "🏠" }, { symbol: "EBAY", name: "eBay", flag: "📦" },
+        { symbol: "ETSY", name: "Etsy", flag: "🧶" }, { symbol: "BABA", name: "Alibaba", flag: "🛍️" },
+        { symbol: "JD", name: "JD.com", flag: "🛒" }, { symbol: "MELI", name: "MercadoLibre", flag: "💛" },
+    ],
     "china": [
         { symbol: "BABA", name: "Alibaba", flag: "🇨🇳" },
         { symbol: "TCEHY", name: "Tencent", flag: "🐧" },
