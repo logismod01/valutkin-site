@@ -234,6 +234,11 @@ function getRubValue(code) {
     return rubValue;
 }
 
+function getFavoriteCurrencies() {
+    try { const value = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]"); return Array.isArray(value) ? value : []; }
+    catch (_) { localStorage.removeItem("valutkin_favorite_currencies"); return []; }
+}
+
 // ============================================
 // РЕНДЕР КАРТОЧЕК
 // ============================================
@@ -244,7 +249,7 @@ function renderCurrencies() {
 
     let codes = Object.keys(CURRENCIES).filter(code => {
         const [name, flag, category] = CURRENCIES[code];
-        const favorites = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]");
+        const favorites = getFavoriteCurrencies();
         if (cat === "favorites" && !favorites.includes(code)) return false;
         if (cat !== "all" && cat !== "favorites" && category !== cat) return false;
         if (q) {
@@ -264,7 +269,7 @@ function renderCurrencies() {
     document.querySelectorAll(".favorite-btn").forEach(button => {
         button.addEventListener("click", event => {
             event.stopPropagation();
-            const list = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]");
+            const list = getFavoriteCurrencies();
             const code = button.dataset.favorite;
             const index = list.indexOf(code);
             index >= 0 ? list.splice(index, 1) : list.push(code);
@@ -283,7 +288,7 @@ function renderCurrencies() {
 function renderCard(code) {
     const [name, flag] = CURRENCIES[code];
     const rubValue = getRubValue(code);
-    const isFavorite = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]").includes(code);
+    const isFavorite = getFavoriteCurrencies().includes(code);
     const favoriteButton = `<button class="favorite-btn ${isFavorite ? "active" : ""}" data-favorite="${code}" title="${isFavorite ? "Убрать из избранного" : "В избранное"}">★</button>`;
 
     if (rubValue === null) {

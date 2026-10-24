@@ -1,9 +1,9 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v18";
+const CACHE_NAME = "valutkin-v23";
 const APP_SHELL = [
   "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./manifest.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
-  "./game.html", "./game.css", "./game.js", "./company.html", "./company.css", "./company.js", "./dashboard-settings.js",
+  "./game.html", "./game.css", "./game.js?v=23", "./company.html", "./company.css", "./company.js?v=22", "./dashboard-settings.js",
   "./compare.html", "./compare.css", "./compare.js", "./profile.html", "./profile.css", "./profile.js",
   "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png", "./assets/icon-192.png", "./assets/icon-512.png", "./assets/icon-maskable-512.png",
   "./exchange/", "./exchange/exchange.css", "./exchange/exchange.js",
@@ -11,6 +11,7 @@ const APP_SHELL = [
 ];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
+  self.skipWaiting();
 });
 self.addEventListener("message", event => {
   if (event.data?.type === "SKIP_WAITING") self.skipWaiting();

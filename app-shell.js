@@ -4,8 +4,7 @@
   const path = location.pathname;
   const inSubfolder = /\/(exchange|stocks)\//.test(path) || /\/(exchange|stocks)\/?$/.test(path);
   const base = inSubfolder ? "../" : "./";
-  const session = localStorage.getItem("valutkin_demo_session");
-  const accountHref = session ? `${base}profile.html` : `${base}auth.html`;
+  const accountHref = `${base}auth.html`;
   const themes = [
     ["dark", "🌙", "Тёмная"], ["light", "☀️", "Светлая"],
     ["blue", "💙", "Океан"], ["cyberpunk", "🌈", "Киберпанк"],
@@ -14,7 +13,7 @@
   ];
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
-    [`${base}stocks/`, "📈", "Акции"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", session ? "Мой профиль" : "Войти"],
+    [`${base}stocks/`, "📈", "Акции"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
     [`${base}profile.html`, "🔔", "Портфель и уведомления"]
   ];
 
@@ -66,7 +65,7 @@
     if (right && !right.querySelector(".account-shortcut")) {
       const account = document.createElement("a");
       account.href = accountHref; account.className = "account-shortcut";
-      account.innerHTML = `<span>👤</span><b>${session ? "Профиль" : "Войти"}</b>`;
+      account.innerHTML = `<span>👤</span><b>Войти</b>`;
       right.appendChild(account);
     }
     if (window.getSupabase) getSupabase().auth.getSession().then(({data}) => {
@@ -85,7 +84,8 @@
     try {
       const registration=await navigator.serviceWorker.register(`${base}service-worker.js`);
       registration.addEventListener("updatefound",()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)showShellToast("Доступна новая версия сайта","info",()=>{navigator.serviceWorker.addEventListener("controllerchange",()=>location.reload(),{once:true});worker.postMessage({type:"SKIP_WAITING"});});});});
-      navigator.serviceWorker.addEventListener("controllerchange",()=>console.info("Валюткин обновлён"));
+      navigator.serviceWorker.addEventListener("controllerchange",()=>{if(sessionStorage.getItem("valutkin_sw_reloading"))return;sessionStorage.setItem("valutkin_sw_reloading","1");location.reload();});
+      window.addEventListener("load",()=>sessionStorage.removeItem("valutkin_sw_reloading"),{once:true});
     } catch(error) { console.warn("Service Worker:",error); }
   }
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded",()=>{mount();registerWorker();}) : (mount(),registerWorker());
