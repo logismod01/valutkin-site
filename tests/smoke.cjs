@@ -85,6 +85,44 @@ function testProfile() {
   assert.equal(data.assets[0].buyPrice, 60);
 }
 
+function testUntrustedContentEscaping() {
+  const profileDom = browser("profile.html");
+  const profileWindow = profileDom.window;
+  profileWindow.localStorage.setItem("valutkin_profile_data", JSON.stringify({
+    portfolios: [{ id: "main", name: '<img src=x onerror="window.hacked=1">', assets: [] }],
+    activePortfolio: "main",
+    notifications: [{ text: '<img src=x onerror="window.hacked=1">', kind: "info", time: new Date().toISOString() }]
+  }));
+  profileWindow.getSupabase = () => ({ auth: { getUser: async () => ({ data: { user: null } }) } });
+  profileWindow.fetch = async url => ({ ok: true, json: async () => String(url).includes("coingecko") ? {} : { rates: { RUB: 90 } } });
+  evaluate(profileWindow, "profile.js");
+  assert.equal(profileWindow.document.querySelector("#portfolio-select img"), null);
+  assert.equal(profileWindow.document.querySelector("#notifications-list img"), null);
+  assert.equal(profileWindow.hacked, undefined);
+
+  const gameDom = browser("game.html");
+  const gameWindow = gameDom.window;
+  gameWindow.localStorage.setItem("valutkin_market_game_v1", JSON.stringify({
+    day: 2,
+    log: [{ day: 2, text: '<img src=x onerror="window.hacked=1">' }]
+  }));
+  evaluate(gameWindow, "game.js");
+  assert.equal(gameWindow.document.querySelector("#game-log img"), null);
+  assert.equal(gameWindow.hacked, undefined);
+
+  const shellSource = read("app-shell.js");
+  assert.match(shellSource, /shellEscape\(x\.note\)/, "diagnostic details must be escaped");
+  assert.match(shellSource, /shellEscape\(text\)/, "toast text must be escaped");
+  const authSource = read("auth.js");
+  assert.match(authSource, /authEscape\(user\.email/, "account metadata must be escaped");
+  const companySource = read("company.js");
+  assert.match(companySource, /new URL\(profile\.weburl\)/, "company links must be validated");
+  assert.doesNotMatch(companySource, /href=[\"`]\$\{profile\.weburl\}/, "raw company URL interpolation is unsafe");
+  const labSource = read("market-lab.js");
+  assert.match(labSource, /labEscape\(x\.summary\)/, "stored conversion history must be escaped");
+  assert.match(labSource, /CURRENCIES\[x\.code\]/, "stored alerts must be allowlisted");
+}
+
 function testStaticFiles() {
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
@@ -107,6 +145,7 @@ const tests = [
   ["game", testGame],
   ["game without storage", testGameWithoutStorage],
   ["profile weighted average", testProfile],
+  ["untrusted content escaping", testUntrustedContentEscaping],
   ["static files and PWA paths", testStaticFiles]
 ];
 

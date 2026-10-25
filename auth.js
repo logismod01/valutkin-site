@@ -3,6 +3,7 @@ const authGet=(key,fallback=null)=>{try{return authStorage?.getItem(key)??fallba
 const authSet=(key,value)=>{try{authStorage?.setItem(key,value)}catch(_){}};
 const authRemove=key=>{try{authStorage?.removeItem(key)}catch(_){}};
 const authClear=()=>{try{authStorage?.clear()}catch(_){}};
+const authEscape=value=>String(value).replace(/[&<>"\']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\'":"&#39;"}[char]));
 const $ = id => document.getElementById(id);
 const db = getSupabase();
 const normalizePhone = value => value.replace(/[^+\d]/g, "");
@@ -16,7 +17,7 @@ async function renderProfile(user){
   const {data:profile}=await db.from("profiles").select("name,phone").eq("id",user.id).maybeSingle();
   ["login-form","register-form","reset-form","new-password-form"].forEach(id=>$(id).classList.add("hidden"));document.querySelector(".auth-tabs").classList.add("hidden");$("profile").classList.remove("hidden");
   $("form-title").textContent=`Здравствуйте, ${profile?.name||user.user_metadata?.name||"пользователь"}`;
-  $("profile-data").innerHTML=`<p>📧 ${user.email||"не указана"}</p><p>📱 ${profile?.phone||user.user_metadata?.phone||"не указан"}</p><small>Почта: ${user.email_confirmed_at?"подтверждена":"ожидает подтверждения"}</small>`;
+  $("profile-data").innerHTML=`<p>📧 ${authEscape(user.email||"не указана")}</p><p>📱 ${authEscape(profile?.phone||user.user_metadata?.phone||"не указан")}</p><small>Почта: ${user.email_confirmed_at?"подтверждена":"ожидает подтверждения"}</small>`;
   $("bind-email").value=user.email||"";$("bind-phone").value=profile?.phone||user.user_metadata?.phone||"";
 }
 document.querySelectorAll("[data-view]").forEach(x=>x.addEventListener("click",()=>show(x.dataset.view)));
