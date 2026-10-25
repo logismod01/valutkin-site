@@ -227,3 +227,22 @@ create policy "push_subscriptions_own_update" on public.push_subscriptions for u
 drop policy if exists "push_subscriptions_own_delete" on public.push_subscriptions;
 create policy "push_subscriptions_own_delete" on public.push_subscriptions for delete using (auth.uid()=user_id);
 create index if not exists push_subscriptions_user_idx on public.push_subscriptions(user_id);
+
+-- Возвращает Push-адреса клуба только автору свежего предложения.
+-- Закрытые ключи VAPID по-прежнему находятся только в Edge Function Secrets.
+create or replace function public.club_push_targets(p_proposal uuid)
+returns table(id bigint,endpoint text,p256dh text,auth text)
+language plpgsql security definer set search_path=public as $$
+declare pr public.game_club_proposals;
+begin
+  select * into pr from public.game_club_proposals where game_club_proposals.id=p_proposal;
+  if pr.id is null or pr.author_id<>auth.uid() or pr.created_at<now()-interval '5 minutes' then
+    raise exception 'proposal is unavailable';
+  end if;
+  return query select s.id,s.endpoint,s.p256dh,s.auth
+  from public.push_subscriptions s
+  join public.game_club_members m on m.user_id=s.user_id
+  where m.club_id=pr.club_id and s.user_id<>auth.uid();
+end;$$;
+revoke all on function public.club_push_targets(uuid) from public, anon;
+grant execute on function public.club_push_targets(uuid) to authenticated;
