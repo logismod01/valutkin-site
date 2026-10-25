@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Аккаунт — Валюткин</title>
-  <script>document.documentElement.dataset.theme=localStorage.getItem("valutkin_theme")||"dark"</script>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("valutkin_theme")||"dark"}catch(_){document.documentElement.dataset.theme="dark"}</script>
   <link rel="icon" type="image/png" href="assets/icon-192.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="shell.css">
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a0a1a">

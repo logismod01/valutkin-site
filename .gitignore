@@ -1,0 +1,12 @@
+
+# Android signing and local build files
+android-twa/.gradle/
+android-twa/local.properties
+android-twa/**/*.jks
+android-twa/**/*.keystore
+android-twa/**/build/
+.well-known/assetlinks.json
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
