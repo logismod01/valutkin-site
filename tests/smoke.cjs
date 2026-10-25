@@ -129,6 +129,12 @@ function testStaticFiles() {
     "stocks/stocks.js", "exchange/exchange.js"
   ];
   for (const script of scripts) execFileSync(process.execPath, ["--check", path.join(ROOT, script)]);
+  const mainSource = read("script.js");
+  assert.match(mainSource, /translucentAccent/, "chart colors must normalize short CSS hex values");
+  assert.doesNotMatch(mainSource, /addColorStop\(0, `\$\{accent\}66`\)/, "short CSS hex must not create an invalid Canvas color");
+  const compareSource = read("compare.js");
+  assert.match(compareSource, /api\.binance\.com\/api\/v3\/klines/, "crypto comparison needs a rate-limit-resistant primary source");
+  assert.match(compareSource, /api\.coingecko\.com/, "crypto comparison needs a fallback source");
   const serviceWorker = read("service-worker.js");
   const block = serviceWorker.match(/const APP_SHELL = \[([\s\S]*?)\];/);
   assert.ok(block, "APP_SHELL is missing");

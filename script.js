@@ -574,8 +574,11 @@ function renderChart(history, code, days) {
 
     const styles = getComputedStyle(document.documentElement);
     const accent = styles.getPropertyValue("--accent").trim() || "#00d4ff";
+    const translucentAccent = /^#[0-9a-f]{3}$/i.test(accent)
+        ? `${accent.slice(1).split("").map(char => char + char).join("")}66`.replace(/^/, "#")
+        : /^#[0-9a-f]{6}$/i.test(accent) ? `${accent}66` : "rgba(0, 212, 255, 0.4)";
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, `${accent}66`);
+    gradient.addColorStop(0, translucentAccent);
     gradient.addColorStop(1, "rgba(0, 212, 255, 0.0)");
 
     state.chart = new Chart(ctx, {
