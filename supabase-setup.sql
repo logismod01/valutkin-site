@@ -136,3 +136,72 @@ create policy "club_members_join_self" on public.game_club_members for insert wi
 drop policy if exists "club_members_leave_self" on public.game_club_members;
 create policy "club_members_leave_self" on public.game_club_members for delete using (auth.uid()=user_id);
 create index if not exists game_club_members_user_idx on public.game_club_members(user_id);
+
+-- Общий виртуальный фонд клуба: решения принимаются голосованием участников.
+alter table public.game_club_members add column if not exists role text not null default 'member'
+  check (role in ('member','analyst','trader','director'));
+create table if not exists public.game_club_funds (
+  club_id uuid primary key references public.game_clubs(id) on delete cascade,
+  cash numeric not null default 1000000 check (cash >= 0),
+  holdings jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+create table if not exists public.game_club_proposals (
+  id uuid primary key default gen_random_uuid(),
+  club_id uuid not null references public.game_clubs(id) on delete cascade,
+  author_id uuid not null references auth.users(id) on delete cascade,
+  asset_code text not null,
+  action text not null check (action in ('buy','sell')),
+  quantity numeric not null check (quantity > 0),
+  price numeric not null check (price > 0),
+  status text not null default 'open' check (status in ('open','approved','rejected','failed')),
+  created_at timestamptz not null default now()
+);
+create table if not exists public.game_club_votes (
+  proposal_id uuid not null references public.game_club_proposals(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  vote boolean not null,
+  created_at timestamptz not null default now(),
+  primary key (proposal_id,user_id)
+);
+alter table public.game_club_funds enable row level security;
+alter table public.game_club_proposals enable row level security;
+alter table public.game_club_votes enable row level security;
+drop policy if exists "club_funds_public_read" on public.game_club_funds;
+create policy "club_funds_public_read" on public.game_club_funds for select using (true);
+drop policy if exists "club_funds_member_insert" on public.game_club_funds;
+create policy "club_funds_member_insert" on public.game_club_funds for insert with check (exists(select 1 from public.game_club_members m where m.club_id=game_club_funds.club_id and m.user_id=auth.uid()));
+drop policy if exists "club_proposals_public_read" on public.game_club_proposals;
+create policy "club_proposals_public_read" on public.game_club_proposals for select using (true);
+drop policy if exists "club_proposals_member_insert" on public.game_club_proposals;
+create policy "club_proposals_member_insert" on public.game_club_proposals for insert with check (auth.uid()=author_id and exists(select 1 from public.game_club_members m where m.club_id=game_club_proposals.club_id and m.user_id=auth.uid()));
+drop policy if exists "club_votes_public_read" on public.game_club_votes;
+create policy "club_votes_public_read" on public.game_club_votes for select using (true);
+
+create or replace function public.vote_club_proposal(p_proposal uuid,p_vote boolean)
+returns text language plpgsql security definer set search_path=public as $$
+declare pr public.game_club_proposals; members int; yes_votes int; no_votes int; owned numeric; total numeric;
+begin
+  select * into pr from public.game_club_proposals where id=p_proposal for update;
+  if pr.id is null or pr.status <> 'open' then return 'closed'; end if;
+  if not exists(select 1 from public.game_club_members where club_id=pr.club_id and user_id=auth.uid()) then raise exception 'not a club member'; end if;
+  insert into public.game_club_votes(proposal_id,user_id,vote) values(p_proposal,auth.uid(),p_vote)
+  on conflict(proposal_id,user_id) do update set vote=excluded.vote,created_at=now();
+  select count(*) into members from public.game_club_members where club_id=pr.club_id;
+  select count(*) filter(where vote),count(*) filter(where not vote) into yes_votes,no_votes from public.game_club_votes where proposal_id=p_proposal;
+  if yes_votes >= greatest(1,ceil(members/2.0)) then
+    insert into public.game_club_funds(club_id) values(pr.club_id) on conflict do nothing;
+    total:=pr.quantity*pr.price;
+    if pr.action='buy' then
+      update public.game_club_funds set cash=cash-total,holdings=jsonb_set(holdings,array[pr.asset_code],to_jsonb(coalesce((holdings->>pr.asset_code)::numeric,0)+pr.quantity)),updated_at=now() where club_id=pr.club_id and cash>=total;
+    else
+      select coalesce((holdings->>pr.asset_code)::numeric,0) into owned from public.game_club_funds where club_id=pr.club_id;
+      if owned>=pr.quantity then update public.game_club_funds set cash=cash+total,holdings=jsonb_set(holdings,array[pr.asset_code],to_jsonb(owned-pr.quantity)),updated_at=now() where club_id=pr.club_id; else update public.game_club_proposals set status='failed' where id=p_proposal; return 'insufficient'; end if;
+    end if;
+    if not found then update public.game_club_proposals set status='failed' where id=p_proposal; return 'insufficient'; end if;
+    update public.game_club_proposals set status='approved' where id=p_proposal; return 'approved';
+  elsif no_votes >= greatest(1,ceil(members/2.0)) then update public.game_club_proposals set status='rejected' where id=p_proposal; return 'rejected'; end if;
+  return 'open';
+end;$$;
+revoke all on function public.vote_club_proposal(uuid,boolean) from public, anon;
+grant execute on function public.vote_club_proposal(uuid,boolean) to authenticated;
