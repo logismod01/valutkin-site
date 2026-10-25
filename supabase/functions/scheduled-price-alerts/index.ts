@@ -18,7 +18,7 @@ Deno.serve(async request=>{
     const triggered:string[]=[],expired:number[]=[];let sent=0;
     for(const [id,{alert,subscriptions}] of grouped){const quote=Number(market.rates?.[alert.asset_code]),price=alert.asset_code==="RUB"?1:quote>0?rub/quote:null;if(!price)continue;const hit=alert.direction==="above"?price>=Number(alert.target):price<=Number(alert.target);if(!hit)continue;
       const payload=JSON.stringify({title:`${alert.asset_code}: цель достигнута`,body:`Курс ${price.toFixed(4)} ₽, цель ${Number(alert.target).toFixed(4)} ₽`,url:"/valutkin-site/",tag:`rate-${id}`});
-      await Promise.all(subscriptions.map(async subscription=>{try{await webpush.sendNotification({endpoint:subscription.endpoint,keys:{p256dh:subscription.p256dh,auth:subscription.auth}},payload);sent++}catch(error){if(error?.statusCode===404||error?.statusCode===410)expired.push(subscription.id);else console.error("Push delivery",error)}}));triggered.push(id);
+      let alertSent=0;await Promise.all(subscriptions.map(async subscription=>{try{await webpush.sendNotification({endpoint:subscription.endpoint,keys:{p256dh:subscription.p256dh,auth:subscription.auth}},payload);sent++;alertSent++}catch(error){if(error?.statusCode===404||error?.statusCode===410)expired.push(subscription.id);else console.error("Push delivery",error)}}));if(alertSent>0)triggered.push(id);
     }
     const {error:markError}=await db.rpc("mark_scheduled_alerts",{p_secret:cronSecret,p_alert_ids:triggered,p_expired_subscription_ids:[...new Set(expired)]});if(markError)throw markError;
     return Response.json({ok:true,checked:grouped.size,triggered:triggered.length,sent,expired:expired.length});

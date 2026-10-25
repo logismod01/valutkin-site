@@ -22,12 +22,13 @@ function normalizeProfileData(value) {
 }
 let data; try { data=normalizeProfileData(JSON.parse(pGet(PROFILE_KEY)||"{}")); } catch { data=normalizeProfileData(DEFAULT_DATA); }
 let market = { crypto:{}, rates:{} };
-let cloudUser = null;
+let cloudUser = null,profileSyncTimer=null,profileSyncing=false,profileSyncPending=false;
 const $ = id => document.getElementById(id);
 const money = n => new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:2}).format(n || 0);
 function persistProfileLocal(){pSet(PROFILE_KEY,JSON.stringify(data))}
-async function syncProfileCloud(){if(!cloudUser||typeof getSupabase!=="function")return false;try{const {error}=await getSupabase().from("user_data").upsert({user_id:cloudUser.id,data,updated_at:data.updatedAt||new Date().toISOString()});if(error)throw error;return true}catch(error){console.warn("Cloud save:",error.message||error);return false}}
-function save(){data.updatedAt=new Date().toISOString();persistProfileLocal();syncProfileCloud()}
+async function syncProfileCloud(){if(!cloudUser||typeof getSupabase!=="function")return false;if(profileSyncing){profileSyncPending=true;return false}profileSyncing=true;profileSyncPending=false;try{const snapshot=JSON.parse(JSON.stringify(data)),{error}=await getSupabase().from("user_data").upsert({user_id:cloudUser.id,data:snapshot,updated_at:snapshot.updatedAt||new Date().toISOString()});if(error)throw error;return true}catch(error){console.warn("Cloud save:",error.message||error);return false}finally{profileSyncing=false;if(profileSyncPending)scheduleProfileCloudSync(100)}}
+function scheduleProfileCloudSync(delay=700){clearTimeout(profileSyncTimer);profileSyncTimer=setTimeout(syncProfileCloud,delay)}
+function save(){data.updatedAt=new Date().toISOString();persistProfileLocal();scheduleProfileCloudSync()}
 function notify(text,kind="info"){ data.notifications.unshift({text,kind,time:new Date().toISOString()}); data.notifications=data.notifications.slice(0,30); save(); }
 async function userInfo(){
  try {
@@ -103,4 +104,4 @@ function applyPrivacy(){ document.body.classList.toggle("finances-hidden",financ
 $("privacy-toggle").onclick=()=>{financesHidden=!financesHidden;pSet("valutkin_hide_finances",financesHidden);applyPrivacy();};
 $("identity-toggle").onclick=()=>{identityHidden=!identityHidden;pSet("valutkin_hide_identity",identityHidden);applyPrivacy();};
 applyPrivacy();
-window.addEventListener("online",()=>syncProfileCloud());const sharedMode=loadSharedPortfolio();render();loadMarket();if(!sharedMode)userInfo();
+window.addEventListener("online",()=>scheduleProfileCloudSync(0));const sharedMode=loadSharedPortfolio();render();loadMarket();if(!sharedMode)userInfo();

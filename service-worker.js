@@ -1,16 +1,21 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v48";
+const CACHE_NAME = "valutkin-v49";
 const APP_SHELL = [
   "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./market-lab.js?v=40", "./manifest.json", "./.well-known/assetlinks.template.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
   "./game.html", "./game.css", "./game.js?v=48", "./company.html", "./company.css", "./company.js?v=46", "./dashboard-settings.js",
-  "./compare.html", "./compare.css", "./compare.js", "./profile.html", "./profile.css", "./profile.js?v=47",
+  "./compare.html", "./compare.css", "./compare.js", "./profile.html", "./profile.css", "./profile.js?v=49",
   "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png", "./assets/icon-192.png", "./assets/icon-512.png", "./assets/icon-maskable-512.png",
   "./exchange/", "./exchange/exchange.css", "./exchange/exchange.js",
   "./stocks/", "./stocks/stocks.css", "./stocks/stocks.js"
 ];
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
+  event.waitUntil(caches.open(CACHE_NAME).then(async cache => {
+    const results=await Promise.allSettled(APP_SHELL.map(path=>cache.add(path)));
+    const saved=results.filter(result=>result.status==="fulfilled").length;
+    if(!saved) throw new Error("Не удалось сохранить оболочку приложения");
+    console.info(`Офлайн-кэш: ${saved}/${APP_SHELL.length}`);
+  }));
   self.skipWaiting();
 });
 self.addEventListener("message", event => {
@@ -30,13 +35,14 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 async function networkFirst(request) {
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
   try {
-    const response = await fetch(request);
+    const response = await fetch(request,{signal:controller.signal});
     if (response.ok) (await caches.open(CACHE_NAME)).put(request, response.clone());
     return response;
   } catch {
     return (await caches.match(request)) || (request.mode === "navigate" ? caches.match("./offline.html") : Response.error());
-  }
+  } finally { clearTimeout(timer); }
 }
 self.addEventListener("push", event => {
   let payload={title:"Валюткин",body:"Новое уведомление",url:"./"};
