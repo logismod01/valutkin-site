@@ -1,0 +1,13 @@
+{
+  "name": "valutkin-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Автоматические проверки PWA Валюткин",
+  "scripts": {
+    "test": "node tests/smoke.cjs",
+    "check": "node tests/smoke.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "24.1.3"
+  }
+}

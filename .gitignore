@@ -6,3 +6,7 @@ android-twa/**/*.jks
 android-twa/**/*.keystore
 android-twa/**/build/
 .well-known/assetlinks.json
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*

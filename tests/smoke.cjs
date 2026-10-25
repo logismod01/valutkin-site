@@ -1,0 +1,117 @@
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const { execFileSync } = require("node:child_process");
+const { JSDOM } = require("jsdom");
+
+const ROOT = path.resolve(__dirname, "..");
+const read = file => fs.readFileSync(path.join(ROOT, file), "utf8");
+const withoutExternalScripts = html => html.replace(/<script[^>]*src[^>]*><\/script>/g, "");
+const evaluate = (window, file) => window.eval(read(file));
+
+function browser(htmlFile) {
+  const dom = new JSDOM(withoutExternalScripts(read(htmlFile)), {
+    url: `https://example.test/${htmlFile}`,
+    runScripts: "outside-only"
+  });
+  dom.window.confirm = () => true;
+  dom.window.prompt = (_, fallback = "") => fallback;
+  dom.window.alert = () => {};
+  dom.window.HTMLElement.prototype.scrollIntoView = function () {};
+  dom.window.matchMedia = () => ({ matches: false });
+  dom.window.scrollTo = () => {};
+  dom.window.AudioContext = function () { throw new Error("Audio disabled in tests"); };
+  return dom;
+}
+
+function testShellWithoutStorage() {
+  const dom = new JSDOM('<!doctype html><header><div class="header-right"></div></header>', {
+    url: "https://example.test/",
+    runScripts: "outside-only"
+  });
+  const { window } = dom;
+  Object.defineProperty(window, "localStorage", { get() { throw new window.DOMException("denied", "SecurityError"); } });
+  Object.defineProperty(window, "sessionStorage", { get() { throw new window.DOMException("denied", "SecurityError"); } });
+  window.matchMedia = () => ({ matches: false });
+  window.scrollTo = () => {};
+  evaluate(window, "app-shell.js");
+  window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+  assert.ok(window.document.querySelector(".side-drawer"));
+  assert.equal(window.document.querySelectorAll("[data-shell-theme]").length, 19);
+  assert.equal(window.document.querySelectorAll("#shell-font option").length, 10);
+  window.document.querySelector('[data-shell-theme="matrix"]').click();
+  assert.equal(window.document.documentElement.dataset.theme, "matrix");
+}
+
+function testGame() {
+  const { window } = browser("game.html");
+  evaluate(window, "game.js");
+  const document = window.document;
+  assert.ok(document.querySelector("#difficulty-modal.active"));
+  document.querySelector('[data-difficulty="easy"]').click();
+  assert.equal(document.querySelectorAll(".market-asset").length, 89);
+  assert.equal(document.querySelectorAll(".employee").length, 15);
+  assert.equal(document.querySelectorAll(".achievement").length, 15);
+  assert.equal(document.querySelectorAll(".lesson-card").length, 8);
+  assert.match(document.querySelector("#game-season").textContent, /Сезон 1/);
+  document.querySelector('[data-choice="0"]').click();
+  document.querySelector("#next-day").click();
+  assert.equal(document.querySelector("#game-day").textContent, "2");
+}
+
+function testGameWithoutStorage() {
+  const dom = browser("game.html");
+  const { window } = dom;
+  Object.defineProperty(window, "localStorage", { get() { throw new window.DOMException("denied", "SecurityError"); } });
+  evaluate(window, "game.js");
+  assert.equal(window.document.querySelectorAll(".market-asset").length, 89);
+}
+
+function testProfile() {
+  const { window } = browser("profile.html");
+  window.getSupabase = () => ({ auth: { getUser: async () => ({ data: { user: null } }) } });
+  window.fetch = async url => ({ ok: true, json: async () => String(url).includes("coingecko") ? {} : { rates: { RUB: 90 } } });
+  evaluate(window, "profile.js");
+  const document = window.document;
+  document.querySelector("#asset-code").value = "BTC";
+  document.querySelector("#asset-amount").value = "2";
+  document.querySelector("#asset-buy-price").value = "50";
+  document.querySelector("#save-asset").click();
+  document.querySelector("#asset-amount").value = "1";
+  document.querySelector("#asset-buy-price").value = "80";
+  document.querySelector("#save-asset").click();
+  const data = JSON.parse(window.localStorage.getItem("valutkin_profile_data"));
+  assert.equal(data.assets[0].amount, 3);
+  assert.equal(data.assets[0].buyPrice, 60);
+}
+
+function testStaticFiles() {
+  const scripts = [
+    ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
+    "stocks/stocks.js", "exchange/exchange.js"
+  ];
+  for (const script of scripts) execFileSync(process.execPath, ["--check", path.join(ROOT, script)]);
+  const serviceWorker = read("service-worker.js");
+  const block = serviceWorker.match(/const APP_SHELL = \[([\s\S]*?)\];/);
+  assert.ok(block, "APP_SHELL is missing");
+  const resources = [...block[1].matchAll(/"([^"]+)"/g)].map(match => match[1]);
+  for (const resource of resources) {
+    let relative = resource.split("?")[0].replace(/^\.\//, "") || "index.html";
+    if (relative.endsWith("/")) relative += "index.html";
+    assert.ok(fs.existsSync(path.join(ROOT, relative)), `Missing cached resource: ${resource}`);
+  }
+}
+
+const tests = [
+  ["shell without storage", testShellWithoutStorage],
+  ["game", testGame],
+  ["game without storage", testGameWithoutStorage],
+  ["profile weighted average", testProfile],
+  ["static files and PWA paths", testStaticFiles]
+];
+
+for (const [name, test] of tests) {
+  test();
+  console.log(`✓ ${name}`);
+}
+console.log(`\n${tests.length} smoke tests passed.`);
