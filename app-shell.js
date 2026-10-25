@@ -5,6 +5,12 @@
   const inSubfolder = /\/(exchange|stocks)\//.test(path) || /\/(exchange|stocks)\/?$/.test(path);
   const base = inSubfolder ? "../" : "./";
   const accountHref = `${base}auth.html`;
+  let localStore=null,sessionStore=null;
+  try{localStore=window.localStorage}catch(_){}
+  try{sessionStore=window.sessionStorage}catch(_){}
+  const storageGet=(storage,key,fallback=null)=>{try{return storage?.getItem(key)??fallback}catch(_){return fallback}};
+  const storageSet=(storage,key,value)=>{try{storage?.setItem(key,value);return Boolean(storage)}catch(_){return false}};
+  const storageRemove=(storage,key)=>{try{storage?.removeItem(key)}catch(_){}};
   const themes = [
     ["dark", "🌙", "Тёмная"], ["light", "☀️", "Светлая"],
     ["blue", "💙", "Океан"], ["cyberpunk", "🌈", "Киберпанк"],
@@ -27,7 +33,7 @@
 
   function setTheme(name) {
     root.dataset.theme = name;
-    localStorage.setItem("valutkin_theme", name);
+    storageSet(localStore,"valutkin_theme",name);
     document.querySelectorAll("[data-shell-theme]").forEach(x => x.classList.toggle("active", x.dataset.shellTheme === name));
   }
   function mount() {
@@ -76,8 +82,8 @@
     const runAction=async action=>{
       if(action==="search") return openPalette();
       if(action==="offline") return openOfflineCenter();
-      if(action==="text"){const large=root.dataset.textSize!=="large";root.dataset.textSize=large?"large":"normal";localStorage.setItem("valutkin_text_size",root.dataset.textSize);showShellToast(large?"Текст увеличен":"Обычный размер текста");}
-      if(action==="motion"){const reduced=root.dataset.motion!=="reduced";root.dataset.motion=reduced?"reduced":"normal";localStorage.setItem("valutkin_motion",root.dataset.motion);showShellToast(reduced?"Анимации уменьшены":"Анимации включены");}
+      if(action==="text"){const large=root.dataset.textSize!=="large";root.dataset.textSize=large?"large":"normal";storageSet(localStore,"valutkin_text_size",root.dataset.textSize);showShellToast(large?"Текст увеличен":"Обычный размер текста");}
+      if(action==="motion"){const reduced=root.dataset.motion!=="reduced";root.dataset.motion=reduced?"reduced":"normal";storageSet(localStore,"valutkin_motion",root.dataset.motion);showShellToast(reduced?"Анимации уменьшены":"Анимации включены");}
       if(action==="top") scrollTo({top:0,behavior:root.dataset.motion==="reduced"?"auto":"smooth"});
       if(action==="share"){try{if(navigator.share)await navigator.share({title:document.title,url:location.href});else{await navigator.clipboard.writeText(location.href);showShellToast("Ссылка скопирована","success");}}catch(error){if(error.name!=="AbortError")showShellToast("Не удалось поделиться");}}
     };
@@ -105,12 +111,12 @@
     function closePalette(){palette.classList.remove("active")}
     paletteInput.oninput=()=>{activeCommand=0;drawCommands(paletteInput.value)};paletteInput.onkeydown=e=>{if(e.key==="ArrowDown"){e.preventDefault();activeCommand=Math.min(activeCommand+1,shown.length-1);drawCommands(paletteInput.value)}if(e.key==="ArrowUp"){e.preventDefault();activeCommand=Math.max(0,activeCommand-1);drawCommands(paletteInput.value)}if(e.key==="Enter"){e.preventDefault();executeCommand(shown[activeCommand])}};palette.querySelector(".palette-search button").onclick=closePalette;palette.onclick=e=>{if(e.target===palette)closePalette()};document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openPalette()}if(e.key==="Escape")closePalette()});
 
-    setTheme(localStorage.getItem("valutkin_theme") || "dark");
-    root.dataset.textSize=localStorage.getItem("valutkin_text_size")||"normal";root.dataset.motion=localStorage.getItem("valutkin_motion")||"normal";
-    const font = localStorage.getItem("valutkin_font") || "system";
+    setTheme(storageGet(localStore,"valutkin_theme","dark"));
+    root.dataset.textSize=storageGet(localStore,"valutkin_text_size","normal");root.dataset.motion=storageGet(localStore,"valutkin_motion","normal");
+    const font = storageGet(localStore,"valutkin_font","system");
     root.dataset.font = font;
     const fontSelect = aside.querySelector("#shell-font"); fontSelect.value = font;
-    fontSelect.addEventListener("change", () => { root.dataset.font = fontSelect.value; localStorage.setItem("valutkin_font", fontSelect.value); });
+    fontSelect.addEventListener("change", () => { root.dataset.font = fontSelect.value; storageSet(localStore,"valutkin_font",fontSelect.value); });
 
     const right = document.querySelector(".header-right");
     if (right && !right.querySelector(".account-shortcut")) {
@@ -135,8 +141,8 @@
     try {
       const registration=await navigator.serviceWorker.register(`${base}service-worker.js`);
       registration.addEventListener("updatefound",()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)showShellToast("Доступна новая версия сайта","info",()=>{navigator.serviceWorker.addEventListener("controllerchange",()=>location.reload(),{once:true});worker.postMessage({type:"SKIP_WAITING"});});});});
-      navigator.serviceWorker.addEventListener("controllerchange",()=>{if(sessionStorage.getItem("valutkin_sw_reloading"))return;sessionStorage.setItem("valutkin_sw_reloading","1");location.reload();});
-      window.addEventListener("load",()=>sessionStorage.removeItem("valutkin_sw_reloading"),{once:true});
+      navigator.serviceWorker.addEventListener("controllerchange",()=>{if(storageGet(sessionStore,"valutkin_sw_reloading"))return;storageSet(sessionStore,"valutkin_sw_reloading","1");location.reload();});
+      window.addEventListener("load",()=>storageRemove(sessionStore,"valutkin_sw_reloading"),{once:true});
     } catch(error) { console.warn("Service Worker:",error); }
   }
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded",()=>{mount();registerWorker();}) : (mount(),registerWorker());

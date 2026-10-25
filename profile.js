@@ -2,6 +2,10 @@ const PROFILE_KEY = "valutkin_profile_data";
 const DEFAULT_DATA = { assets: [], portfolios: [], activePortfolio: "main", favorites: ["USD", "EUR", "CNY"], notifications: [], widgets:{} };
 const cryptoMeta = { BTC:["Bitcoin","₿","bitcoin"],ETH:["Ethereum","◆","ethereum"],TON:["Toncoin","💎","the-open-network"],SOL:["Solana","◎","solana"],USDT:["Tether","₮","tether"],BNB:["BNB","🟡","binancecoin"],XRP:["XRP","✕","ripple"],ADA:["Cardano","🔷","cardano"],DOGE:["Dogecoin","🐕","dogecoin"],TRX:["TRON","🔺","tron"],DOT:["Polkadot","⚪","polkadot"],AVAX:["Avalanche","🔻","avalanche-2"],LINK:["Chainlink","🔗","chainlink"] };
 const fiatMeta = {USD:["Доллар США","🇺🇸"],EUR:["Евро","🇪🇺"],CNY:["Юань","🇨🇳"],GBP:["Фунт","🇬🇧"],JPY:["Иена","🇯🇵"],KZT:["Тенге","🇰🇿"],AED:["Дирхам","🇦🇪"],TRY:["Лира","🇹🇷"],GEL:["Лари","🇬🇪"]};
+let profileStorage=null;try{profileStorage=window.localStorage}catch(_){}
+const pGet=(key,fallback=null)=>{try{return profileStorage?.getItem(key)??fallback}catch(_){return fallback}};
+const pSet=(key,value)=>{try{profileStorage?.setItem(key,value)}catch(_){}};
+const pRemove=key=>{try{profileStorage?.removeItem(key)}catch(_){}};
 function normalizeProfileData(value) {
  const source=value&&typeof value==="object"?value:{};
  const cleanAssets=list=>Array.isArray(list)?list.filter(a=>a&&cryptoMeta[a.code]&&Number.isFinite(+a.amount)&&+a.amount>0).map(a=>({...a,amount:+a.amount,buyPrice:Number.isFinite(+a.buyPrice)?+a.buyPrice:0})):[];
@@ -15,19 +19,19 @@ function normalizeProfileData(value) {
   widgets:source.widgets&&typeof source.widgets==="object"?source.widgets:{}
  };
 }
-let data; try { data=normalizeProfileData(JSON.parse(localStorage.getItem(PROFILE_KEY)||"{}")); } catch { data=normalizeProfileData(DEFAULT_DATA); }
+let data; try { data=normalizeProfileData(JSON.parse(pGet(PROFILE_KEY)||"{}")); } catch { data=normalizeProfileData(DEFAULT_DATA); }
 let market = { crypto:{}, rates:{} };
 let cloudUser = null;
 const $ = id => document.getElementById(id);
 const money = n => new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:2}).format(n || 0);
-function save(){ try{localStorage.setItem(PROFILE_KEY,JSON.stringify(data))}catch(error){console.warn("Local profile save:",error)} if(cloudUser) getSupabase().from("user_data").upsert({user_id:cloudUser.id,data,updated_at:new Date().toISOString()}).then(({error})=>{if(error)console.warn("Cloud save:",error.message)}); }
+function save(){ try{pSet(PROFILE_KEY,JSON.stringify(data))}catch(error){console.warn("Local profile save:",error)} if(cloudUser) getSupabase().from("user_data").upsert({user_id:cloudUser.id,data,updated_at:new Date().toISOString()}).then(({error})=>{if(error)console.warn("Cloud save:",error.message)}); }
 function notify(text,kind="info"){ data.notifications.unshift({text,kind,time:new Date().toISOString()}); data.notifications=data.notifications.slice(0,30); save(); }
 async function userInfo(){
  try {
   const db=getSupabase(),{data:{user}}=await db.auth.getUser(); cloudUser=user;
   if(!user){$("guest-warning").classList.remove("hidden");return;}
   const [{data:profile},{data:cloud}]=await Promise.all([db.from("profiles").select("name,phone,avatar").eq("id",user.id).maybeSingle(),db.from("user_data").select("data").eq("user_id",user.id).maybeSingle()]);
-  if(cloud?.data&&Object.keys(cloud.data).length){data=normalizeProfileData(cloud.data);try{localStorage.setItem(PROFILE_KEY,JSON.stringify(data))}catch(_){}render();}
+  if(cloud?.data&&Object.keys(cloud.data).length){data=normalizeProfileData(cloud.data);try{pSet(PROFILE_KEY,JSON.stringify(data))}catch(_){}render();}
   $("welcome").textContent=`Здравствуйте, ${profile?.name||user.user_metadata?.name||"пользователь"}`;$("contacts").textContent=`${user.email||""}${profile?.phone?` • ${profile.phone}`:""}`;
  } catch(e){$("guest-warning").classList.remove("hidden");}
 }
@@ -39,9 +43,9 @@ async function loadMarket(){
  createPriceNotifications(); render();
 }
 function createPriceNotifications(){
- const previous=JSON.parse(localStorage.getItem("valutkin_price_snapshot")||"{}"); const current={};
+ const previous=JSON.parse(pGet("valutkin_price_snapshot")||"{}"); const current={};
  Object.entries(cryptoMeta).forEach(([code,m])=>{const price=market.crypto[m[2]]?.rub;if(!price)return;current[code]=price;if(previous[code]){const change=(price-previous[code])/previous[code]*100;if(Math.abs(change)>=1)notify(`${code} ${change>0?"вырос":"снизился"} на ${Math.abs(change).toFixed(2)}% с прошлого просмотра`,change>0?"up":"down");}});
- if(Object.keys(current).length)localStorage.setItem("valutkin_price_snapshot",JSON.stringify(current));
+ if(Object.keys(current).length)pSet("valutkin_price_snapshot",JSON.stringify(current));
 }
 function render(){ renderPortfolioControls();renderPortfolio();renderFavorites();renderNotifications();renderMonthlyReport();renderWidgetSettings(); }
 function renderPortfolio(){
@@ -79,21 +83,21 @@ $("portfolio-select").onchange=e=>switchPortfolio(e.target.value);$("new-portfol
 $("choose-currencies").onclick=()=>$("currency-picker").classList.toggle("hidden");$("clear-notifications").onclick=()=>{data.notifications=[];save();renderNotifications();};
 const avatars = ["🦊","🐻","🐼","🐯","🦁","🐸","🐧","🦄","🐺","🐱","🐶","🐵"];
 const avatarPicker = $("avatar-picker");
-const savedPhoto = localStorage.getItem("valutkin_avatar_photo");
-$("avatar-button").textContent = savedPhoto ? "" : (localStorage.getItem("valutkin_avatar") || "🦊");
+const savedPhoto = pGet("valutkin_avatar_photo");
+$("avatar-button").textContent = savedPhoto ? "" : (pGet("valutkin_avatar") || "🦊");
 if (savedPhoto) $("avatar-button").style.backgroundImage = `url(${savedPhoto})`;
 avatarPicker.querySelector("div").innerHTML = avatars.map(a => `<span data-avatar="${a}">${a}</span>`).join("");
 $("avatar-button").onclick = () => avatarPicker.classList.toggle("hidden");
-avatarPicker.querySelectorAll("[data-avatar]").forEach(x => x.onclick = () => { localStorage.setItem("valutkin_avatar", x.dataset.avatar); localStorage.removeItem("valutkin_avatar_photo"); $("avatar-button").style.backgroundImage=""; $("avatar-button").textContent=x.dataset.avatar; avatarPicker.classList.add("hidden"); });
+avatarPicker.querySelectorAll("[data-avatar]").forEach(x => x.onclick = () => { pSet("valutkin_avatar", x.dataset.avatar); pRemove("valutkin_avatar_photo"); $("avatar-button").style.backgroundImage=""; $("avatar-button").textContent=x.dataset.avatar; avatarPicker.classList.add("hidden"); });
 $("avatar-file").addEventListener("change", event => {
   const file = event.target.files[0]; if (!file) return;
   if (file.size > 2 * 1024 * 1024) return alert("Фото должно быть меньше 2 МБ");
-  const reader = new FileReader(); reader.onload = () => { localStorage.setItem("valutkin_avatar_photo", reader.result); $("avatar-button").textContent=""; $("avatar-button").style.backgroundImage=`url(${reader.result})`; avatarPicker.classList.add("hidden"); }; reader.readAsDataURL(file);
+  const reader = new FileReader(); reader.onload = () => { pSet("valutkin_avatar_photo", reader.result); $("avatar-button").textContent=""; $("avatar-button").style.backgroundImage=`url(${reader.result})`; avatarPicker.classList.add("hidden"); }; reader.readAsDataURL(file);
 });
-let financesHidden = localStorage.getItem("valutkin_hide_finances") === "true";
-let identityHidden = localStorage.getItem("valutkin_hide_identity") === "true";
+let financesHidden = pGet("valutkin_hide_finances") === "true";
+let identityHidden = pGet("valutkin_hide_identity") === "true";
 function applyPrivacy(){ document.body.classList.toggle("finances-hidden",financesHidden);document.body.classList.toggle("identity-hidden",identityHidden);$("privacy-toggle").textContent=financesHidden?"👁️ Показать финансы":"🙈 Скрыть финансы";$("identity-toggle").textContent=identityHidden?"👁️ Показать аккаунт":"🕶️ Скрыть аккаунт"; }
-$("privacy-toggle").onclick=()=>{financesHidden=!financesHidden;localStorage.setItem("valutkin_hide_finances",financesHidden);applyPrivacy();};
-$("identity-toggle").onclick=()=>{identityHidden=!identityHidden;localStorage.setItem("valutkin_hide_identity",identityHidden);applyPrivacy();};
+$("privacy-toggle").onclick=()=>{financesHidden=!financesHidden;pSet("valutkin_hide_finances",financesHidden);applyPrivacy();};
+$("identity-toggle").onclick=()=>{identityHidden=!identityHidden;pSet("valutkin_hide_identity",identityHidden);applyPrivacy();};
 applyPrivacy();
 const sharedMode=loadSharedPortfolio();render();loadMarket();if(!sharedMode)userInfo();
