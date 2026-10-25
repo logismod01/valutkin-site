@@ -1,5 +1,5 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v33";
+const CACHE_NAME = "valutkin-v34";
 const APP_SHELL = [
   "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./market-lab.js?v=29", "./manifest.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
@@ -15,6 +15,15 @@ self.addEventListener("install", event => {
 });
 self.addEventListener("message", event => {
   if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
+  if (event.data?.type === "CACHE_ALL") {
+    const task=caches.open(CACHE_NAME).then(cache=>Promise.allSettled(APP_SHELL.map(path=>cache.add(path)))).then(results=>{
+      const saved=results.filter(x=>x.status==="fulfilled").length;
+      const payload={ok:saved===APP_SHELL.length,saved,total:APP_SHELL.length,error:saved===APP_SHELL.length?null:`Сохранено ${saved} из ${APP_SHELL.length}`};
+      event.ports?.[0]?.postMessage(payload);
+      return payload;
+    }).catch(error=>event.ports?.[0]?.postMessage({ok:false,error:error.message}));
+    event.waitUntil(task);
+  }
 });
 self.addEventListener("activate", event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))));
