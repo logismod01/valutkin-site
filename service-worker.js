@@ -1,5 +1,5 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v36";
+const CACHE_NAME = "valutkin-v37";
 const APP_SHELL = [
   "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./market-lab.js?v=29", "./manifest.json", "./.well-known/assetlinks.template.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
@@ -38,6 +38,16 @@ async function networkFirst(request) {
     return (await caches.match(request)) || (request.mode === "navigate" ? caches.match("./offline.html") : Response.error());
   }
 }
+self.addEventListener("push", event => {
+  let payload={title:"Валюткин",body:"Новое уведомление",url:"./"};
+  try { if(event.data) payload={...payload,...event.data.json()}; } catch { if(event.data) payload.body=event.data.text(); }
+  event.waitUntil(self.registration.showNotification(payload.title,{body:payload.body,icon:"./assets/icon-192.png",badge:"./assets/icon-192.png",tag:payload.tag||"valutkin",data:{url:payload.url||"./"},renotify:Boolean(payload.renotify)}));
+});
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+  const target=new URL(event.notification.data?.url||"./",self.location.origin).href;
+  event.waitUntil(clients.matchAll({type:"window",includeUncontrolled:true}).then(list=>{const existing=list.find(client=>client.url===target);return existing?existing.focus():clients.openWindow(target)}));
+});
 self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET" || new URL(request.url).origin !== location.origin) return;

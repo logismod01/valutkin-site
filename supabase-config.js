@@ -2,7 +2,9 @@
 // Никогда не добавляйте сюда service_role или secret key.
 window.VALUTKIN_SUPABASE = {
   url: "https://cnypuxlljlmqaltpugzm.supabase.co",
-  publishableKey: "sb_publishable_BbvpDTfdRXCcoqnefn-11Q_yCQ9UK3R"
+  publishableKey: "sb_publishable_BbvpDTfdRXCcoqnefn-11Q_yCQ9UK3R",
+  // Публичный VAPID-ключ безопасно хранить в клиенте. Закрытый ключ хранится только в Supabase Secrets.
+  vapidPublicKey: ""
 };
 
 window.getSupabase = function () {
