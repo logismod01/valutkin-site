@@ -104,3 +104,35 @@ create policy "game_friends_own_insert" on public.game_friends for insert with c
 drop policy if exists "game_friends_own_delete" on public.game_friends;
 create policy "game_friends_own_delete" on public.game_friends for delete using (auth.uid() = user_id);
 create index if not exists game_friends_user_idx on public.game_friends(user_id);
+
+-- Асинхронные клубы: друзья играют в общем сезонном рейтинге.
+create table if not exists public.game_clubs (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null references auth.users(id) on delete cascade,
+  code text unique not null,
+  name text not null,
+  created_at timestamptz not null default now()
+);
+create table if not exists public.game_club_members (
+  club_id uuid not null references public.game_clubs(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  joined_at timestamptz not null default now(),
+  primary key (club_id,user_id)
+);
+alter table public.game_clubs enable row level security;
+alter table public.game_club_members enable row level security;
+drop policy if exists "game_clubs_public_read" on public.game_clubs;
+create policy "game_clubs_public_read" on public.game_clubs for select using (true);
+drop policy if exists "game_clubs_owner_insert" on public.game_clubs;
+create policy "game_clubs_owner_insert" on public.game_clubs for insert with check (auth.uid()=owner_id);
+drop policy if exists "game_clubs_owner_update" on public.game_clubs;
+create policy "game_clubs_owner_update" on public.game_clubs for update using (auth.uid()=owner_id);
+drop policy if exists "game_clubs_owner_delete" on public.game_clubs;
+create policy "game_clubs_owner_delete" on public.game_clubs for delete using (auth.uid()=owner_id);
+drop policy if exists "club_members_public_read" on public.game_club_members;
+create policy "club_members_public_read" on public.game_club_members for select using (true);
+drop policy if exists "club_members_join_self" on public.game_club_members;
+create policy "club_members_join_self" on public.game_club_members for insert with check (auth.uid()=user_id);
+drop policy if exists "club_members_leave_self" on public.game_club_members;
+create policy "club_members_leave_self" on public.game_club_members for delete using (auth.uid()=user_id);
+create index if not exists game_club_members_user_idx on public.game_club_members(user_id);
