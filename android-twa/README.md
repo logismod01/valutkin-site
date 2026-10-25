@@ -13,3 +13,16 @@
 7. Опубликуйте сайт, проверьте `https://logismod01.github.io/valutkin-site/.well-known/assetlinks.json` и соберите AAB.
 
 Release keystore, пароли и закрытые ключи нельзя добавлять в Git. Публикация в Google Play требует отдельной учётной записи разработчика.
+
+## Автоматическая сборка GitHub Actions
+
+Workflow `.github/workflows/android.yml` проверяет Android-проект и собирает debug APK при изменениях.
+
+Для ручной release-сборки создайте GitHub Environment `android-release` и добавьте secrets:
+
+- `ANDROID_KEYSTORE_BASE64` — release keystore в Base64;
+- `ANDROID_KEYSTORE_PASSWORD`;
+- `ANDROID_KEY_ALIAS`;
+- `ANDROID_KEY_PASSWORD`.
+
+Затем откройте **Actions → Android TWA → Run workflow**, включите `Собрать подписанный AAB`. Keystore создаётся только на время job, удаляется после сборки и не попадает в artifact.
