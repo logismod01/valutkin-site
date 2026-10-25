@@ -1,7 +1,7 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v39";
+const CACHE_NAME = "valutkin-v40";
 const APP_SHELL = [
-  "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./market-lab.js?v=29", "./manifest.json", "./.well-known/assetlinks.template.json",
+  "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./market-lab.js?v=40", "./manifest.json", "./.well-known/assetlinks.template.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
   "./game.html", "./game.css", "./game.js?v=39", "./company.html", "./company.css", "./company.js?v=22", "./dashboard-settings.js",
   "./compare.html", "./compare.css", "./compare.js", "./profile.html", "./profile.css", "./profile.js?v=30",

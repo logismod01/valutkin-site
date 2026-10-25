@@ -246,3 +246,26 @@ begin
 end;$$;
 revoke all on function public.club_push_targets(uuid) from public, anon;
 grant execute on function public.club_push_targets(uuid) to authenticated;
+
+-- Облачные ценовые условия. Доступны только владельцу аккаунта.
+create table if not exists public.push_rate_alerts (
+  id text primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  asset_code text not null,
+  direction text not null check(direction in ('above','below')),
+  target numeric not null check(target > 0),
+  last_triggered_at timestamptz,
+  enabled boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.push_rate_alerts enable row level security;
+drop policy if exists "push_rate_alerts_own_select" on public.push_rate_alerts;
+create policy "push_rate_alerts_own_select" on public.push_rate_alerts for select using(auth.uid()=user_id);
+drop policy if exists "push_rate_alerts_own_insert" on public.push_rate_alerts;
+create policy "push_rate_alerts_own_insert" on public.push_rate_alerts for insert with check(auth.uid()=user_id);
+drop policy if exists "push_rate_alerts_own_update" on public.push_rate_alerts;
+create policy "push_rate_alerts_own_update" on public.push_rate_alerts for update using(auth.uid()=user_id) with check(auth.uid()=user_id);
+drop policy if exists "push_rate_alerts_own_delete" on public.push_rate_alerts;
+create policy "push_rate_alerts_own_delete" on public.push_rate_alerts for delete using(auth.uid()=user_id);
+create index if not exists push_rate_alerts_user_idx on public.push_rate_alerts(user_id) where enabled;
