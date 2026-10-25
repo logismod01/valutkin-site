@@ -57,6 +57,18 @@
             <div id="convert-result" class="convert-result"></div>
         </section>
 
+        <section class="market-lab">
+            <div class="market-lab-head"><div><p class="eyebrow">НОВЫЕ ИНСТРУМЕНТЫ</p><h2 class="section-title">🧭 Центр валютных решений</h2></div><label>Базовая валюта<select id="base-currency" class="select"><option>RUB</option><option>USD</option><option>EUR</option><option>CNY</option><option>KZT</option><option>GBP</option></select></label></div>
+            <div class="market-lab-grid">
+                <article class="lab-card"><h3>🎯 Ценовые уведомления</h3><p>Сообщим, когда курс станет выше или ниже цели.</p><div class="lab-form"><select id="alert-currency" class="select"></select><select id="alert-direction" class="select"><option value="above">выше</option><option value="below">ниже</option></select><input id="alert-price" class="input" type="number" min="0" step="any" placeholder="Цена"><button id="add-rate-alert" class="btn-primary">Добавить</button></div><div id="rate-alerts" class="mini-list"></div></article>
+                <article class="lab-card"><h3>⚖️ Официальный и рыночный курс</h3><p id="rate-source-note">Загружаем данные Банка России…</p><div id="rate-comparison" class="comparison-list"></div></article>
+                <article class="lab-card"><h3>🧮 Мультиконвертер</h3><p>Одна сумма — сразу в выбранные валюты.</p><div id="multi-targets" class="target-chips"></div><button id="run-multi-converter" class="btn-primary">Рассчитать по текущей сумме</button><div id="multi-result" class="mini-list"></div></article>
+                <article class="lab-card"><h3>🕘 История конвертаций</h3><div id="conversion-history" class="mini-list"></div><button id="clear-conversion-history" class="ghost-btn">Очистить историю</button></article>
+                <article class="lab-card metals-info"><h3>🥇 Драгоценные металлы</h3><p>Золото, серебро, платина и палладий доступны в категории «Металлы». Цена пересчитывается из тройской унции в граммы.</p><a href="#currencies-grid" data-open-category="metals">Открыть металлы →</a></article>
+                <article class="lab-card"><h3>🏛️ Цифровые валюты ЦБ</h3><p>Справочник проектов CBDC. Это не торгуемые криптоактивы.</p><div id="cbdc-list" class="cbdc-list"></div></article>
+            </div>
+        </section>
+
         <!-- Поиск -->
         <section class="search-section">
             <input type="text" id="search" placeholder="🔍 Поиск валюты (USD, Евро, Юань...)" class="search-input">
@@ -141,6 +153,7 @@
         </div>
     </div>
 
+    <script src="market-lab.js?v=29"></script>
     <script src="script.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="app-shell.js"></script>
