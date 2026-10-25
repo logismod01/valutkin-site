@@ -1,5 +1,5 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v49";
+const CACHE_NAME = "valutkin-v50";
 const APP_SHELL = [
   "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./market-lab.js?v=40", "./manifest.json", "./.well-known/assetlinks.template.json",
   "./theme.js", "./supabase-config.js", "./app-shell.js", "./shell.css",
@@ -41,7 +41,13 @@ async function networkFirst(request) {
     if (response.ok) (await caches.open(CACHE_NAME)).put(request, response.clone());
     return response;
   } catch {
-    return (await caches.match(request)) || (request.mode === "navigate" ? caches.match("./offline.html") : Response.error());
+    const cached=await caches.match(request);
+    if(cached)return cached;
+    if(request.mode==="navigate"){
+      const offline=await caches.match("./offline.html");
+      return offline||new Response("Валюткин сейчас недоступен офлайн. Подключитесь к сети и повторите попытку.",{status:503,headers:{"Content-Type":"text/plain; charset=utf-8"}});
+    }
+    return Response.error();
   } finally { clearTimeout(timer); }
 }
 self.addEventListener("push", event => {
