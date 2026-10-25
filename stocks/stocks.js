@@ -1,3 +1,8 @@
+let stockStorage=null;try{stockStorage=window.localStorage}catch(_){}
+const stockGet=(key,fallback=null)=>{try{return stockStorage?.getItem(key)??fallback}catch(_){return fallback}};
+const stockSet=(key,value)=>{try{stockStorage?.setItem(key,value)}catch(_){}};
+const stockRemove=key=>{try{stockStorage?.removeItem(key)}catch(_){}};
+const stockClear=()=>{try{stockStorage?.clear()}catch(_){}};
 // ============================================
 // КОНФИГ
 // ============================================
@@ -287,7 +292,7 @@ let loadRequestId = 0;
 let visibleStockResults = [];
 let stockLoadController = null;
 const STOCK_DISK_CACHE_KEY = "valutkin_stock_quotes_v2";
-try { Object.assign(CACHE, JSON.parse(localStorage.getItem(STOCK_DISK_CACHE_KEY) || "{}")); } catch { localStorage.removeItem(STOCK_DISK_CACHE_KEY); }
+try { Object.assign(CACHE, JSON.parse(stockGet(STOCK_DISK_CACHE_KEY) || "{}")); } catch { stockRemove(STOCK_DISK_CACHE_KEY); }
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function loadStocks(category) {
     const grid = document.getElementById("stocks-grid");
@@ -321,7 +326,7 @@ async function loadStocks(category) {
         results.push(...batchResults);
         if (offset + 6 < list.length) await wait(220);
     }
-    try { localStorage.setItem(STOCK_DISK_CACHE_KEY, JSON.stringify(CACHE)); } catch (_) {}
+    try { stockSet(STOCK_DISK_CACHE_KEY, JSON.stringify(CACHE)); } catch (_) {}
 
     // Не даём запоздавшему ответу прошлой категории затереть новую страницу.
     if (requestId !== loadRequestId || category !== currentCategory) return;
@@ -330,8 +335,8 @@ async function loadStocks(category) {
     grid.setAttribute("aria-busy", "false");
 }
 
-function stockFavorites() { try { const value=JSON.parse(localStorage.getItem("valutkin_favorite_stocks") || "[]"); return Array.isArray(value)?value:[]; } catch { localStorage.removeItem("valutkin_favorite_stocks"); return []; } }
-function toggleStockFavorite(symbol) { const list=stockFavorites(),i=list.indexOf(symbol);i>=0?list.splice(i,1):list.push(symbol);localStorage.setItem("valutkin_favorite_stocks",JSON.stringify(list));renderStocksView(); }
+function stockFavorites() { try { const value=JSON.parse(stockGet("valutkin_favorite_stocks") || "[]"); return Array.isArray(value)?value:[]; } catch { stockRemove("valutkin_favorite_stocks"); return []; } }
+function toggleStockFavorite(symbol) { const list=stockFavorites(),i=list.indexOf(symbol);i>=0?list.splice(i,1):list.push(symbol);stockSet("valutkin_favorite_stocks",JSON.stringify(list));renderStocksView(); }
 function renderStocksView() {
     const grid=document.getElementById("stocks-grid"); if(!grid)return;
     const q=(document.getElementById("stock-search")?.value||"").trim().toLowerCase();
@@ -514,10 +519,10 @@ const STOCK_CHART_CACHE_MS = 6 * 60 * 60 * 1000;
 
 function chartCacheKey(symbol, days) { return `valutkin_stock_chart_${symbol}_${days}`; }
 function readChartCache(symbol, days, allowExpired=false) {
-    try { const item=JSON.parse(localStorage.getItem(chartCacheKey(symbol,days))); return item&&(allowExpired||Date.now()-item.time<STOCK_CHART_CACHE_MS)?item:null; } catch { return null; }
+    try { const item=JSON.parse(stockGet(chartCacheKey(symbol,days))); return item&&(allowExpired||Date.now()-item.time<STOCK_CHART_CACHE_MS)?item:null; } catch { return null; }
 }
 function saveChartCache(symbol, days, points, source) {
-    try { localStorage.setItem(chartCacheKey(symbol,days),JSON.stringify({time:Date.now(),points,source})); } catch (_) {}
+    try { stockSet(chartCacheKey(symbol,days),JSON.stringify({time:Date.now(),points,source})); } catch (_) {}
 }
 async function fetchFinnhubHistory(symbol, days) {
     const to=Math.floor(Date.now()/1000),from=to-days*86400;

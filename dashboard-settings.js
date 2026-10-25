@@ -1,7 +1,13 @@
 (() => {
+let dashboardStorage=null;try{dashboardStorage=window.localStorage}catch(_){}
+const dashboardGet=(key,fallback=null)=>{try{return dashboardStorage?.getItem(key)??fallback}catch(_){return fallback}};
+const dashboardSet=(key,value)=>{try{dashboardStorage?.setItem(key,value)}catch(_){}};
+const dashboardRemove=key=>{try{dashboardStorage?.removeItem(key)}catch(_){}};
+const dashboardClear=()=>{try{dashboardStorage?.clear()}catch(_){}};
+
   const defaults = { converter: true, search: true, categories: true, market: true, compact: false };
   let stored = {};
-  try { stored = JSON.parse(localStorage.getItem("valutkin_dashboard") || "{}"); } catch { localStorage.removeItem("valutkin_dashboard"); }
+  try { stored = JSON.parse(dashboardGet("valutkin_dashboard") || "{}"); } catch { dashboardRemove("valutkin_dashboard"); }
   const settings = { ...defaults, ...stored };
   const items = [["converter","Конвертер"],["search","Поиск"],["categories","Категории"],["market","Карточки рынка"],["compact","Компактные карточки"]];
   const panel = document.createElement("div");
@@ -15,7 +21,7 @@
     document.querySelector(".categories")?.classList.toggle("widget-hidden", !settings.categories);
     document.querySelector("#currencies-grid")?.classList.toggle("widget-hidden", !settings.market);
     document.querySelector("#currencies-grid")?.classList.toggle("compact-grid", settings.compact);
-    localStorage.setItem("valutkin_dashboard", JSON.stringify(settings));
+    dashboardSet("valutkin_dashboard", JSON.stringify(settings));
   }
   function toggle(open = !panel.classList.contains("open")) {
     panel.classList.toggle("open", open);

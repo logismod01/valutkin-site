@@ -1,3 +1,7 @@
+let mainStorage=null;try{mainStorage=window.localStorage}catch(_){}
+const mainGet=(key,fallback=null)=>{try{return mainStorage?.getItem(key)??fallback}catch(_){return fallback}};
+const mainSet=(key,value)=>{try{mainStorage?.setItem(key,value)}catch(_){}};
+const mainRemove=key=>{try{mainStorage?.removeItem(key)}catch(_){}};
 // ============================================
 // КОНФИГ
 // ============================================
@@ -165,7 +169,7 @@ const fetchJson = (url, timeout = 8000) => {
 
 function restoreCachedRates() {
     try {
-        const cached = JSON.parse(localStorage.getItem(RATES_CACHE_KEY));
+        const cached = JSON.parse(mainGet(RATES_CACHE_KEY));
         if (!cached || !cached.rates) return false;
         state.rates = cached.rates;
         state.crypto = cached.crypto || {};
@@ -203,7 +207,7 @@ async function loadRates() {
     }
 
     if (changed && Object.keys(state.rates).length) {
-        localStorage.setItem(RATES_CACHE_KEY, JSON.stringify({
+        mainSet(RATES_CACHE_KEY, JSON.stringify({
             rates: state.rates, crypto: state.crypto, updatedAt: state.updatedAt || new Date()
         }));
         renderCurrencies();
@@ -235,8 +239,8 @@ function getRubValue(code) {
 }
 
 function getFavoriteCurrencies() {
-    try { const value = JSON.parse(localStorage.getItem("valutkin_favorite_currencies") || "[]"); return Array.isArray(value) ? value : []; }
-    catch (_) { localStorage.removeItem("valutkin_favorite_currencies"); return []; }
+    try { const value = JSON.parse(mainGet("valutkin_favorite_currencies") || "[]"); return Array.isArray(value) ? value : []; }
+    catch (_) { mainRemove("valutkin_favorite_currencies"); return []; }
 }
 
 // ============================================
@@ -273,7 +277,7 @@ function renderCurrencies() {
             const code = button.dataset.favorite;
             const index = list.indexOf(code);
             index >= 0 ? list.splice(index, 1) : list.push(code);
-            localStorage.setItem("valutkin_favorite_currencies", JSON.stringify(list));
+            mainSet("valutkin_favorite_currencies", JSON.stringify(list));
             renderCurrencies();
         });
     });
@@ -629,7 +633,7 @@ function renderChart(history, code, days) {
 // ============================================
 function setTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("valutkin_theme", theme);
+    mainSet("valutkin_theme", theme);
     // Активная кнопка
     document.querySelectorAll(".theme-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.theme === theme);
@@ -637,7 +641,7 @@ function setTheme(theme) {
 }
 
 function loadTheme() {
-    const saved = localStorage.getItem("valutkin_theme") || "dark";
+    const saved = mainGet("valutkin_theme") || "dark";
     setTheme(saved);
 }
 
