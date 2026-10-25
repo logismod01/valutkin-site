@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Валюткин</string>
+    <string name="launch_url">https://logismod01.github.io/valutkin-site/</string>
+    <string name="asset_statements">[{"relation":["delegate_permission/common.handle_all_urls"],"target":{"namespace":"web","site":"https://logismod01.github.io"}}]</string>
+</resources>
