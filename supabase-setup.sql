@@ -269,3 +269,41 @@ create policy "push_rate_alerts_own_update" on public.push_rate_alerts for updat
 drop policy if exists "push_rate_alerts_own_delete" on public.push_rate_alerts;
 create policy "push_rate_alerts_own_delete" on public.push_rate_alerts for delete using(auth.uid()=user_id);
 create index if not exists push_rate_alerts_user_idx on public.push_rate_alerts(user_id) where enabled;
+
+-- Планировщик Push без service_role. Таблица закрыта RLS и хранит только SHA-256 секрета.
+create extension if not exists pgcrypto with schema extensions;
+create table if not exists public.push_scheduler_config (
+  id text primary key,
+  secret_hash text not null,
+  updated_at timestamptz not null default now()
+);
+alter table public.push_scheduler_config enable row level security;
+revoke all on public.push_scheduler_config from anon, authenticated;
+
+create or replace function public.scheduled_push_targets(p_secret text)
+returns table(alert_id text,asset_code text,direction text,target numeric,last_triggered_at timestamptz,subscription_id bigint,endpoint text,p256dh text,auth text)
+language plpgsql security definer set search_path=public as $$
+begin
+  if p_secret is null or not exists(
+    select 1 from public.push_scheduler_config
+    where id='price-alerts' and secret_hash=encode(extensions.digest(p_secret,'sha256'),'hex')
+  ) then raise exception 'invalid scheduler secret'; end if;
+  return query
+  select a.id,a.asset_code,a.direction,a.target,a.last_triggered_at,s.id,s.endpoint,s.p256dh,s.auth
+  from public.push_rate_alerts a join public.push_subscriptions s on s.user_id=a.user_id
+  where a.enabled and (a.last_triggered_at is null or a.last_triggered_at<now()-interval '6 hours');
+end;$$;
+create or replace function public.mark_scheduled_alerts(p_secret text,p_alert_ids text[],p_expired_subscription_ids bigint[])
+returns void language plpgsql security definer set search_path=public as $$
+begin
+  if p_secret is null or not exists(
+    select 1 from public.push_scheduler_config
+    where id='price-alerts' and secret_hash=encode(extensions.digest(p_secret,'sha256'),'hex')
+  ) then raise exception 'invalid scheduler secret'; end if;
+  update public.push_rate_alerts set last_triggered_at=now(),updated_at=now() where id=any(coalesce(p_alert_ids,array[]::text[]));
+  delete from public.push_subscriptions where id=any(coalesce(p_expired_subscription_ids,array[]::bigint[]));
+end;$$;
+revoke all on function public.scheduled_push_targets(text) from public, authenticated;
+revoke all on function public.mark_scheduled_alerts(text,text[],bigint[]) from public, authenticated;
+grant execute on function public.scheduled_push_targets(text) to anon;
+grant execute on function public.mark_scheduled_alerts(text,text[],bigint[]) to anon;

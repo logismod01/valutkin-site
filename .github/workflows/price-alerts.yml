@@ -1,0 +1,23 @@
+name: Price Push Scheduler
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: price-push-scheduler
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Проверить ценовые условия
+        env:
+          PUSH_CRON_SECRET: ${{ secrets.PUSH_CRON_SECRET }}
+        run: |
+          test -n "$PUSH_CRON_SECRET"
+          curl --fail-with-body --retry 2 --max-time 90 \
+            -X POST \
+            -H "x-cron-secret: $PUSH_CRON_SECRET" \
+            https://cnypuxlljlmqaltpugzm.supabase.co/functions/v1/scheduled-price-alerts
