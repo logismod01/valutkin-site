@@ -58,3 +58,49 @@ for each row execute procedure public.handle_new_user();
 -- Удаление самой учётной записи выполняет Edge Function из
 -- supabase/functions/delete-account/index.ts. Разверните её командой:
 -- supabase functions deploy delete-account
+
+-- Облачные сохранения биржевой игры. Финансовые данные видит только владелец.
+create table if not exists public.game_saves (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  state jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+alter table public.game_saves enable row level security;
+drop policy if exists "game_saves_own" on public.game_saves;
+create policy "game_saves_own" on public.game_saves for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Публично видны только игровые показатели — не сделки и не состав портфеля.
+create table if not exists public.game_profiles (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  friend_code text unique not null,
+  display_name text not null default 'Управляющий',
+  avatar text not null default '🦊',
+  season integer not null default 1,
+  game_day integer not null default 1,
+  fund_worth numeric not null default 0,
+  achievement_count integer not null default 0,
+  updated_at timestamptz not null default now()
+);
+alter table public.game_profiles enable row level security;
+drop policy if exists "game_profiles_public_read" on public.game_profiles;
+create policy "game_profiles_public_read" on public.game_profiles for select using (true);
+drop policy if exists "game_profiles_own_insert" on public.game_profiles;
+create policy "game_profiles_own_insert" on public.game_profiles for insert with check (auth.uid() = user_id);
+drop policy if exists "game_profiles_own_update" on public.game_profiles;
+create policy "game_profiles_own_update" on public.game_profiles for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+create table if not exists public.game_friends (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  friend_id uuid not null references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (user_id, friend_id),
+  check (user_id <> friend_id)
+);
+alter table public.game_friends enable row level security;
+drop policy if exists "game_friends_own_read" on public.game_friends;
+create policy "game_friends_own_read" on public.game_friends for select using (auth.uid() = user_id);
+drop policy if exists "game_friends_own_insert" on public.game_friends;
+create policy "game_friends_own_insert" on public.game_friends for insert with check (auth.uid() = user_id);
+drop policy if exists "game_friends_own_delete" on public.game_friends;
+create policy "game_friends_own_delete" on public.game_friends for delete using (auth.uid() = user_id);
+create index if not exists game_friends_user_idx on public.game_friends(user_id);
