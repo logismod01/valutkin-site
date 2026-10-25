@@ -129,6 +129,9 @@ function testStaticFiles() {
     "stocks/stocks.js", "exchange/exchange.js"
   ];
   for (const script of scripts) execFileSync(process.execPath, ["--check", path.join(ROOT, script)]);
+  const shellCss = read("shell.css");
+  assert.match(shellCss, /\.drawer-body\{height:100%;max-height:none;overflow-x:hidden;overflow-y:auto/, "mobile drawer must expose all controls by scrolling");
+  assert.match(shellCss, /safe-area-inset-top/, "mobile drawer must respect the top safe area");
   const mainSource = read("script.js");
   assert.match(mainSource, /translucentAccent/, "chart colors must normalize short CSS hex values");
   assert.doesNotMatch(mainSource, /addColorStop\(0, `\$\{accent\}66`\)/, "short CSS hex must not create an invalid Canvas color");

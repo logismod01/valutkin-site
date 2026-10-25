@@ -5,3 +5,18 @@
 .shell-offline-panel{display:none;position:fixed;inset:0;z-index:3050;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px);place-items:center}.shell-offline-panel.active{display:grid}.shell-offline-panel>div{position:relative;width:min(520px,100%);max-height:90dvh;overflow:auto;padding:25px;border:1px solid var(--card-border);border-radius:20px;background:var(--header-bg);color:var(--text-color)}.offline-close{position:absolute;right:12px;top:12px;width:37px;height:37px;border:1px solid var(--card-border);border-radius:9px;background:var(--input-bg);color:var(--text-color);cursor:pointer}.offline-state{display:flex;align-items:center;gap:12px;margin:14px 0;padding:13px;border-radius:12px;background:var(--input-bg)}.offline-state>span{font-size:22px;color:#f6b73c}.offline-state.online>span{color:#22c982}.offline-state.offline>span{color:#f45572}.offline-state div{display:grid}.offline-state small,.shell-offline-panel p,.offline-metrics small{color:var(--text-muted)}.offline-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}.offline-metrics div{display:grid;padding:12px;border:1px solid var(--card-border);border-radius:11px}.offline-metrics b{font-size:20px}.offline-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:15px}.offline-actions button{min-height:42px;padding:9px;border:1px solid var(--card-border);border-radius:9px;background:var(--input-bg);color:var(--text-color);cursor:pointer}.offline-actions button:first-child{grid-column:1/-1;border-color:var(--accent)}.offline-actions button:disabled{opacity:.5}.offline-result{min-height:22px;margin-top:11px;color:var(--accent);font-size:13px}@media(max-width:600px){.shell-offline-panel{padding:0;align-items:end}.shell-offline-panel>div{width:100%;max-height:92dvh;border-radius:20px 20px 0 0;padding-bottom:calc(25px + env(safe-area-inset-bottom))}}
 .push-state{margin-top:10px;padding:9px 11px;border-radius:9px;background:var(--input-bg);color:var(--text-muted);font-size:12px}.offline-actions [data-push-enable]{border-color:var(--accent)}
 .system-checks{display:grid;gap:6px;margin-top:10px}.system-check{display:flex;align-items:center;gap:9px;padding:9px;border-radius:9px;background:var(--input-bg)}.system-check>span{width:25px;height:25px;display:grid;place-items:center;border-radius:50%;font-weight:900}.system-check.ok>span{color:#22c982;background:rgba(34,201,130,.12)}.system-check.fail>span{color:#f6b73c;background:rgba(246,183,60,.12)}.system-check div{display:grid}.system-check small{color:var(--text-muted);overflow-wrap:anywhere}.check-running{padding:12px;text-align:center;color:var(--text-muted)}
+
+/* Меню всегда помещается в мобильный viewport; всё содержимое доступно прокруткой. */
+.side-drawer,.side-drawer *{box-sizing:border-box}
+@media(max-width:760px){
+  .side-drawer{top:calc(8px + env(safe-area-inset-top));bottom:calc(8px + env(safe-area-inset-bottom));height:auto;max-height:none}
+  .side-drawer:hover,.side-drawer:focus-within,.side-drawer.open{transform:translate(0,0)}
+  .drawer-body{height:100%;max-height:none;overflow-x:hidden;overflow-y:auto;scrollbar-gutter:stable;padding-bottom:calc(20px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+  .drawer-handle{bottom:0}
+  .drawer-tools,.drawer-install,.drawer-telegram{position:relative;z-index:1}
+}
+@media(max-height:620px) and (max-width:760px){
+  .drawer-brand{padding-bottom:8px}
+  .drawer-links{padding:8px 0}
+  .drawer-themes{height:92px}
+}
