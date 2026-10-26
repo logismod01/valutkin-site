@@ -20,3 +20,6 @@
   .drawer-links{padding:8px 0}
   .drawer-themes{height:92px}
 }
+
+/* Колёсико прокручивает всю панель, поэтому нижние кнопки всегда доступны. */
+.drawer-body{overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}

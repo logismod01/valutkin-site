@@ -123,6 +123,48 @@ function testUntrustedContentEscaping() {
   assert.match(labSource, /CURRENCIES\[x\.code\]/, "stored alerts must be allowlisted");
 }
 
+function testSplitMarketPages() {
+  const main = browser("index.html");
+  main.window.getRubValue = code => ({ RUB: 1, USD: 80, EUR: 90, CNY: 11 }[code] || 10);
+  const from = main.window.document.querySelector("#from-currency");
+  from.innerHTML = '<option value="USD">USD</option>';
+  evaluate(main.window, "converter-hub.js");
+  assert.equal(main.window.document.querySelectorAll("[data-converter-tab]").length, 3);
+  main.window.document.querySelector('[data-converter-tab="multi"]').click();
+  assert.equal(main.window.document.querySelector('[data-converter-view="multi"]').hidden, false);
+  main.window.document.querySelector("#run-multi-converter").click();
+  assert.match(main.window.document.querySelector("#multi-result").textContent, /RUB/);
+  assert.equal(main.window.document.querySelector(".market-lab"), null, "extra tools should not overload the homepage");
+
+  const tools = browser("market-tools.html");
+  tools.window.setInterval = () => 0;
+  tools.window.fetch = async url => String(url).includes("daily_json")
+    ? { ok: true, json: async () => ({ Date: new Date().toISOString(), Valute: { USD: { Value: 80, Nominal: 1 }, EUR: { Value: 90, Nominal: 1 }, CNY: { Value: 11, Nominal: 1 }, GBP: { Value: 100, Nominal: 1 }, JPY: { Value: 55, Nominal: 100 } } }) }
+    : { ok: true, json: async () => ({ rates: { RUB: 80, USD: 1, EUR: .9, CNY: 7.2, GBP: .8, JPY: 150, KZT: 500, CHF: .9, AED: 3.67, TRY: 30 } }) };
+  evaluate(tools.window, "market-tools.js");
+  assert.equal(tools.window.document.querySelectorAll("#cbdc-list > div").length, 8);
+  assert.ok(tools.window.document.querySelector("#alerts"));
+}
+
+function testNewsPage() {
+  const { window } = browser("news.html");
+  window.localStorage.setItem("valutkin_news_cache_v1", JSON.stringify({ at: Date.now(), items: [
+    { id: "safe-1", topic: "crypto", title: '<img src=x onerror="window.hacked=1"> Bitcoin растёт', description: "Описание", source: "Тестовое СМИ", date: Date.now(), link: "https://example.com/story" },
+    { id: "safe-2", topic: "currency", title: "Курс валют", description: "Решение центрального банка", source: "Другое СМИ", date: Date.now(), link: "https://example.org/story" }
+  ] }));
+  window.fetch = async () => { throw new Error("cached data expected"); };
+  evaluate(window, "news.js");
+  const document = window.document;
+  assert.equal(document.querySelectorAll(".news-card").length, 2);
+  assert.equal(document.querySelector(".news-card img"), null);
+  assert.equal(window.hacked, undefined);
+  document.querySelector('[data-news-category="crypto"]').click();
+  assert.equal(document.querySelectorAll(".news-card").length, 1);
+  document.querySelector(".news-save").click();
+  assert.equal(JSON.parse(window.localStorage.getItem("valutkin_saved_news_v1")).length, 1);
+  assert.match(read("app-shell.js"), /news\.html.*Новости рынка/);
+}
+
 function testStaticFiles() {
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
@@ -155,6 +197,8 @@ const tests = [
   ["game without storage", testGameWithoutStorage],
   ["profile weighted average", testProfile],
   ["untrusted content escaping", testUntrustedContentEscaping],
+  ["split market pages and converter modes", testSplitMarketPages],
+  ["news page filters, saved items and escaping", testNewsPage],
   ["static files and PWA paths", testStaticFiles]
 ];
 
