@@ -28,7 +28,7 @@
   ];
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
-    [`${base}stocks/`, "📈", "Акции"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
+    [`${base}stocks/`, "📈", "Акции"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
     [`${base}profile.html`, "🔔", "Портфель и уведомления"]
   ];
 

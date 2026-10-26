@@ -146,6 +146,25 @@ function testSplitMarketPages() {
   assert.ok(tools.window.document.querySelector("#alerts"));
 }
 
+function testNewsPage() {
+  const { window } = browser("news.html");
+  window.localStorage.setItem("valutkin_news_cache_v1", JSON.stringify({ at: Date.now(), items: [
+    { id: "safe-1", topic: "crypto", title: '<img src=x onerror="window.hacked=1"> Bitcoin растёт', description: "Описание", source: "Тестовое СМИ", date: Date.now(), link: "https://example.com/story" },
+    { id: "safe-2", topic: "currency", title: "Курс валют", description: "Решение центрального банка", source: "Другое СМИ", date: Date.now(), link: "https://example.org/story" }
+  ] }));
+  window.fetch = async () => { throw new Error("cached data expected"); };
+  evaluate(window, "news.js");
+  const document = window.document;
+  assert.equal(document.querySelectorAll(".news-card").length, 2);
+  assert.equal(document.querySelector(".news-card img"), null);
+  assert.equal(window.hacked, undefined);
+  document.querySelector('[data-news-category="crypto"]').click();
+  assert.equal(document.querySelectorAll(".news-card").length, 1);
+  document.querySelector(".news-save").click();
+  assert.equal(JSON.parse(window.localStorage.getItem("valutkin_saved_news_v1")).length, 1);
+  assert.match(read("app-shell.js"), /news\.html.*Новости рынка/);
+}
+
 function testStaticFiles() {
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
@@ -179,6 +198,7 @@ const tests = [
   ["profile weighted average", testProfile],
   ["untrusted content escaping", testUntrustedContentEscaping],
   ["split market pages and converter modes", testSplitMarketPages],
+  ["news page filters, saved items and escaping", testNewsPage],
   ["static files and PWA paths", testStaticFiles]
 ];
 
