@@ -123,6 +123,29 @@ function testUntrustedContentEscaping() {
   assert.match(labSource, /CURRENCIES\[x\.code\]/, "stored alerts must be allowlisted");
 }
 
+function testSplitMarketPages() {
+  const main = browser("index.html");
+  main.window.getRubValue = code => ({ RUB: 1, USD: 80, EUR: 90, CNY: 11 }[code] || 10);
+  const from = main.window.document.querySelector("#from-currency");
+  from.innerHTML = '<option value="USD">USD</option>';
+  evaluate(main.window, "converter-hub.js");
+  assert.equal(main.window.document.querySelectorAll("[data-converter-tab]").length, 3);
+  main.window.document.querySelector('[data-converter-tab="multi"]').click();
+  assert.equal(main.window.document.querySelector('[data-converter-view="multi"]').hidden, false);
+  main.window.document.querySelector("#run-multi-converter").click();
+  assert.match(main.window.document.querySelector("#multi-result").textContent, /RUB/);
+  assert.equal(main.window.document.querySelector(".market-lab"), null, "extra tools should not overload the homepage");
+
+  const tools = browser("market-tools.html");
+  tools.window.setInterval = () => 0;
+  tools.window.fetch = async url => String(url).includes("daily_json")
+    ? { ok: true, json: async () => ({ Date: new Date().toISOString(), Valute: { USD: { Value: 80, Nominal: 1 }, EUR: { Value: 90, Nominal: 1 }, CNY: { Value: 11, Nominal: 1 }, GBP: { Value: 100, Nominal: 1 }, JPY: { Value: 55, Nominal: 100 } } }) }
+    : { ok: true, json: async () => ({ rates: { RUB: 80, USD: 1, EUR: .9, CNY: 7.2, GBP: .8, JPY: 150, KZT: 500, CHF: .9, AED: 3.67, TRY: 30 } }) };
+  evaluate(tools.window, "market-tools.js");
+  assert.equal(tools.window.document.querySelectorAll("#cbdc-list > div").length, 8);
+  assert.ok(tools.window.document.querySelector("#alerts"));
+}
+
 function testStaticFiles() {
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
@@ -155,6 +178,7 @@ const tests = [
   ["game without storage", testGameWithoutStorage],
   ["profile weighted average", testProfile],
   ["untrusted content escaping", testUntrustedContentEscaping],
+  ["split market pages and converter modes", testSplitMarketPages],
   ["static files and PWA paths", testStaticFiles]
 ];
 

@@ -28,7 +28,7 @@
   ];
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
-    [`${base}stocks/`, "📈", "Акции"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
+    [`${base}stocks/`, "📈", "Акции"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
     [`${base}profile.html`, "🔔", "Портфель и уведомления"]
   ];
 
@@ -66,7 +66,11 @@
     document.addEventListener("click", e => { if (innerWidth <= 760 && !aside.contains(e.target)) aside.classList.remove("open"); });
     aside.querySelectorAll("[data-shell-theme]").forEach(button => button.addEventListener("click", () => setTheme(button.dataset.shellTheme)));
     const scroller = aside.querySelector(".drawer-themes");
-    scroller.addEventListener("wheel", e => { e.preventDefault(); scroller.scrollTop += e.deltaY; }, { passive: false });
+    scroller.addEventListener("wheel", e => {
+      const atTop=scroller.scrollTop<=0&&e.deltaY<0,atBottom=Math.ceil(scroller.scrollTop+scroller.clientHeight)>=scroller.scrollHeight&&e.deltaY>0;
+      if(atTop||atBottom)return;
+      e.stopPropagation();
+    }, { passive: true });
     const installButton = aside.querySelector(".drawer-install");
     let installPrompt = null;
     window.addEventListener("beforeinstallprompt", event => {
