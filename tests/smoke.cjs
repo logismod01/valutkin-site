@@ -195,6 +195,8 @@ function testTenLanguageInterface() {
     assert.notEqual(i18n.translate("Главная"), "", `missing ${language} translation`);
   }
   i18n.setLanguage("en");
+  assert.equal(i18n.currency, "USD");
+  assert.equal(JSON.parse(window.localStorage.getItem("valutkin_base_currency")), "USD");
   assert.equal(window.document.documentElement.lang, "en");
   assert.match(window.document.querySelector(".converter-hub .section-title").textContent, /All conversion modes/);
   assert.match(window.document.querySelector('[data-converter-tab="single"]').textContent, /Standard/);

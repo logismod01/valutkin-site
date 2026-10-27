@@ -57,6 +57,11 @@
       <button class="drawer-install" type="button">📲 Установить приложение</button>
       <a class="drawer-telegram" href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer">✈️ Открыть в Telegram</a></div>`;
     document.body.appendChild(aside);
+    const headerRight=document.querySelector(".header-right");
+    if(headerRight&&window.ValutkinI18n){
+      const languageBox=document.createElement("div");languageBox.className="header-language";
+      const makeLanguageMenu=()=>{const current=window.ValutkinI18n.language,currency=window.ValutkinI18n.currency;languageBox.innerHTML=`<button type="button" class="header-language-button" aria-expanded="false" aria-label="Язык и основная валюта">🌐 <b>${current.toUpperCase()}</b><small>${currency}</small></button><div class="header-language-menu" role="menu">${Object.entries(window.ValutkinI18n.languages).map(([id,name])=>`<button type="button" data-quick-language="${id}" class="${id===current?'active':''}"><span>${id.toUpperCase()}</span><b>${name}</b><small>${window.ValutkinI18n.currencies[id]}</small></button>`).join("")}</div>`;const trigger=languageBox.querySelector(".header-language-button"),menu=languageBox.querySelector(".header-language-menu");trigger.onclick=()=>{const open=languageBox.classList.toggle("open");trigger.setAttribute("aria-expanded",String(open))};menu.querySelectorAll("[data-quick-language]").forEach(button=>button.onclick=()=>{window.ValutkinI18n.setLanguage(button.dataset.quickLanguage);makeLanguageMenu()})};makeLanguageMenu();headerRight.prepend(languageBox);document.addEventListener("click",event=>{if(!languageBox.contains(event.target))languageBox.classList.remove("open")});
+    }
     if(!document.querySelector('script[data-feature-suite]')){const suite=document.createElement('script');suite.src=`${base}feature-suite.js`;suite.dataset.featureSuite='true';document.body.appendChild(suite)}
     const palette=document.createElement("div");
     palette.className="shell-palette";
