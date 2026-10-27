@@ -180,6 +180,26 @@ function testExchangeDirectory() {
   assert.match(document.querySelector(".exchange-header").textContent, /KZT/);
 }
 
+function testTenLanguageInterface() {
+  const { window } = browser("index.html");
+  evaluate(window, "i18n.js");
+  window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+  const i18n = window.ValutkinI18n;
+  assert.deepEqual(Object.keys(i18n.languages), ["ru","en","zh","es","fr","de","ar","pt","ja","ko"]);
+  for (const language of Object.keys(i18n.languages)) {
+    i18n.setLanguage(language);
+    assert.notEqual(i18n.translate("Главная"), "", `missing ${language} translation`);
+  }
+  i18n.setLanguage("en");
+  assert.equal(window.document.documentElement.lang, "en");
+  assert.match(window.document.querySelector(".converter-hub .section-title").textContent, /All conversion modes/);
+  assert.match(window.document.querySelector('[data-converter-tab="single"]').textContent, /Standard/);
+  i18n.setLanguage("ar");
+  assert.equal(window.document.documentElement.dir, "rtl");
+  assert.equal(window.localStorage.getItem("valutkin_language"), "ar");
+  assert.match(read("app-shell.js"), /shell-language/);
+}
+
 function testStaticFiles() {
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
@@ -189,6 +209,10 @@ function testStaticFiles() {
   const shellCss = read("shell.css");
   assert.match(shellCss, /\.drawer-body\{height:100%;max-height:none;overflow-x:hidden;overflow-y:auto/, "mobile drawer must expose all controls by scrolling");
   assert.match(shellCss, /safe-area-inset-top/, "mobile drawer must respect the top safe area");
+  const featureSource = read("feature-suite.js");
+  assert.match(featureSource, /valutkin_hidden_promos/, "internal promos must support dismissal");
+  assert.match(featureSource, /7\*86400000/, "dismissed promos must stay hidden temporarily");
+  assert.match(featureSource, /20000/, "promos must disappear automatically");
   const mainSource = read("script.js");
   assert.match(mainSource, /translucentAccent/, "chart colors must normalize short CSS hex values");
   assert.doesNotMatch(mainSource, /addColorStop\(0, `\$\{accent\}66`\)/, "short CSS hex must not create an invalid Canvas color");
@@ -215,6 +239,7 @@ const tests = [
   ["split market pages and converter modes", testSplitMarketPages],
   ["news page filters, saved items and escaping", testNewsPage],
   ["exchange directory choices and safe links", testExchangeDirectory],
+  ["ten-language interface and RTL", testTenLanguageInterface],
   ["static files and PWA paths", testStaticFiles]
 ];
 
