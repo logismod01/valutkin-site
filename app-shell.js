@@ -48,6 +48,7 @@
       <div class="drawer-section"><div class="drawer-section-title">Темы <small>крутите колёсико</small></div>
       <div class="drawer-themes" tabindex="0">${themes.map(([id, icon, title]) => `<button data-shell-theme="${id}" title="${title}"><span>${icon}</span>${title}</button>`).join("")}</div></div>
       <div class="drawer-section font-section"><div class="drawer-section-title">Шрифт</div><select id="shell-font">${fonts.map(([id,name])=>`<option value="${id}">${name}</option>`).join("")}</select></div>
+      <div class="drawer-section language-section"><div class="drawer-section-title">Язык <small>все страницы</small></div><select id="shell-language" data-language-select aria-label="Язык интерфейса">${Object.entries(window.ValutkinI18n?.languages||{ru:"Русский"}).map(([id,name])=>`<option value="${id}">${name}</option>`).join("")}</select><small class="language-note">Настройки языка применяются ко всем страницам</small></div>
       <div class="drawer-tools"><button type="button" data-shell-action="search">⌕ Поиск и команды <kbd>Ctrl K</kbd></button><button type="button" data-shell-action="text">Аа Увеличить текст</button><button type="button" data-shell-action="motion">◉ Меньше анимаций</button><button type="button" data-shell-action="top">↑ Наверх</button><button type="button" data-shell-action="share">↗ Поделиться</button><button type="button" data-shell-action="offline">☁ Офлайн-центр</button></div>
       <button class="drawer-install" type="button">📲 Установить приложение</button>
       <a class="drawer-telegram" href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer">✈️ Открыть в Telegram</a></div>`;
@@ -120,6 +121,7 @@
     root.dataset.textSize=storageGet(localStore,"valutkin_text_size","normal");root.dataset.motion=storageGet(localStore,"valutkin_motion","normal");
     const font = storageGet(localStore,"valutkin_font","system");
     root.dataset.font = font;
+    const languageSelect=aside.querySelector("#shell-language");languageSelect.value=window.ValutkinI18n?.language||"ru";languageSelect.onchange=()=>window.ValutkinI18n?.setLanguage(languageSelect.value);
     const fontSelect = aside.querySelector("#shell-font"); fontSelect.value = font;
     fontSelect.addEventListener("change", () => { root.dataset.font = fontSelect.value; storageSet(localStore,"valutkin_font",fontSelect.value); });
 

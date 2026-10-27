@@ -180,6 +180,26 @@ function testExchangeDirectory() {
   assert.match(document.querySelector(".exchange-header").textContent, /KZT/);
 }
 
+function testTenLanguageInterface() {
+  const { window } = browser("index.html");
+  evaluate(window, "i18n.js");
+  window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+  const i18n = window.ValutkinI18n;
+  assert.deepEqual(Object.keys(i18n.languages), ["ru","en","zh","es","fr","de","ar","pt","ja","ko"]);
+  for (const language of Object.keys(i18n.languages)) {
+    i18n.setLanguage(language);
+    assert.notEqual(i18n.translate("Главная"), "", `missing ${language} translation`);
+  }
+  i18n.setLanguage("en");
+  assert.equal(window.document.documentElement.lang, "en");
+  assert.match(window.document.querySelector(".converter-hub .section-title").textContent, /All conversion modes/);
+  assert.match(window.document.querySelector('[data-converter-tab="single"]').textContent, /Standard/);
+  i18n.setLanguage("ar");
+  assert.equal(window.document.documentElement.dir, "rtl");
+  assert.equal(window.localStorage.getItem("valutkin_language"), "ar");
+  assert.match(read("app-shell.js"), /shell-language/);
+}
+
 function testStaticFiles() {
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
@@ -215,6 +235,7 @@ const tests = [
   ["split market pages and converter modes", testSplitMarketPages],
   ["news page filters, saved items and escaping", testNewsPage],
   ["exchange directory choices and safe links", testExchangeDirectory],
+  ["ten-language interface and RTL", testTenLanguageInterface],
   ["static files and PWA paths", testStaticFiles]
 ];
 
