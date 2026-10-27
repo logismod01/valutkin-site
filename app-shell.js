@@ -39,6 +39,10 @@
   }
   function mount() {
     if (document.querySelector(".side-drawer")) return;
+    const brand=document.querySelector(".header-left");
+    if(brand&&brand.tagName!=="A"){
+      const link=document.createElement("a");link.className=brand.className;link.href=base;link.setAttribute("aria-label","На главную страницу");while(brand.firstChild)link.appendChild(brand.firstChild);brand.replaceWith(link);
+    }else if(brand&&!brand.getAttribute("href"))brand.href=base;
     const aside = document.createElement("aside");
     aside.className = "side-drawer";
     aside.setAttribute("aria-label", "Быстрое меню");

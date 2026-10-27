@@ -25,7 +25,7 @@ function browser(htmlFile) {
 }
 
 function testShellWithoutStorage() {
-  const dom = new JSDOM('<!doctype html><header><div class="header-right"></div></header>', {
+  const dom = new JSDOM('<!doctype html><header><div class="header-left"><b>Валюткин</b></div><div class="header-right"></div></header>', {
     url: "https://example.test/",
     runScripts: "outside-only"
   });
@@ -37,6 +37,7 @@ function testShellWithoutStorage() {
   evaluate(window, "app-shell.js");
   window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   assert.ok(window.document.querySelector(".side-drawer"));
+  assert.equal(window.document.querySelector("a.header-left")?.getAttribute("href"), "./", "site brand must link to homepage");
   assert.equal(window.document.querySelectorAll("[data-shell-theme]").length, 19);
   assert.equal(window.document.querySelectorAll("#shell-font option").length, 10);
   window.document.querySelector('[data-shell-theme="matrix"]').click();
