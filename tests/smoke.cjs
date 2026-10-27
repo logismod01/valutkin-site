@@ -25,7 +25,7 @@ function browser(htmlFile) {
 }
 
 function testShellWithoutStorage() {
-  const dom = new JSDOM('<!doctype html><header><div class="header-right"></div></header>', {
+  const dom = new JSDOM('<!doctype html><header><div class="header-left"><b>Валюткин</b></div><div class="header-right"></div></header>', {
     url: "https://example.test/",
     runScripts: "outside-only"
   });
@@ -37,6 +37,7 @@ function testShellWithoutStorage() {
   evaluate(window, "app-shell.js");
   window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   assert.ok(window.document.querySelector(".side-drawer"));
+  assert.equal(window.document.querySelector("a.header-left")?.getAttribute("href"), "./", "site brand must link to homepage");
   assert.equal(window.document.querySelectorAll("[data-shell-theme]").length, 19);
   assert.equal(window.document.querySelectorAll("#shell-font option").length, 10);
   window.document.querySelector('[data-shell-theme="matrix"]').click();
@@ -164,6 +165,9 @@ function testNewsPage() {
   document.querySelector(".news-save").click();
   assert.equal(JSON.parse(window.localStorage.getItem("valutkin_saved_news_v1")).length, 1);
   assert.match(read("app-shell.js"), /news\.html.*Новости рынка/);
+  const newsSource = read("news.js");
+  assert.match(newsSource, /\.\/data\/news\.json/, "news must load a same-origin snapshot");
+  assert.doesNotMatch(newsSource, /rss2json|news\.google\.com/, "browser must not call cross-origin RSS services");
 }
 
 function testExchangeDirectory() {
@@ -191,6 +195,8 @@ function testTenLanguageInterface() {
     assert.notEqual(i18n.translate("Главная"), "", `missing ${language} translation`);
   }
   i18n.setLanguage("en");
+  assert.equal(i18n.currency, "USD");
+  assert.equal(JSON.parse(window.localStorage.getItem("valutkin_base_currency")), "USD");
   assert.equal(window.document.documentElement.lang, "en");
   assert.match(window.document.querySelector(".converter-hub .section-title").textContent, /All conversion modes/);
   assert.match(window.document.querySelector('[data-converter-tab="single"]').textContent, /Standard/);

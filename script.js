@@ -265,6 +265,11 @@ function getRubValue(code) {
     return rubValue;
 }
 
+function getDisplayCurrency() {
+    try { const value = JSON.parse(mainGet("valutkin_base_currency") || '"RUB"'); return CURRENCIES[value] ? value : "RUB"; }
+    catch (_) { return "RUB"; }
+}
+
 function getFavoriteCurrencies() {
     try { const value = JSON.parse(mainGet("valutkin_favorite_currencies") || "[]"); return Array.isArray(value) ? value : []; }
     catch (_) { mainRemove("valutkin_favorite_currencies"); return []; }
@@ -336,15 +341,16 @@ function renderCard(code) {
     }
 
     let priceText, unitText;
-    if (code === "RUB") {
-        priceText = "1.00 ₽";
+    const baseCode = getDisplayCurrency(), baseRub = getRubValue(baseCode) || 1, displayValue = rubValue / baseRub;
+    if (code === baseCode) {
+        priceText = `1.00 ${baseCode}`;
         unitText = "базовая валюта";
-    } else if (rubValue >= 1) {
-        priceText = rubValue.toFixed(2) + " ₽";
+    } else if (displayValue >= 1) {
+        priceText = displayValue.toFixed(2) + ` ${baseCode}`;
         unitText = `1 ${code}`;
     } else {
-        priceText = (1 / rubValue).toFixed(4) + " " + code;
-        unitText = "за 1 ₽";
+        priceText = (1 / displayValue).toFixed(4) + " " + code;
+        unitText = `за 1 ${baseCode}`;
     }
 
 
@@ -393,8 +399,9 @@ function convert() {
         return;
     }
     const totalRub = amount * rubValue;
+    const baseCode = getDisplayCurrency(), baseRub = getRubValue(baseCode) || 1;
     const targets = ["USD", "EUR", "CNY", "KZT", "GBP", "JPY"];
-    let text = `${amount} ${from} = ${totalRub.toFixed(2)} ₽`;
+    let text = `${amount} ${from} = ${(totalRub / baseRub).toFixed(2)} ${baseCode}`;
     let extra = [];
     for (const code of targets) {
         if (code === from) continue;
@@ -751,3 +758,5 @@ document.addEventListener("DOMContentLoaded", () => {
     loadRates();
     setInterval(loadRates, 5 * 60 * 1000);
 });
+
+document.addEventListener("valutkin:language",()=>{if(Object.keys(state.rates).length){renderCurrencies();const amount=document.getElementById("amount");if(amount&&+amount.value>0)convert()}});
