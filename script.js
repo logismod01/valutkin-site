@@ -63,6 +63,15 @@ const CURRENCIES = {
     "ALL": ["Албанский лек", "🇦🇱", "europe"],
     "MKD": ["Македонский денар", "🇲🇰", "europe"],
     "BAM": ["Конвертируемая марка", "🇧🇦", "europe"],
+    "XCD": ["Восточно-карибский доллар", "🏝️", "america"],
+    "BSD": ["Багамский доллар", "🇧🇸", "america"],
+    "BZD": ["Белизский доллар", "🇧🇿", "america"],
+    "PAB": ["Панамский бальбоа", "🇵🇦", "america"],
+    "NIO": ["Никарагуанская кордоба", "🇳🇮", "america"],
+    "AWG": ["Арубанский флорин", "🇦🇼", "america"],
+    "ANG": ["Антильский гульден", "🏝️", "america"],
+    "BMD": ["Бермудский доллар", "🇧🇲", "america"],
+    "KYD": ["Доллар Каймановых островов", "🇰🇾", "america"],
     "CAD": ["Канадский доллар", "🇨🇦", "america"],
     "BRL": ["Бразильский реал", "🇧🇷", "america"],
     "MXN": ["Мексиканское песо", "🇲🇽", "america"],
@@ -103,6 +112,9 @@ const CURRENCIES = {
     "RWF": ["Руандийский франк", "🇷🇼", "mena"],
     "XOF": ["Западноафриканский франк", "🌍", "mena"],
     "XAF": ["Центральноафриканский франк", "🌍", "mena"],
+    "XPF": ["Франк КФП", "🌊", "oceania"],
+    "TOP": ["Тонганская паанга", "🇹🇴", "oceania"],
+    "VUV": ["Вануатский вату", "🇻🇺", "oceania"],
     "AUD": ["Австралийский доллар", "🇦🇺", "oceania"],
     "NZD": ["Новозеландский доллар", "🇳🇿", "oceania"],
     "FJD": ["Доллар Фиджи", "🇫🇯", "oceania"],
@@ -121,6 +133,18 @@ const CURRENCIES = {
     "DOT": ["Polkadot", "⚪", "crypto"],
     "AVAX": ["Avalanche", "🔻", "crypto"],
     "LINK": ["Chainlink", "🔗", "crypto"],
+    "LTC": ["Litecoin", "Ł", "crypto"],
+    "BCH": ["Bitcoin Cash", "₿", "crypto"],
+    "XLM": ["Stellar", "✦", "crypto"],
+    "UNI": ["Uniswap", "🦄", "crypto"],
+    "ATOM": ["Cosmos", "⚛️", "crypto"],
+    "NEAR": ["NEAR Protocol", "◈", "crypto"],
+    "APT": ["Aptos", "⬡", "crypto"],
+    "ARB": ["Arbitrum", "🔵", "crypto"],
+    "OP": ["Optimism", "🔴", "crypto"],
+    "SHIB": ["Shiba Inu", "🐕", "crypto"],
+    "USDC": ["USD Coin", "🔵", "crypto"],
+    "DAI": ["Dai", "◉", "crypto"],
     // ===== МЕТАЛЛЫ =====
     "XAU": ["Золото", "🥇", "metals"],
     "XAG": ["Серебро", "🥈", "metals"],
@@ -136,6 +160,9 @@ const CRYPTO_IDS = {
     "SOL": "solana",
     "BNB": "binancecoin", "XRP": "ripple", "ADA": "cardano", "DOGE": "dogecoin",
     "TRX": "tron", "DOT": "polkadot", "AVAX": "avalanche-2", "LINK": "chainlink",
+    "LTC": "litecoin", "BCH": "bitcoin-cash", "XLM": "stellar", "UNI": "uniswap",
+    "ATOM": "cosmos", "NEAR": "near", "APT": "aptos", "ARB": "arbitrum",
+    "OP": "optimism", "SHIB": "shiba-inu", "USDC": "usd-coin", "DAI": "dai",
 };
 
 // Валюта для fawazahmed0 — строчными буквами
@@ -183,7 +210,7 @@ function restoreCachedRates() {
 async function loadRates() {
     const requests = await Promise.allSettled([
         fetchJson(API_FIAT_URL),
-        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink&vs_currencies=usd,rub"),
+        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink,litecoin,bitcoin-cash,stellar,uniswap,cosmos,near,aptos,arbitrum,optimism,shiba-inu,usd-coin,dai&vs_currencies=usd,rub"),
         fetchJson("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
     ]);
     const [fiatResult, cryptoResult, metalsResult] = requests;
@@ -706,6 +733,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Ссылка со страницы «Где купить» сразу показывает выбранную валюту.
+    const requested = new URLSearchParams(location.search).get("currency")?.toUpperCase();
+    if (requested && CURRENCIES[requested]) {
+        state.activeCategory = "all";
+        state.searchQuery = requested;
+        document.querySelectorAll(".cat-btn").forEach(button => button.classList.toggle("active", button.dataset.cat === "all"));
+        document.getElementById("search").value = requested;
+    }
     // Сначала мгновенно показываем последний успешный результат, затем обновляем его.
     restoreCachedRates();
     loadRates();
