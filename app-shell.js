@@ -28,7 +28,7 @@
   ];
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
-    [`${base}stocks/`, "📈", "Акции"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
+    [`${base}stocks/`, "📈", "Акции"], [`${base}macro.html`, "🌐", "Сырьё и ставки"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
     [`${base}profile.html`, "🔔", "Портфель и уведомления"]
   ];
 
@@ -53,6 +53,7 @@
       <button class="drawer-install" type="button">📲 Установить приложение</button>
       <a class="drawer-telegram" href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer">✈️ Открыть в Telegram</a></div>`;
     document.body.appendChild(aside);
+    if(!document.querySelector('script[data-feature-suite]')){const suite=document.createElement('script');suite.src=`${base}feature-suite.js`;suite.dataset.featureSuite='true';document.body.appendChild(suite)}
     const palette=document.createElement("div");
     palette.className="shell-palette";
     palette.innerHTML=`<div role="dialog" aria-modal="true" aria-label="Поиск по Валюткину"><div class="palette-search"><span>⌕</span><input type="search" placeholder="Страница, функция или тема…" aria-label="Поиск команд"><button type="button" aria-label="Закрыть">✕</button></div><div class="palette-results"></div><small>↑↓ выбор · Enter открыть · Esc закрыть</small></div>`;
