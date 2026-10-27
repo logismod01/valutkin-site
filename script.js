@@ -735,11 +735,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Ссылка со страницы «Где купить» сразу показывает выбранную валюту.
     const requested = new URLSearchParams(location.search).get("currency")?.toUpperCase();
+    const requestedCategory = new URLSearchParams(location.search).get("category");
     if (requested && CURRENCIES[requested]) {
         state.activeCategory = "all";
         state.searchQuery = requested;
         document.querySelectorAll(".cat-btn").forEach(button => button.classList.toggle("active", button.dataset.cat === "all"));
         document.getElementById("search").value = requested;
+    }
+    if (["popular","favorites","asia","europe","america","mena","oceania","crypto","metals","all"].includes(requestedCategory)) {
+        state.activeCategory = requestedCategory;
+        document.querySelectorAll(".cat-btn").forEach(button => button.classList.toggle("active", button.dataset.cat === requestedCategory));
     }
     // Сначала мгновенно показываем последний успешный результат, затем обновляем его.
     restoreCachedRates();
