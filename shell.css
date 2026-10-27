@@ -23,3 +23,7 @@
 
 /* Колёсико прокручивает всю панель, поэтому нижние кнопки всегда доступны. */
 .drawer-body{overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+
+/* Единая визуальная полировка: мягкие оттенки, фокус и плавные переходы на всех страницах. */
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(circle at 8% 8%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 28%),radial-gradient(circle at 92% 22%,color-mix(in srgb,var(--accent-2) 9%,transparent),transparent 30%)}
+a,button,input,select,textarea,.card,.lab-card,.market-asset,.service-card,.news-card{transition:color .22s ease,background-color .22s ease,border-color .22s ease,box-shadow .28s ease,transform .28s cubic-bezier(.2,.8,.2,1),opacity .22s ease}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 48%,transparent);outline-offset:3px}.card,.lab-card,.compare-panel,.compare-chart-card{background-image:linear-gradient(145deg,color-mix(in srgb,var(--accent) 3%,transparent),transparent 46%)}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}

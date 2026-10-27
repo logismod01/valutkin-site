@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Где купить валюту — Валюткин</title>
+    <script>try{document.documentElement.dataset.theme=localStorage.getItem("valutkin_theme")||"dark"}catch{document.documentElement.dataset.theme="dark"}</script>
     <meta name="description" content="Где выгодно купить валюту: банки, обменники, биржи, крипта.">
     <link rel="icon" type="image/png" href="../assets/icon-192.png">
     <link rel="stylesheet" href="../style.css">
@@ -44,23 +45,13 @@
 
         <h1 class="page-title">🏦 Где выгодно купить валюту</h1>
         <p class="page-subtitle">
-            Список проверенных сервисов: банки, обменники, биржи, крипта.
+            40 валют: банки, официальные сервисы и обменные пункты рядом с вами.
         </p>
 
         <!-- ВЫБОР ВАЛЮТЫ -->
-        <section class="currency-selector">
-            <button class="curr-btn active" data-cur="USD">🇺🇸 USD</button>
-            <button class="curr-btn" data-cur="EUR">🇪🇺 EUR</button>
-            <button class="curr-btn" data-cur="RUB">🇷🇺 RUB</button>
-            <button class="curr-btn" data-cur="KZT">🇰🇿 KZT</button>
-            <button class="curr-btn" data-cur="CNY">🇨🇳 CNY</button>
-            <button class="curr-btn" data-cur="KRW">🇰🇷 KRW</button>
-            <button class="curr-btn" data-cur="MNT">🇲🇳 MNT</button>
-            <button class="curr-btn" data-cur="TRY">🇹🇷 TRY</button>
-            <button class="curr-btn" data-cur="GBP">🇬🇧 GBP</button>
-            <button class="curr-btn" data-cur="JPY">🇯🇵 JPY</button>
-            <button class="curr-btn" data-cur="AED">🇦🇪 AED</button>
-            <button class="curr-btn" data-cur="UAH">🇺🇦 UAH</button>
+        <section class="exchange-picker">
+            <div class="exchange-search"><span>⌕</span><input id="exchange-search" type="search" placeholder="Найти USD, юань, Казахстан…" aria-label="Поиск валюты"><button id="exchange-clear" type="button" aria-label="Очистить поиск">✕</button></div>
+            <div id="currency-selector" class="currency-selector" aria-label="Выбор валюты"></div>
         </section>
 
         <!-- КОНТЕНТ -->
@@ -70,8 +61,7 @@
 
         <!-- ДИСКЛЕЙМЕР -->
         <section class="disclaimer">
-            ⚠️ Мы не несём ответственности за операции.
-            Проверяйте сервисы перед сделкой.
+            ⚠️ Доступность валюты и правила обслуживания зависят от страны. Сайт не проводит операции и не получает комиссию от указанных сервисов.
         </section>
 
     </main>

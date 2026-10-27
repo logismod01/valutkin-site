@@ -153,6 +153,7 @@ function testNewsPage() {
     { id: "safe-2", topic: "currency", title: "Курс валют", description: "Решение центрального банка", source: "Другое СМИ", date: Date.now(), link: "https://example.org/story" }
   ] }));
   window.fetch = async () => { throw new Error("cached data expected"); };
+  window.setInterval = () => 0;
   evaluate(window, "news.js");
   const document = window.document;
   assert.equal(document.querySelectorAll(".news-card").length, 2);
@@ -163,6 +164,20 @@ function testNewsPage() {
   document.querySelector(".news-save").click();
   assert.equal(JSON.parse(window.localStorage.getItem("valutkin_saved_news_v1")).length, 1);
   assert.match(read("app-shell.js"), /news\.html.*Новости рынка/);
+}
+
+function testExchangeDirectory() {
+  const { window } = browser("exchange/index.html");
+  evaluate(window, "exchange/exchange.js");
+  const document = window.document;
+  assert.ok(document.querySelectorAll("[data-cur]").length >= 40, "exchange directory needs broad currency choice");
+  assert.ok(document.querySelectorAll(".service-card").length >= 5);
+  assert.ok([...document.querySelectorAll(".service-card")].every(link => link.rel.includes("noopener")));
+  document.querySelector("#exchange-search").value = "тенге";
+  document.querySelector("#exchange-search").dispatchEvent(new window.Event("input"));
+  assert.equal(document.querySelectorAll("[data-cur]").length, 1);
+  document.querySelector("[data-cur]").click();
+  assert.match(document.querySelector(".exchange-header").textContent, /KZT/);
 }
 
 function testStaticFiles() {
@@ -199,6 +214,7 @@ const tests = [
   ["untrusted content escaping", testUntrustedContentEscaping],
   ["split market pages and converter modes", testSplitMarketPages],
   ["news page filters, saved items and escaping", testNewsPage],
+  ["exchange directory choices and safe links", testExchangeDirectory],
   ["static files and PWA paths", testStaticFiles]
 ];
 
