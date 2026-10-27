@@ -200,6 +200,10 @@ function testTenLanguageInterface() {
   assert.equal(window.document.documentElement.lang, "en");
   assert.match(window.document.querySelector(".converter-hub .section-title").textContent, /All conversion modes/);
   assert.match(window.document.querySelector('[data-converter-tab="single"]').textContent, /Standard/);
+  assert.equal(i18n.translate("КОНВЕРТЕРЫ"), "CONVERTERS");
+  assert.equal(i18n.translate("Другие инструменты →"), "More tools →");
+  assert.equal(i18n.translate("Комиссия обмена"), "Exchange fee");
+  assert.equal(i18n.translate("Аа Увеличить текст"), "Aa Increase text");
   i18n.setLanguage("ar");
   assert.equal(window.document.documentElement.dir, "rtl");
   assert.equal(window.localStorage.getItem("valutkin_language"), "ar");
