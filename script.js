@@ -265,6 +265,14 @@ function getRubValue(code) {
     return rubValue;
 }
 
+function localizedAssetName(code) {
+    const original = CURRENCIES[code]?.[0] || code, category = CURRENCIES[code]?.[2], language = window.ValutkinI18n?.language || "ru";
+    if (language === "ru" || category === "crypto") return original;
+    if (category !== "metals") { try { return new Intl.DisplayNames([language], { type: "currency" }).of(code) || original; } catch (_) {} }
+    const metals = {en:{XAU:"Gold",XAG:"Silver",XPT:"Platinum",XPD:"Palladium"},zh:{XAU:"黄金",XAG:"白银",XPT:"铂金",XPD:"钯金"},es:{XAU:"Oro",XAG:"Plata",XPT:"Platino",XPD:"Paladio"},fr:{XAU:"Or",XAG:"Argent",XPT:"Platine",XPD:"Palladium"},de:{XAU:"Gold",XAG:"Silber",XPT:"Platin",XPD:"Palladium"},ar:{XAU:"ذهب",XAG:"فضة",XPT:"بلاتين",XPD:"بلاديوم"},pt:{XAU:"Ouro",XAG:"Prata",XPT:"Platina",XPD:"Paládio"},ja:{XAU:"金",XAG:"銀",XPT:"プラチナ",XPD:"パラジウム"},ko:{XAU:"금",XAG:"은",XPT:"백금",XPD:"팔라듐"}};
+    return metals[language]?.[code] || original;
+}
+
 function getDisplayCurrency() {
     try { const value = JSON.parse(mainGet("valutkin_base_currency") || '"RUB"'); return CURRENCIES[value] ? value : "RUB"; }
     catch (_) { return "RUB"; }
@@ -322,8 +330,8 @@ function renderCurrencies() {
 }
 
 function renderCard(code) {
-    const [name, flag] = CURRENCIES[code];
-    const rubValue = getRubValue(code);
+    const [, flag] = CURRENCIES[code];
+    const name = localizedAssetName(code), rubValue = getRubValue(code);
     const isFavorite = getFavoriteCurrencies().includes(code);
     const favoriteButton = `<button class="favorite-btn ${isFavorite ? "active" : ""}" data-favorite="${code}" title="${isFavorite ? "Убрать из избранного" : "В избранное"}">★</button>`;
 
@@ -377,7 +385,7 @@ function renderCard(code) {
 function populateConverterSelect() {
     const select = document.getElementById("from-currency");
     const options = Object.keys(CURRENCIES).map(code => {
-        const [name, flag] = CURRENCIES[code];
+        const [, flag] = CURRENCIES[code], name = localizedAssetName(code);
         return `<option value="${code}">${flag} ${code} — ${name}</option>`;
     });
     select.innerHTML = options.join("");
@@ -419,8 +427,8 @@ function convert() {
 // МОДАЛЬНОЕ ОКНО
 // ============================================
 function openModal(code) {
-    const [name, flag] = CURRENCIES[code];
-    const rubValue = getRubValue(code);
+    const [, flag] = CURRENCIES[code];
+    const name = localizedAssetName(code), rubValue = getRubValue(code);
 
     state.currentModal = code;
     state.currentPeriod = 1;
@@ -759,4 +767,4 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(loadRates, 5 * 60 * 1000);
 });
 
-document.addEventListener("valutkin:language",()=>{if(Object.keys(state.rates).length){renderCurrencies();const amount=document.getElementById("amount");if(amount&&+amount.value>0)convert()}});
+document.addEventListener("valutkin:language",()=>{if(Object.keys(state.rates).length){const select=document.getElementById("from-currency"),chosen=select?.value;renderCurrencies();populateConverterSelect();if(chosen&&CURRENCIES[chosen])select.value=chosen;const amount=document.getElementById("amount");if(amount&&+amount.value>0)convert()}});
