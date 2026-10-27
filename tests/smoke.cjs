@@ -164,6 +164,9 @@ function testNewsPage() {
   document.querySelector(".news-save").click();
   assert.equal(JSON.parse(window.localStorage.getItem("valutkin_saved_news_v1")).length, 1);
   assert.match(read("app-shell.js"), /news\.html.*Новости рынка/);
+  const newsSource = read("news.js");
+  assert.match(newsSource, /\.\/data\/news\.json/, "news must load a same-origin snapshot");
+  assert.doesNotMatch(newsSource, /rss2json|news\.google\.com/, "browser must not call cross-origin RSS services");
 }
 
 function testExchangeDirectory() {
