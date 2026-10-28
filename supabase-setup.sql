@@ -307,3 +307,23 @@ revoke all on function public.scheduled_push_targets(text) from public, authenti
 revoke all on function public.mark_scheduled_alerts(text,text[],bigint[]) from public, authenticated;
 grant execute on function public.scheduled_push_targets(text) to anon;
 grant execute on function public.mark_scheduled_alerts(text,text[],bigint[]) to anon;
+
+-- Публичные отзывы: читать могут все, писать и менять — только владелец аккаунта.
+create table if not exists public.reviews (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  nickname text not null check(char_length(nickname) between 1 and 30),
+  rating smallint not null check(rating between 1 and 5),
+  comment text not null check(char_length(comment) between 3 and 500),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.reviews enable row level security;
+drop policy if exists "reviews_public_select" on public.reviews;
+create policy "reviews_public_select" on public.reviews for select using(true);
+drop policy if exists "reviews_own_insert" on public.reviews;
+create policy "reviews_own_insert" on public.reviews for insert to authenticated with check(auth.uid()=user_id);
+drop policy if exists "reviews_own_update" on public.reviews;
+create policy "reviews_own_update" on public.reviews for update to authenticated using(auth.uid()=user_id) with check(auth.uid()=user_id);
+drop policy if exists "reviews_own_delete" on public.reviews;
+create policy "reviews_own_delete" on public.reviews for delete to authenticated using(auth.uid()=user_id);
+create index if not exists reviews_updated_idx on public.reviews(updated_at desc);

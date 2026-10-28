@@ -234,6 +234,15 @@ function testWalletAndFreeSecurityFeatures() {
   assert.match(read("app-shell.js"), /wallet\.html.*Кошелёк/);
   assert.match(read("app-shell.js"), /support\.html.*Поддержка/);
   assert.ok(fs.existsSync(path.join(ROOT, "support.html")));
+  const reviewsHtml = read("reviews.html");
+  const reviewsSource = read("reviews.js");
+  const setupSql = read("supabase-setup.sql");
+  assert.match(reviewsHtml, /name="rating" value="5"/);
+  assert.match(reviewsSource, /\.from\("reviews"\)\.upsert/);
+  assert.match(reviewsSource, /comment\.textContent=row\.comment/, "review comments must render as text");
+  assert.match(setupSql, /reviews_own_insert/);
+  assert.match(setupSql, /char_length\(comment\) between 3 and 500/);
+  assert.match(read("app-shell.js"), /reviews\.html.*Отзывы/);
 }
 
 function testStaticFiles() {
