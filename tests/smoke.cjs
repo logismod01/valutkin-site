@@ -249,6 +249,12 @@ function testWalletAndFreeSecurityFeatures() {
   assert.match(read("game.js"), /globalProfiles\.filter/, "season leaderboard must use real public profiles");
   assert.doesNotMatch(read("game.js"), /Фонд Север|Капитал Лис/, "leaderboard must not contain fake rivals");
   assert.ok(fs.existsSync(path.join(ROOT, "install.html")));
+  assert.ok(fs.existsSync(path.join(ROOT, "goals.html")));
+  assert.ok(fs.existsSync(path.join(ROOT, "updates.html")));
+  assert.match(read("goals.js"), /\.from\("savings_goals"\)/);
+  assert.match(setupSql, /scheduled_goal_targets/);
+  assert.match(read("app-shell.js"), /goals\.html.*Цели накопления/);
+  assert.match(read("app-shell.js"), /updates\.html.*Что нового/);
 }
 
 function testStaticFiles() {
