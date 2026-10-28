@@ -73,7 +73,10 @@ function testProfile() {
   window.getSupabase = () => ({ auth: { getUser: async () => ({ data: { user: null } }) } });
   window.fetch = async url => ({ ok: true, json: async () => String(url).includes("coingecko") ? {} : { rates: { RUB: 90 } } });
   evaluate(window, "profile.js");
+  evaluate(window, "profile-upgrade.js");
+  window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   const document = window.document;
+  assert.equal(document.querySelectorAll(".profile-upgrade-grid .dashboard-card").length, 3);
   document.querySelector("#asset-code").value = "BTC";
   document.querySelector("#asset-amount").value = "2";
   document.querySelector("#asset-buy-price").value = "50";
@@ -210,6 +213,50 @@ function testTenLanguageInterface() {
   assert.match(read("app-shell.js"), /shell-language/);
 }
 
+function testWalletAndFreeSecurityFeatures() {
+  const wallet = browser("wallet.html");
+  assert.match(wallet.window.document.querySelector(".police-tape").textContent, /СКОРО ОТКРОЕТСЯ/);
+  assert.equal(wallet.window.document.querySelectorAll(".wallet-plans article").length, 3);
+  const authHtml = read("auth.html");
+  const authSource = read("auth.js");
+  assert.match(authHtml, /data-oauth="google"/);
+  assert.match(authHtml, /data-oauth="github"/);
+  assert.match(authSource, /signInWithOAuth/);
+  assert.match(authSource, /mfa\.enroll/);
+  assert.match(authSource, /mfa\.verify/);
+  assert.match(authSource, /signOut\(\{scope:"global"\}\)/);
+  assert.match(authSource, /linkIdentity/);
+  assert.match(authSource, /unlinkIdentity/);
+  const profileUpgrade = read("profile-upgrade.js");
+  assert.match(profileUpgrade, /valutkin_profile_custom_v1/);
+  assert.match(profileUpgrade, /valutkin_profile_privacy_v2/);
+  assert.match(profileUpgrade, /valutkin_account_activity_v1/);
+  assert.match(read("app-shell.js"), /wallet\.html.*Кошелёк/);
+  assert.match(read("app-shell.js"), /support\.html.*Поддержка/);
+  assert.ok(fs.existsSync(path.join(ROOT, "support.html")));
+  const reviewsHtml = read("reviews.html");
+  const reviewsSource = read("reviews.js");
+  const setupSql = read("supabase-setup.sql");
+  assert.match(reviewsHtml, /name="rating" value="5"/);
+  assert.match(reviewsSource, /\.from\("reviews"\)\.upsert/);
+  assert.match(reviewsSource, /comment\.textContent=row\.comment/, "review comments must render as text");
+  assert.match(setupSql, /reviews_own_insert/);
+  assert.match(setupSql, /char_length\(comment\) between 3 and 500/);
+  assert.match(setupSql, /primary key \(user_id,slot\)/, "cloud game saves must support multiple funds");
+  assert.match(read("app-shell.js"), /reviews\.html.*Отзывы/);
+  assert.match(read("app-shell.js"), /install\.html.*Установить приложение/);
+  assert.match(read("dashboard-settings.js"), /data-move/, "dashboard widgets must be reorderable");
+  assert.match(read("game.js"), /globalProfiles\.filter/, "season leaderboard must use real public profiles");
+  assert.doesNotMatch(read("game.js"), /Фонд Север|Капитал Лис/, "leaderboard must not contain fake rivals");
+  assert.ok(fs.existsSync(path.join(ROOT, "install.html")));
+  assert.ok(fs.existsSync(path.join(ROOT, "goals.html")));
+  assert.ok(fs.existsSync(path.join(ROOT, "updates.html")));
+  assert.match(read("goals.js"), /\.from\("savings_goals"\)/);
+  assert.match(setupSql, /scheduled_goal_targets/);
+  assert.match(read("app-shell.js"), /goals\.html.*Цели накопления/);
+  assert.match(read("app-shell.js"), /updates\.html.*Что нового/);
+}
+
 function testStaticFiles() {
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
@@ -250,6 +297,7 @@ const tests = [
   ["news page filters, saved items and escaping", testNewsPage],
   ["exchange directory choices and safe links", testExchangeDirectory],
   ["ten-language interface and RTL", testTenLanguageInterface],
+  ["wallet preview and free account security", testWalletAndFreeSecurityFeatures],
   ["static files and PWA paths", testStaticFiles]
 ];
 

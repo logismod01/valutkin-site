@@ -47,3 +47,41 @@ chmod +x scripts/setup-push.sh
 - `service_role`;
 - пароль базы данных;
 - GitHub token.
+
+## 5. Бесплатный вход Google и GitHub
+
+Кнопки уже используют Supabase OAuth. Чтобы они заработали, совершеннолетний владелец OAuth-приложений должен самостоятельно включить провайдеры в Supabase Dashboard → Authentication → Providers.
+
+Для каждого провайдера используйте callback из Supabase Dashboard вида:
+
+```
+https://cnypuxlljlmqaltpugzm.supabase.co/auth/v1/callback
+```
+
+Добавьте адрес опубликованного сайта в Authentication → URL Configuration → Redirect URLs:
+
+```
+https://logismod01.github.io/valutkin-site/**
+```
+
+- Google: создайте OAuth Web application в Google Cloud Console и перенесите Client ID/Secret непосредственно в Supabase.
+- GitHub: создайте OAuth App в GitHub Settings → Developer settings и перенесите Client ID/Secret непосредственно в Supabase.
+- Никогда не сохраняйте OAuth Secret в этом репозитории и не отправляйте его в чат.
+
+TOTP 2FA настраивается самим пользователем на странице аккаунта через приложение-аутентификатор. Доступность MFA зависит от действующих ограничений тарифа проекта Supabase.
+
+### Привязка нескольких способов входа
+
+Чтобы кнопки «Подключить Google/GitHub» работали для уже вошедшего пользователя, включите в Supabase Dashboard настройку **Authentication → Providers → Allow manual linking** (название может отображаться как Manual identity linking). До включения этой настройки обычный OAuth-вход работает, а привязка второй учётной записи может быть отклонена сервером.
+
+Не разрешайте отвязать последний способ входа. Клиент Валюткина показывает отключение только когда у пользователя уже есть больше одной identity.
+
+### Резервные коды 2FA
+
+Текущий клиентский Supabase TOTP API не выдаёт recovery-коды. Валюткин намеренно не генерирует локальные «резервные коды», которые сервер не сможет проверить. Пользователю следует хранить TOTP secret в защищённом менеджере и поддерживать подтверждённую почту для восстановления.
+
+### Ежедневные напоминания о целях
+
+Цели работают сразу после выполнения актуального `supabase-setup.sql`. Для уведомлений при полностью закрытом приложении дополнительно разверните `scheduled-goal-reminders` по его README и вызывайте функцию по расписанию каждые 15–60 минут. Используется тот же VAPID-набор, что и для остальных Web Push.
+
+Создайте отдельный случайный scheduler secret и сохраните в `push_scheduler_config` под id `savings-goals` только его SHA-256-хэш. Исходный секрет передаётся планировщиком в заголовке `x-scheduler-secret` и никогда не помещается в Git или браузерный JavaScript.

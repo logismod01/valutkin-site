@@ -307,3 +307,75 @@ revoke all on function public.scheduled_push_targets(text) from public, authenti
 revoke all on function public.mark_scheduled_alerts(text,text[],bigint[]) from public, authenticated;
 grant execute on function public.scheduled_push_targets(text) to anon;
 grant execute on function public.mark_scheduled_alerts(text,text[],bigint[]) to anon;
+
+-- Публичные отзывы: читать могут все, писать и менять — только владелец аккаунта.
+create table if not exists public.reviews (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  nickname text not null check(char_length(nickname) between 1 and 30),
+  rating smallint not null check(rating between 1 and 5),
+  comment text not null check(char_length(comment) between 3 and 500),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.reviews enable row level security;
+drop policy if exists "reviews_public_select" on public.reviews;
+create policy "reviews_public_select" on public.reviews for select using(true);
+drop policy if exists "reviews_own_insert" on public.reviews;
+create policy "reviews_own_insert" on public.reviews for insert to authenticated with check(auth.uid()=user_id);
+drop policy if exists "reviews_own_update" on public.reviews;
+create policy "reviews_own_update" on public.reviews for update to authenticated using(auth.uid()=user_id) with check(auth.uid()=user_id);
+drop policy if exists "reviews_own_delete" on public.reviews;
+create policy "reviews_own_delete" on public.reviews for delete to authenticated using(auth.uid()=user_id);
+create index if not exists reviews_updated_idx on public.reviews(updated_at desc);
+
+-- Несколько независимых виртуальных фондов на один аккаунт.
+alter table public.game_saves add column if not exists slot text not null default 'main';
+alter table public.game_saves drop constraint if exists game_saves_pkey;
+alter table public.game_saves add primary key (user_id,slot);
+alter table public.game_saves drop constraint if exists game_saves_slot_check;
+alter table public.game_saves add constraint game_saves_slot_check check(slot ~ '^[a-z0-9-]{1,40}$');
+
+-- Цели накопления и расписание мотивирующих Push.
+create table if not exists public.savings_goals (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  title text not null check(char_length(title) between 1 and 60),
+  target_amount numeric not null check(target_amount > 0),
+  current_amount numeric not null default 0 check(current_amount >= 0 and current_amount <= target_amount),
+  deadline date not null,
+  reminders_enabled boolean not null default false,
+  reminder_time time not null default '19:00',
+  next_reminder_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.savings_goals enable row level security;
+drop policy if exists "savings_goals_own" on public.savings_goals;
+create policy "savings_goals_own" on public.savings_goals for all to authenticated using(auth.uid()=user_id) with check(auth.uid()=user_id);
+create index if not exists savings_goals_due_idx on public.savings_goals(next_reminder_at) where reminders_enabled;
+
+create or replace function public.scheduled_goal_targets(p_secret text)
+returns table(goal_id uuid,title text,current_amount numeric,target_amount numeric,deadline date,subscription_id bigint,endpoint text,p256dh text,auth text)
+language plpgsql security definer set search_path=public as $$
+begin
+  if p_secret is null or not exists(
+    select 1 from public.push_scheduler_config where id='savings-goals' and secret_hash=encode(extensions.digest(p_secret,'sha256'),'hex')
+  ) then raise exception 'invalid scheduler secret'; end if;
+  return query select g.id,g.title,g.current_amount,g.target_amount,g.deadline,s.id,s.endpoint,s.p256dh,s.auth
+  from public.savings_goals g join public.push_subscriptions s on s.user_id=g.user_id
+  where g.reminders_enabled and g.current_amount<g.target_amount and g.next_reminder_at<=now()
+  limit 500;
+end;$$;
+create or replace function public.mark_goal_reminders(p_secret text,p_goal_ids uuid[],p_expired_subscription_ids bigint[])
+returns void language plpgsql security definer set search_path=public as $$
+begin
+  if p_secret is null or not exists(
+    select 1 from public.push_scheduler_config where id='savings-goals' and secret_hash=encode(extensions.digest(p_secret,'sha256'),'hex')
+  ) then raise exception 'invalid scheduler secret'; end if;
+  update public.savings_goals set next_reminder_at=case when next_reminder_at<now() then now()+interval '1 day' else next_reminder_at+interval '1 day' end,updated_at=now() where id=any(coalesce(p_goal_ids,array[]::uuid[]));
+  delete from public.push_subscriptions where id=any(coalesce(p_expired_subscription_ids,array[]::bigint[]));
+end;$$;
+revoke all on function public.scheduled_goal_targets(text) from public,authenticated;
+revoke all on function public.mark_goal_reminders(text,uuid[],bigint[]) from public,authenticated;
+grant execute on function public.scheduled_goal_targets(text) to anon;
+grant execute on function public.mark_goal_reminders(text,uuid[],bigint[]) to anon;
