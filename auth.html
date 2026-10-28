@@ -18,6 +18,7 @@
   <div class="auth-brand"><img src="assets/fox.png" alt="Лис"><div><h1 id="form-title">Вход</h1><p id="form-subtitle">Войдите в аккаунт Валюткина</p></div></div>
   <div class="auth-tabs"><button data-view="login" class="active">Вход</button><button data-view="register">Регистрация</button></div>
   <div id="auth-message" class="auth-message" role="alert"></div>
+  <div id="oauth-options" class="oauth-options"><button type="button" data-oauth="google"><span>G</span> Продолжить с Google</button><button type="button" data-oauth="github"><span>◉</span> Продолжить с GitHub</button></div><div class="auth-divider"><span>или через почту</span></div>
   <form id="login-form" class="auth-form">
    <label>Почта или телефон<input id="login-id" autocomplete="username" required placeholder="name@example.com или +7…"></label>
    <label>Пароль<input id="login-password" type="password" autocomplete="current-password" minlength="8" required></label>
@@ -46,6 +47,7 @@
   </form>
   <section id="profile" class="hidden profile">
    <h2>Ваш аккаунт</h2><div id="profile-data"></div>
+   <section class="security-center"><div class="security-heading"><div><small>БЕЗОПАСНОСТЬ</small><h3>Защита аккаунта</h3></div><span id="security-score">Проверяем…</span></div><div id="connected-providers" class="provider-list"></div><div class="mfa-card"><div><b>🔐 Двухфакторная защита</b><small>Коды Google Authenticator, Aegis или другого TOTP-приложения</small></div><button id="mfa-start" type="button">Настроить 2FA</button><div id="mfa-setup" class="mfa-setup hidden"><img id="mfa-qr" alt="QR-код 2FA"><code id="mfa-secret"></code><label>Код из приложения<input id="mfa-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></label><button id="mfa-confirm" type="button">Подтвердить</button><button id="mfa-cancel" type="button">Отмена</button></div><div id="mfa-factors"></div></div><div class="devices-card"><div><b>💻 Устройства и сеансы</b><small>Supabase позволяет безопасно завершить все сеансы сразу</small></div><div id="current-device"></div></div></section>
    <form id="bind-form" class="auth-form"><label>Привязать новую почту<input id="bind-email" type="email"></label><label>Привязать новый телефон<input id="bind-phone" type="tel"></label><button class="btn-primary">Сохранить контакты</button></form>
    <a href="profile.html" class="btn-primary" style="text-align:center">Открыть мой профиль →</a><button id="logout-all" class="danger-button">Выйти на всех устройствах</button><button id="delete-cloud-data" class="danger-button">Очистить данные профиля</button><button id="delete-account" class="danger-button danger-solid">Удалить аккаунт полностью</button><button id="logout" class="danger-button">Выйти</button>
   </section>

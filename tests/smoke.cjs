@@ -210,6 +210,21 @@ function testTenLanguageInterface() {
   assert.match(read("app-shell.js"), /shell-language/);
 }
 
+function testWalletAndFreeSecurityFeatures() {
+  const wallet = browser("wallet.html");
+  assert.match(wallet.window.document.querySelector(".police-tape").textContent, /СКОРО ОТКРОЕТСЯ/);
+  assert.equal(wallet.window.document.querySelectorAll(".wallet-plans article").length, 3);
+  const authHtml = read("auth.html");
+  const authSource = read("auth.js");
+  assert.match(authHtml, /data-oauth="google"/);
+  assert.match(authHtml, /data-oauth="github"/);
+  assert.match(authSource, /signInWithOAuth/);
+  assert.match(authSource, /mfa\.enroll/);
+  assert.match(authSource, /mfa\.verify/);
+  assert.match(authSource, /signOut\(\{scope:"global"\}\)/);
+  assert.match(read("app-shell.js"), /wallet\.html.*Кошелёк/);
+}
+
 function testStaticFiles() {
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
@@ -250,6 +265,7 @@ const tests = [
   ["news page filters, saved items and escaping", testNewsPage],
   ["exchange directory choices and safe links", testExchangeDirectory],
   ["ten-language interface and RTL", testTenLanguageInterface],
+  ["wallet preview and free account security", testWalletAndFreeSecurityFeatures],
   ["static files and PWA paths", testStaticFiles]
 ];
 

@@ -47,3 +47,25 @@ chmod +x scripts/setup-push.sh
 - `service_role`;
 - пароль базы данных;
 - GitHub token.
+
+## 5. Бесплатный вход Google и GitHub
+
+Кнопки уже используют Supabase OAuth. Чтобы они заработали, совершеннолетний владелец OAuth-приложений должен самостоятельно включить провайдеры в Supabase Dashboard → Authentication → Providers.
+
+Для каждого провайдера используйте callback из Supabase Dashboard вида:
+
+```
+https://cnypuxlljlmqaltpugzm.supabase.co/auth/v1/callback
+```
+
+Добавьте адрес опубликованного сайта в Authentication → URL Configuration → Redirect URLs:
+
+```
+https://logismod01.github.io/valutkin-site/**
+```
+
+- Google: создайте OAuth Web application в Google Cloud Console и перенесите Client ID/Secret непосредственно в Supabase.
+- GitHub: создайте OAuth App в GitHub Settings → Developer settings и перенесите Client ID/Secret непосредственно в Supabase.
+- Никогда не сохраняйте OAuth Secret в этом репозитории и не отправляйте его в чат.
+
+TOTP 2FA настраивается самим пользователем на странице аккаунта через приложение-аутентификатор. Доступность MFA зависит от действующих ограничений тарифа проекта Supabase.
