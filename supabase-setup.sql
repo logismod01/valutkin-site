@@ -327,3 +327,10 @@ create policy "reviews_own_update" on public.reviews for update to authenticated
 drop policy if exists "reviews_own_delete" on public.reviews;
 create policy "reviews_own_delete" on public.reviews for delete to authenticated using(auth.uid()=user_id);
 create index if not exists reviews_updated_idx on public.reviews(updated_at desc);
+
+-- Несколько независимых виртуальных фондов на один аккаунт.
+alter table public.game_saves add column if not exists slot text not null default 'main';
+alter table public.game_saves drop constraint if exists game_saves_pkey;
+alter table public.game_saves add primary key (user_id,slot);
+alter table public.game_saves drop constraint if exists game_saves_slot_check;
+alter table public.game_saves add constraint game_saves_slot_check check(slot ~ '^[a-z0-9-]{1,40}$');

@@ -242,7 +242,13 @@ function testWalletAndFreeSecurityFeatures() {
   assert.match(reviewsSource, /comment\.textContent=row\.comment/, "review comments must render as text");
   assert.match(setupSql, /reviews_own_insert/);
   assert.match(setupSql, /char_length\(comment\) between 3 and 500/);
+  assert.match(setupSql, /primary key \(user_id,slot\)/, "cloud game saves must support multiple funds");
   assert.match(read("app-shell.js"), /reviews\.html.*Отзывы/);
+  assert.match(read("app-shell.js"), /install\.html.*Установить приложение/);
+  assert.match(read("dashboard-settings.js"), /data-move/, "dashboard widgets must be reorderable");
+  assert.match(read("game.js"), /globalProfiles\.filter/, "season leaderboard must use real public profiles");
+  assert.doesNotMatch(read("game.js"), /Фонд Север|Капитал Лис/, "leaderboard must not contain fake rivals");
+  assert.ok(fs.existsSync(path.join(ROOT, "install.html")));
 }
 
 function testStaticFiles() {
