@@ -1,10 +1,10 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v68";
+const CACHE_NAME = "valutkin-v70";
 const APP_SHELL = [
   "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./market-lab.js?v=40", "./manifest.json", "./.well-known/assetlinks.template.json",
   "./theme.js", "./i18n.js", "./feature-suite.js", "./macro.html", "./macro.js", "./macro.css", "./supabase-config.js", "./app-shell.js", "./shell.css",
   "./game.html", "./game.css", "./game.js?v=48", "./company.html", "./company.css", "./company.js?v=46", "./dashboard-settings.js",
-  "./compare.html", "./compare.css", "./compare.js", "./wallet.html", "./wallet.css", "./news.html", "./news.css", "./news.js", "./data/news.json", "./market-tools.html", "./market-tools.css", "./market-tools.js", "./converter-hub.js", "./profile.html", "./profile.css", "./profile.js?v=49",
+  "./compare.html", "./compare.css", "./compare.js", "./wallet.html", "./wallet.css", "./support.html", "./support.css", "./support.js", "./profile-upgrade.js", "./news.html", "./news.css", "./news.js", "./data/news.json", "./market-tools.html", "./market-tools.css", "./market-tools.js", "./converter-hub.js", "./profile.html", "./profile.css", "./profile.js?v=49",
   "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png", "./assets/icon-192.png", "./assets/icon-512.png", "./assets/icon-maskable-512.png",
   "./exchange/", "./exchange/exchange.css", "./exchange/exchange.js",
   "./stocks/", "./stocks/stocks.css", "./stocks/stocks.js"

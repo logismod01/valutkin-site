@@ -73,7 +73,10 @@ function testProfile() {
   window.getSupabase = () => ({ auth: { getUser: async () => ({ data: { user: null } }) } });
   window.fetch = async url => ({ ok: true, json: async () => String(url).includes("coingecko") ? {} : { rates: { RUB: 90 } } });
   evaluate(window, "profile.js");
+  evaluate(window, "profile-upgrade.js");
+  window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   const document = window.document;
+  assert.equal(document.querySelectorAll(".profile-upgrade-grid .dashboard-card").length, 3);
   document.querySelector("#asset-code").value = "BTC";
   document.querySelector("#asset-amount").value = "2";
   document.querySelector("#asset-buy-price").value = "50";
@@ -222,7 +225,15 @@ function testWalletAndFreeSecurityFeatures() {
   assert.match(authSource, /mfa\.enroll/);
   assert.match(authSource, /mfa\.verify/);
   assert.match(authSource, /signOut\(\{scope:"global"\}\)/);
+  assert.match(authSource, /linkIdentity/);
+  assert.match(authSource, /unlinkIdentity/);
+  const profileUpgrade = read("profile-upgrade.js");
+  assert.match(profileUpgrade, /valutkin_profile_custom_v1/);
+  assert.match(profileUpgrade, /valutkin_profile_privacy_v2/);
+  assert.match(profileUpgrade, /valutkin_account_activity_v1/);
   assert.match(read("app-shell.js"), /wallet\.html.*Кошелёк/);
+  assert.match(read("app-shell.js"), /support\.html.*Поддержка/);
+  assert.ok(fs.existsSync(path.join(ROOT, "support.html")));
 }
 
 function testStaticFiles() {
