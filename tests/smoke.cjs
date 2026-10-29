@@ -227,6 +227,12 @@ function testWalletAndFreeSecurityFeatures() {
   assert.match(authSource, /signOut\(\{scope:"global"\}\)/);
   assert.match(authSource, /linkIdentity/);
   assert.match(authSource, /unlinkIdentity/);
+  assert.match(authSource, /list_my_sessions/);
+  assert.match(authSource, /revoke_my_session/);
+  assert.match(authSource, /scope:"others"/);
+  const sessionSql = read("sql/session-management.sql");
+  assert.match(sessionSql, /where s\.user_id = auth\.uid\(\)/, "session list must only expose the current user's sessions");
+  assert.match(sessionSql, /p_session_id::text = current_session_id/, "current session must not be remotely revoked");
   const profileUpgrade = read("profile-upgrade.js");
   assert.match(profileUpgrade, /valutkin_profile_custom_v1/);
   assert.match(profileUpgrade, /valutkin_profile_privacy_v2/);
