@@ -1,6 +1,24 @@
 {
-  "generatedAt": "2026-10-30T22:15:49.875Z",
+  "generatedAt": "2026-10-31T05:35:44.168Z",
   "items": [
+    {
+      "id": "tl4crh",
+      "topic": "currency",
+      "title": "Официальные курсы валют на заданную дату, устанавливаемые ежедневно - Центральный Банк России",
+      "description": "",
+      "source": "Центральный Банк России",
+      "date": 1793421886000,
+      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFB1SW04LWJfZHRRdmttcThtZEVqLU1nMG4yX295NjE2OU1GMmxmTU5XVEdyWm1reHFqTUlNWTc3SW55OGM5TUswb012RUdLckt2?oc=5"
+    },
+    {
+      "id": "1c18mb1",
+      "topic": "metals",
+      "title": "Цена на серебро сегодня, 31 октября 2026 года: продолжает резкое снижение. - Vietnam.vn",
+      "description": "",
+      "source": "Vietnam.vn",
+      "date": 1793403263000,
+      "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAtODkySE1ybW1kY1dEaHl3cVNJcEVjdmRjS3JQdVUxSjBGM1FFb3pRNk5ULUZXR3FqV01UTE5jclF3WThYQkh4RThQb0Fjbl9MNjNVQkFGcjVIa18wT2VZa29hUG5ueEpVVG1ETENfQm1MMEx2cnFr?oc=5"
+    },
     {
       "id": "pgbyn8",
       "topic": "metals",
@@ -11,13 +29,40 @@
       "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFA1MXJ1M1FHSFZiTmM0dzZEMFNIT2F4MDdxaFY1dzFnQ1B3R3VSRldRdEh5YlZXY1lUSDZrNVdSTmZUb0xpOEQzb2hlb3ZmSS02RHM2d1VvcGdMUXlZWUh3LTAyVmZicTA?oc=5"
     },
     {
-      "id": "tl4crh",
-      "topic": "currency",
-      "title": "Официальные курсы валют на заданную дату, устанавливаемые ежедневно - Центральный Банк России",
+      "id": "jc5xrk",
+      "topic": "stocks",
+      "title": "Рынок акций США закрылся падением, Dow Jones снизился на 1,09% - Investing.com",
       "description": "",
-      "source": "Центральный Банк России",
-      "date": 1793389120000,
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFB1SW04LWJfZHRRdmttcThtZEVqLU1nMG4yX295NjE2OU1GMmxmTU5XVEdyWm1reHFqTUlNWTc3SW55OGM5TUswb012RUdLckt2?oc=5"
+      "source": "Investing.com",
+      "date": 1793392200000,
+      "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTE9MSHREMFpGTE91WkkxMHM2VWZMUGxyNktBZ0o1NlVHY1F2WDdfNmd1UEFxblNzX25YSVZ6Q09mV2JHeUt3WmFfZnZZTGs3bEczREN4VzFySVJIb2M5blk3YU5sdXB0RmxLUlJkeF9UNUs?oc=5"
+    },
+    {
+      "id": "h0s3xc",
+      "topic": "currency",
+      "title": "Рубль снова теснит доллар и евро. Курс валют на 31 октября - Выберу.ру",
+      "description": "",
+      "source": "Выберу.ру",
+      "date": 1793391209000,
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPNUI1OVRrQ2hsVC1ZRE1kblp5cnNrLVZIRzhxN0JsRURJVndIM2hSQmpReFFfczFVR2ozSG9oSm1ya3FWOElLZVdQX3lxTUNjV0M0cnBDYWxidkJyVS1iMy1JOVVnM3VDQVFvQkRxa1lHSTdCMTBPeHBVcTFYNjJDMFlHYkhwMGc?oc=5"
+    },
+    {
+      "id": "10x9ao5",
+      "topic": "stocks",
+      "title": "«Эмоции накалены до предела»: технологические акции пережили худший день с июня - Oninvest",
+      "description": "",
+      "source": "Oninvest",
+      "date": 1793391128000,
+      "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOMDZzM3pfTE9zT3R1TjhsTndiaGtNbGxsNGdHN2N4bjZqWWlYWDh5SUtlUHl5TUJWaFhUdlIxMnpleXVqNlotY2Y3UERrLVBVNEZ3NGpPZ0FOUzFCdm5vV2RZX0RXYzJ5UHZMbVVyOFVqX1ZST2lSeGRiVGpXRzluWlJLVGpzVTdYVEV6UU5iVnhzTFpaZFZQZ1pPOUNVTjNTMFk0MWpRWQ?oc=5"
+    },
+    {
+      "id": "1t36iul",
+      "topic": "metals",
+      "title": "Цены на драгоценные металлы перешли к снижению по итогам торгов - Вестник Кавказа",
+      "description": "",
+      "source": "Вестник Кавказа",
+      "date": 1793381850000,
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQM1VhdlBfTmc1ZXp5aW1QeFlZMjluakQ4dkV0WVpXYUsxbDhqdTVkaVgxM1l2clJQVlprckoxZ1g1X1VkTnd5U3pjN2tHcDNOSmNKOUNRZHV1N2lmX3VBbERldkdPbzZQUHdGOUNLd3RZdWVMSk1USG12NzRkWXBnbE1LLWUyeFRvaVBrTnBBbnE3NmlUMWZVZWRrRElXUdIBSkFVX3lxTE82UDJvZHdSMHpIVklMd1hnWnFoM1hPbDNsMkVxT2RfSGJ5RnZzOE9sS3J5S05DTmtfRnZYVnJ0M0NxVVREc1lrRHZR?oc=5"
     },
     {
       "id": "4w1mzf",
@@ -47,6 +92,15 @@
       "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxORFdTdHcwZEZacTd2a0JXRHhkTy1fYUp2aWl6YWVxOEtYNllwVThqQjRWNERxWVRYMzBjS2tfMVN4aWVYUVNPdlpaWkxjU3BLUzVoeEEwOEpRYzF1VEhrNERTX3Z4bm1hWHF4V2tFejhDNDNHY3dZNTVfWFp6c0VlYkdHbk1rMm5OdE5oOXlSRHVESVFuQ1dTZGltdUVXTlZ4a0pRczdyRXJvemNJTkZMdDhZWU5LajJBT21QdzdQYlp6T2hMQk1PZTFGMW1hdw?oc=5"
     },
     {
+      "id": "grvghe",
+      "topic": "stocks",
+      "title": "Торги на фондовом рынке 30 октября: акции банков и компаний, занимающихся ценными бумагами, оказывают давление на индекс. - Vietnam.vn",
+      "description": "",
+      "source": "Vietnam.vn",
+      "date": 1793371472000,
+      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQTEV4dU5LNjhPQUd2TkZHc3ZNdjAwd1c5N0dGM0IzZExOSTRJMGhzVEliMk1kQVZYM2RxbmdpdGkzQnRUSkFjbm9VYW93d2U2OWFxVkpUa3JtRmpTVUl6UkpuclpUU3B0TTlmSXFHVm1mRGVRLVhrcmF0WTNrd01ud3V3c1JKYy0zLVFJLW1WVkRXTGMz?oc=5"
+    },
+    {
       "id": "1swrf1f",
       "topic": "currency",
       "title": "Рубль снова растет к доллару и евро. ЦБ установил официальные курсы на 31 октября - Банки.ру",
@@ -56,31 +110,40 @@
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFB0RzBHLXJnQnhkTGsxTFZWOS04RV9kd1JydGZlekYxcGdHY0JHUTAwRWxmMmZYUnhxRlcyeVRGYzVMTEZKMEstS0FjR3FMa2k2WkZaWEF0dw?oc=5"
     },
     {
-      "id": "1kdc21z",
-      "topic": "metals",
-      "title": "Цены на драгоценные металлы перешли к снижению по итогам торгов - Вестник Кавказа",
+      "id": "18n6ljb",
+      "topic": "stocks",
+      "title": "Кипрская фондовая биржа продлила приостановку торгов акциями Reputation Exchange Plc до 21 декабря 2026 года - Cyprus Inform",
       "description": "",
-      "source": "Вестник Кавказа",
-      "date": 1793346026000,
-      "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE82UDJvZHdSMHpIVklMd1hnWnFoM1hPbDNsMkVxT2RfSGJ5RnZzOE9sS3J5S05DTmtfRnZYVnJ0M0NxVVREc1lrRHZR0gFKQVVfeXFMTzZQMm9kd1IwekhWSUx3WGdacWgzWE9sM2wyRXFPZF9IYnlGdnM4T2xLcnlLTkNOa19GdlhWcnQzQ3FVVERzWWtEdlE?oc=5"
+      "source": "Cyprus Inform",
+      "date": 1793367604000,
+      "link": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxOZnBDRG1XTkdmRHVORGJ3aVEtUS04SVRlQmwtUEhzR0JYVGN6MUVuU1NvZWRrek1qNTRKYTYyWG42REJjUFF2UzUzcVNqbWlMOS0xR0w2dFRaVXRPR3dsZTdDRHNla0NzRVVxRnR0NXNxZ3VPVVZ4dzNHY3FVbWJKektvbzRSZDNQTkFjemEyOWhobzdseHBfeW4zQ2RzNmVvUnRobWhmekk0ejFHTXBDMHYzZUpUdHZhZU5MT3oxWW5yd242MXV3TzFqMk8yeXNKRXpNOWZyeElMeDlXTUE0?oc=5"
     },
     {
-      "id": "114yp0g",
+      "id": "lebxv8",
       "topic": "crypto",
-      "title": "Что случилось на крипторынке, пока все спали — обзор от 30 октября - BeInCrypto",
+      "title": "Взлом Binance на сумму $6 млрд ударил по биткоину (BTC). Что дальше? - CoinDesk",
       "description": "",
-      "source": "BeInCrypto",
-      "date": 1793340120000,
-      "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBOSFRjRXI4WFEwMVRuYWZ4MzNvX0lvRllWaGdsVE5OOWJOaTFyQVY2cDRndEZwcDQ4dmhBNHR4Y3V4VVZJMGJaYmlzbG9pZkpPRDZtak9tVHp3WmtVWTE2eEtqQVpId0hUUWxNcTB0bWlSR2hkWlE?oc=5"
+      "source": "CoinDesk",
+      "date": 1793357708000,
+      "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxNYXA5c0VlemNmdUdGWnBZME1FZ2d2TndxeURhRlZtVzZnZjRSM0swVklUU2UwY2pSdHJ4Z25GWFNlSEd0Y3dGZlY2RjF2YWxfRW5FSWlWYVZkWVhKMU9PX2JFQndDSU1DdHRLZVVMNTFFZnRPMlBxZkxFZjlGYW1meGxfT2R3TmZwdG1JSXVQZkw4bV84ZFoyTF9kQXBfU1FIR1Rrd3U3Y0JJNl9RODBjNm9rZlIxTkpiMmt1UG9lSnNycU56MWlFVXBwekJDUUF3UExjcUxSTU04c1U?oc=5"
     },
     {
-      "id": "lqd881",
-      "topic": "crypto",
-      "title": "Как биткоин и Ethereum отреагировали на взлом Binance - TengriNews",
+      "id": "8kw9o0",
+      "topic": "stocks",
+      "title": "Котировки акций Газпрома сегодня онлайн: актуальная стоимость GAZP, графики Московской биржи, изменение цены в течение торговой сессии и способы отслеживания рыночных тенденций - Bankinform.ru",
       "description": "",
-      "source": "TengriNews",
-      "date": 1793339226000,
-      "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOUzRSVm92V0dyNndfalBsSXVtNTc4cXlMNFptMzQxQ2pEOWZJdTdsbmFBVzRfbm9xQUVrUWdhRi01bUs1TVpHaUp2MU9ma01seVczUUJVbWxJVE8xTTY4UTFoaWx0Vk1YUHl6OFJpY0h4YzhLSWYycHBfazlXSHlDOUZrZjVHQTh1bDMzUW1PYXhCaklDZDRGUUVB?oc=5"
+      "source": "Bankinform.ru",
+      "date": 1793353498000,
+      "link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1reGpqZC1JRi1jZVlEaHl5NV9mYUpJNjNlZmV2cU1INXhDSVZnVG9Uc054Z2xhVVV0d04wZ0g0b1VYT2hkRmJUcw?oc=5"
+    },
+    {
+      "id": "1pey8dr",
+      "topic": "stocks",
+      "title": "Акции «Россети Урал» рухнули: фондовые биржи завершили день в минусе - GOVP.info",
+      "description": "",
+      "source": "GOVP.info",
+      "date": 1793349511000,
+      "link": "https://news.google.com/rss/articles/CBMiPEFVX3lxTE5waFNfbzN2OW0yWDFqbURqX3RrTXRvSmlPa2lmRjBYZ3NLRW50MU1YcjFralgybEVXYVBKbA?oc=5"
     },
     {
       "id": "ezei6f",
@@ -128,6 +191,15 @@
       "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOb1FwOUowdWhfSU1URjlCLURiZG94STZzNF91WE5RR18yTkVFdUthTHpyNE9QOW1FYlJnb2ZhMHVIR1JrbjJvWFNXZG1TVWZKR3BISmpQQkYzMU5JcFRnaUY0Z1Zia0pmNFpyMHlMczJlS1FCU3YzMEluUm44TG1xY0JnN2FtdzRVQU1hbA?oc=5"
     },
     {
+      "id": "1ei797a",
+      "topic": "economy",
+      "title": "США сохраняют процентные ставки на уровне 4%, но могут и повысить их: золото и финансовые рынки сталкиваются с рисками. - Vietnam.vn",
+      "description": "",
+      "source": "Vietnam.vn",
+      "date": 1793316939000,
+      "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQR2N0RU9UTGtqZ3VVUEFXWXl0LVBjblc5SUFZQzVXLU96VE1HdnRJLVNBQnJlcTZ5cTVqS2xqT2ZURS1tdnBhVmZkcDVqZkRpTmdPYlZDMVJFbTlyVWFoVkNFaThCRm1vbkk1OUUzTngzZHk5YmhwbE5PcUxSZDY2UlowQWZ1Yk5Meld0RzI5NWlfb3R6NmpTUWQzWDluX29vUjh3?oc=5"
+    },
+    {
       "id": "1sicaat",
       "topic": "crypto",
       "title": "Ликвидации на рынке криптовалют превысили $628 млн за час из-за опасений взлома Binance - BeInCrypto",
@@ -137,22 +209,22 @@
       "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE1JWFpHazNVaUJuSVlJU1lYRDlNS0NnNG1xRFhZU25hNVlzRnZuV0dITmgyZW1xeTVqc1JPNDBjaWlEb0tpWmxQUEN5NVB4ZmpTSThGVVk3dlR6bU9mbkpNdkNoVzhqSFJkbHR2a2tNTjhOZw?oc=5"
     },
     {
-      "id": "1xh5n01",
-      "topic": "currency",
-      "title": "Доллар у минимумов: ждать ещё дешевле? Курс валют на 30 октября - Выберу.ру",
+      "id": "11gtuco",
+      "topic": "stocks",
+      "title": "Индекс Мосбиржи вырос на 33% за 3 месяца: причины роста и чего ждать дальше - Т—Ж",
       "description": "",
-      "source": "Выберу.ру",
-      "date": 1793294611000,
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPLWZRRHowMFUzakdBcnMxTFVuV01XVzZXNnVUbVRyMHFfaHJyWms0aUlTbV9uUjcxOHJHYlgtb1FWcV84Z0lmSWtMZVlFcGtwbUg1Z0ZCWHhTSlhkdUVYb0djM0lncDQ0eFM0SExEQ2JLNlpIS1ppSnU1TEkyRUpTZVgwM01PVW8?oc=5"
+      "source": "Т—Ж",
+      "date": 1793294674000,
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE8wRUc3RnMwXzB2T19EeW1yVUlNLWV4TDFmOUZZSUhOQjZIWFBsVHl4MDFIRHdQM2tFZkQ3RkpsUFFKSkloXzdScDVOSQ?oc=5"
     },
     {
-      "id": "wu993h",
-      "topic": "metals",
-      "title": "Законопроект о налоге на сверхдоходы компаний принят в I чтении - Интерфакс",
+      "id": "v008qx",
+      "topic": "stocks",
+      "title": "Московская биржа объявила победителей XXIX ежегодного конкурса годовых отчетов - Московская биржа",
       "description": "",
-      "source": "Интерфакс",
-      "date": 1793292420000,
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5kUE9nUVRscWN5WVllNURGczVMVnpqQ0Jwd0E5V1M4S1U0YVEtb0VUQm83c2hrc1N3OERCXzBFMWt0X19seUloSE9UNNIBS0FVX3lxTE5kUE9nUVRscWN5WVllNURGczVMVnpqQ0Jwd0E5V1M4S1U0YVEtb0VUQm83c2hrc1N3OERCXzBFMWt0X19seUloSE9UNA?oc=5"
+      "source": "Московская биржа",
+      "date": 1793290263000,
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFA0dEk3YXRSRnV0Q2VCbDZGQUtUOTNNeUlia2VuRU5mWXk2NXJKdTVuR2xnTFVxZGtKMXQzLTRTZlFWNUl3aUZmTnF0dw?oc=5"
     },
     {
       "id": "5v8vdz",
@@ -191,15 +263,6 @@
       "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNNVBRWU9sMmxWdTM4NGJWb09pUmFXbll5VTl0S0lIa3ZvaGs1UTdLVFV5SjZfQW5saGV3em9BM3VkZFg4QWRVdGpXUkYzT1pYR0VIVmp3X1R5NFlTSk1Fa0JoYmpWVE5mN0pXbjlfOHlTamRja09NcmhBVUZpWGF6X04xekVQT1VuOW04LTg4XzRmWE81Y2piYVNYai1LQUZ3aXhycHFtUEZ4aG1jWml1UmEwWHZEOFh5Tmc?oc=5"
     },
     {
-      "id": "hcbnn3",
-      "topic": "economy",
-      "title": "Рынок недвижимости США показал снижение цен на жилье и рост стоимости аренды впервые за три года - Marketpower.pro",
-      "description": "",
-      "source": "Marketpower.pro",
-      "date": 1793284863000,
-      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOX2N0MzlSQ21KY2VmVHF4OUlxOEdOc25LNC1waVRQTUxkcFFPbEdvc3l4SmtRM1VLVXpMM2Q4X0FMTkZXamM1LXFmT0d5Mkwteks5ZjdBRzdORFVRelhsa3prM3BveWd0LUNpZTdyZGNzaGx5eldfNWJIMkVvWmRuSW9vd1VGeUhOLUEwNFptOGpaVTBsQ3B0WjZLa0hpd0toWGZadFM0Q2pRbzYyczhSZlVFUGZ6QnV3?oc=5"
-    },
-    {
       "id": "1sa0pn9",
       "topic": "currency",
       "title": "Рубль снова растет к доллару и евро. ЦБ установил официальные курсы на 30 октября - Банки.ру",
@@ -209,13 +272,22 @@
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFB3ZmZIenpBeWFvSXRGaUxZOXB6UkFSR19jRzlTdy0yRTY0eC1DbEJoNVE2UmluNzRhNzBQSGFMU2F2NHNFWWFUNjJmT2hWNDdCYlhLTks3SQ?oc=5"
     },
     {
-      "id": "olfw77",
+      "id": "1qhdi4l",
+      "topic": "stocks",
+      "title": "Инвестиции в акции Латинской Америки: почему рынок не восстановился, проблемы и перспективы - Финансы Mail",
+      "description": "",
+      "source": "Финансы Mail",
+      "date": 1793279794000,
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOQzJFSWVLaF9aRnFINVA5cEFELVVKNjRDVC1seFI5azdzR3Y1dlBsUjVyMW1faDdOS01ZNThmN2R5WEtNVGhtVGdRWHk4MHFSV0VlSHlWSG54c2ktblJNLW1YQUNGQVd4cVZOdGFpRUdRZEx3NzVtRWlRNUJOOXo2V1FIYnIyaWFpQ0N2dUxRcFRPeGEwUEFvM28yN3VrRVBGdzN2U1dHa3RVY2RHTFRnckNB?oc=5"
+    },
+    {
+      "id": "16wag8d",
       "topic": "economy",
       "title": "Экономика США выросла самыми быстрыми темпами за год. Инфляция в сентябре ускорилась - TradingView",
       "description": "",
       "source": "TradingView",
       "date": 1793278432000,
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1qQnJrYUJPT0FWbzM2YW4tS3ctYWpoNndzaFA0a0Vqd0Z0MnhldXVaSGtHZWwzXzliandYcm5HU2tSaTdrX2JrR1hoVWUzSmpLUEZTYnZTaUpvVVdKcjA5VUE4OWZMMFNM?oc=5"
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5tYkNlbjQxT3g0OHpNdWM3TUVacTlJSHRJd2Z5UWtEQzdRd2k4NGRjZm1ta2s3UDJ5NklRMC0xci1LclNqRFlzTDhfc0VfU0FrR3o2aXFTVUR1MFY0eHpSa3hvdlNoTzZZ?oc=5"
     },
     {
       "id": "1cdbu7o",
@@ -234,33 +306,6 @@
       "source": "CoinDesk",
       "date": 1793271455000,
       "link": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxOd0pFck9uVFozd0gwTlctaW51Vk5qcktjV01heGw1VGVRMGp4Y1dFNkY3VFl6RTloU3VreGNIMGpkOXJGanNZT2VIMTRFYnhDYzFxVlEwejBkSjNwd1I1RTFuUzZvYWEtMFo2eGRDMTRrY2lHV0lGbWE5NzVXelh3bDFBelh6SzdLSkZkSF9XZnZtd3ByQjFMdVNtVnBMYmdOTGJwc0JWVjUyTW9GWi1saTdDM1JhUEVpTnBtejIxNVFnYUlFUFFWOUhRYkxQTHJZYi1jQnJ3UXZ3Z3lXcm1V?oc=5"
-    },
-    {
-      "id": "1wrbshi",
-      "topic": "economy",
-      "title": "Доллар США стабилен, евро слабеет, иена под давлением - IDNFinancials",
-      "description": "",
-      "source": "IDNFinancials",
-      "date": 1793263200000,
-      "link": "https://news.google.com/rss/articles/CBMiwANBVV95cUxNbkptbjNEUnFuNXpQMHNQMEFmM3RMTVA4Z2xHWHc0NjJ2eWJfbUFza1BrNk1rSmoxMS1vUWh1Q1ZLNDBud2MzZjdyMjVxbXNQQXVyTGt2Zl9GM2lXSDdWMDhkdnUxUmNUMUhfZGxfOU53c3VmMHlOUXp2LUgxSGNMWHZtVXFHY3oyVHI3UDEyVDRVc3YxajVsMDZ1QkZHQ1lQd0FhTDYyT0FIZFpHZV91bklNWU9mRUsteVF5OXhQZE5iTmtkaHNqUXNDeVIyQXE0XzczMlJrLUZSaDdQeHViYXZPVS04MkVwSmNabl9PdXQ1bVRTenRTd1ZPRVJoalZzTk9UenBsMmkycXZIenJRMHlDUFVVaU5ESVZ0ci1zSzhmSnpVMUtMdnVyTXZsUXVKWFlLVEN5cDVkOFJYZl9sUzl1SzJGRXFmSHlDc3Y1VUZ4YnY3R0Q3SmJCS2dKUmtPNUhqQUkxSEpvNklCRndxa3lqMDNaRXFOYmxfdHQxanoyRTBab0NvMkptbVJGNVRIUHJ0VERvdFY0cjZYZG5HV0NRcmxEX25DQTNDRHk1cVN2VWhFSE1ibXhnZ2dGUWp3?oc=5"
-    },
-    {
-      "id": "1ijvwzi",
-      "topic": "stocks",
-      "title": "33 крупные компании запретили токенизировать свои акции - Bits Media",
-      "description": "",
-      "source": "Bits Media",
-      "date": 1793260611000,
-      "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNOEdQMEVvTU92QTB4dEg4MzR2dmJvTlU5YUFUWFhTYkdEb3dXdVc1NnA1T1o5d1JXUGc3NW8tdk9SYmZwQmJsTEMwYmE0SHFiNUV0TlBvd09Ud1pySXpTSmdZVnZZV2pFYm9jWXhaUTNUaU9uV2k3bWIzc0dKampWaU5NTHNkQQ?oc=5"
-    },
-    {
-      "id": "mxm3v1",
-      "topic": "crypto",
-      "title": "График, за которым должны следить трейдеры BTC - CoinDesk",
-      "description": "",
-      "source": "CoinDesk",
-      "date": 1793260266000,
-      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNUUVleGpLVjhoWUt0S1NLTHJUbXU2QnhnYmtjN013M19xN0Q3dmIzMVFlYnc3SDhsdVpSM092THhkcC1GaUtTZlV5a1Ita0xkTWJYbmIwelpEbEZUYm8tc1FoQm9UYUhfZ212cVluVnc4Q1djOHR4cnMtbG9Cb1RnR21GNktIMENSRWlYQ2pEa1BIQ1RMOHVVaDU1TkFJdUlxWmdudg?oc=5"
     },
     {
       "id": "1287xmz",
@@ -290,6 +335,15 @@
       "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBQY2M5cHVhX3lrVENWc2s5MExGMDh6WVpoNkZBLUkwbzZ0Ni12ZzBCTGZ3UW5ONGFnWlJ2eXRNRlZMcVotakpGa2JKWdIBS0FVX3lxTFBQY2M5cHVhX3lrVENWc2s5MExGMDh6WVpoNkZBLUkwbzZ0Ni12ZzBCTGZ3UW5ONGFnWlJ2eXRNRlZMcVotakpGa2JKWQ?oc=5"
     },
     {
+      "id": "q80flg",
+      "topic": "economy",
+      "title": "Уолл-стрит закрылась в плюсе после решения ФРС - Интерфакс",
+      "description": "",
+      "source": "Интерфакс",
+      "date": 1793245320000,
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9RUTMyWW9zTnNDMG9wUmdEYWVvSmpvS2J6eThYcTJaaXJ6LVFlX1lxR0owdUYydm02SlpIUXFyWUpmS1dOeXYyemYwa9IBS0FVX3lxTE9RUTMyWW9zTnNDMG9wUmdEYWVvSmpvS2J6eThYcTJaaXJ6LVFlX1lxR0owdUYydm02SlpIUXFyWUpmS1dOeXYyemYwaw?oc=5"
+    },
+    {
       "id": "66i6u7",
       "topic": "currency",
       "title": "Рубль ползет вниз. Курсы доллара, евро и юаня на 29 октября - Банки.ру",
@@ -306,15 +360,6 @@
       "source": "Finversia",
       "date": 1793216798000,
       "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQQzBtcm5CdkRETjBLWV9TR3Bla1U4UzZFUjdnVDRtUGhxazJ4RE1VSTBBV2ZQb3llYnN0aVZsSGdmc0ZreWhxVUJibVg2U3NRcm9nRUx4bWs4aVU3blpEeElrS0E1QXh3VUt6QnptRWJDcG1FSFJCU09QX1Q4aGRxeFBsSFF6WHdobllpa3h4S1NpV0lTVzdBZkVDUUJKazBOb3ktaGY3WU1lcnV6NVdZRnZLNXM0c0YyRkQ3SVZCNVdRZlpyWk1WTnVENA?oc=5"
-    },
-    {
-      "id": "788kzp",
-      "topic": "economy",
-      "title": "ФРС оставляет процентные ставки без изменений, как и ожидалось - CoinDesk",
-      "description": "",
-      "source": "CoinDesk",
-      "date": 1793211289000,
-      "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQY2RjT2RzcE9ORnpkcDR1bjN6WGpLZVp1MzU1YU5ZRVJhVWNiQmtlTmp3VkRFRmdaYUtwZGtzSGh0YVZmLWdDN19ldDY4RjJNc3ZRU0xHelc2TnJQbFZZeFBNVWxmakdVNWdkQmF5MzBoRlBBRGhOd0ZoaGVlVENkUGdka1pUZnlhc083c19OZVl5WVhha0lVNUpR?oc=5"
     },
     {
       "id": "55875c",
@@ -371,6 +416,33 @@
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFB1QWNyU28wdVJYdnlYUFRZVzdGeWRkQzhaRW1VSFRucG5KVFN6TWQ0OUFfa2oza2J2UE9XYkhEZGtPOFN5UW93UlExZWJHb1dRSGlwRFhGTQ?oc=5"
     },
     {
+      "id": "7soz8q",
+      "topic": "stocks",
+      "title": "Акции компаний «Великолепной семерки» потеряли историческую корреляцию на фондовом рынке - Marketpower.pro",
+      "description": "",
+      "source": "Marketpower.pro",
+      "date": 1793195506000,
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOdVVrXzE0VDA0MWFrZjMxd2M0S19TY0ZSanpKNDZCS3gwQU5BamJzMm9mcGZBSUZkSkwxbUhQUlVnVkFDR2JOUEhYM1NsWjFBNXVzSWlrWnpDcHNfaks0b2hlVGdLSTh6WUhscnN0WWFQdkExXzNTZGpESkZEN08zSGU4TEQwYVhyQngxYkcxR2VrLWFzRTFOcWtyWU42aUdBSjlGeVFfSUtwT1pfMngwYkJn?oc=5"
+    },
+    {
+      "id": "1eecci6",
+      "topic": "crypto",
+      "title": "Google представит систему безопасности хранения криптовалют на фоне роста угроз со стороны ИИ - CoinDesk",
+      "description": "",
+      "source": "CoinDesk",
+      "date": 1793190954000,
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQQWNIdVl6Zm02bGV5S1hfR3owYUItUnR0eWE0V09ZTUFsSEZIb1g4V1hYQk1ObnJoenFxcW1mU196d0xlRVlLZFdfVnlKMWFWUUd6U1AybXdjQURGemVJdzVVeW5tYk5vU1BrSU5ZSzlIZjFXejNKNmowSHdrVW83WmFYc20wbzdaLVphV0ZVZkt3RllhUzVvbkZFYzRLcVlpMTF4T2tGdUlwQ2ZaTXF5cQ?oc=5"
+    },
+    {
+      "id": "1kt9byg",
+      "topic": "crypto",
+      "title": "Разногласия и не только: 3 момента, за которыми стоит следить на заседании ФРС - CoinDesk",
+      "description": "",
+      "source": "CoinDesk",
+      "date": 1793189075000,
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOY25aLUZLQ1gwOW50Z243REYzaEZkb0J5czlyNnREdFRnLXNlVVVfSlE0OWk1cFF0VWlqUUdfZENRLTBBNy14Sm0zbHBfRm45dDRVMmJDVjhfNm1TRllfQk0wSXZlWEdQemRLQktsclhIU3N2QUpSaUswYmFiQ0I3eS0xQ1cySUhyOGl6UE84RnNOWGZQUG95QXlMUThBVGY5LW4zeFdCY0Y0Z1U?oc=5"
+    },
+    {
       "id": "doa0qj",
       "topic": "crypto",
       "title": "Биткоин превысил отметку в $81 000 перед решением ФРС, мемкоины лидируют в росте альткоинов - CoinDesk",
@@ -380,31 +452,31 @@
       "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOMHExV1NFcWtfbUJoZFg0UkZ0ZWZRQjRwVFJsc1ZCZ19hTU5od291VjgxcFhxZG14cDBGTUdCa0t1SW92YUk1UmhhSHgtSklmZ0lnQk5QVDhNZUQyTzd6aDNwbWRWcUxRMGs5VkpaTVdTckJiMkJDR1dMeG1mZ1lwY3FxYmVrVTRIR3VxR3Qza2JnTFBRWGZkNjZPNTJxMzJEVHVsS2JZQ3V2RkZPU3lPSVV4T0xxdGdtNUZjazdDWFdmRjYzTjZ4cTBjcw?oc=5"
     },
     {
-      "id": "152l70t",
-      "topic": "stocks",
-      "title": "Фондовые рынки Азии завершили торги ростом: индекс KOSPI взлетел на 6,6% – Публикации - Finversia",
-      "description": "",
-      "source": "Finversia",
-      "date": 1793182004000,
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQVVhsaUJBbXZIWXpfeWNNN0RhRWM4R1RhRmJFaXJtVUluRlJwYjM1ZHgyUnYxTldFVmV3UDJGNFlpcGhWdGRoWEk4ZTVRSWhMNVlGSVFOeXhaQnlHa25halQtTHNqRGlyZnJpVDYzWkdhc0FiaHVUWHJadmxvVk9yQUhWNFNncC05aEhMbWdCaHNhSkc2MUxlc0tBYlg0UzZUY0wyeTE0cDJmbkVsTTJ6dkJLS3R6dw?oc=5"
-    },
-    {
-      "id": "9isnwb",
-      "topic": "stocks",
-      "title": "ИИ в Китае оказался слишком дорогим: почему лопнул технологический пузырь - Телеканал «Наука",
-      "description": "",
-      "source": "Телеканал «Наука",
-      "date": 1793181035000,
-      "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNZ3p6RDZqT3Y1OFYwaWlCM09odHl3UVZYUVhpM2tHdjlSOERZVlFLNXZYR0diRkgtcWhTXzFGWVNqd2w5QU1fcXdyMUlRcFFkZ05RVEVzZWhncll0dC1oVmkxVFptMUNjdVVLUVhYQng5dWFqV2E2eFZHeWhzdGV5VmtGaThHV2VWNmc?oc=5"
-    },
-    {
       "id": "1kyahp7",
       "topic": "crypto",
       "title": "Являются ли промежуточные выборы благоприятным фактором для биткойна (BTC)? Вот что говорит история - CoinDesk",
       "description": "",
       "source": "CoinDesk",
-      "date": 1793180817000,
+      "date": 1793178922000,
       "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNX0RoYjdvVEhyV1NRQ3ROOGJqU1FCdXdBQ3FnUXRqZkJBY01mSTh0dDFEUkE3cURlYXhQeU56UmRwWlEtZHNmQ0J0MVJzTzNqc1g3enVrSElmdm43VVFiNGVncnlEVi16MjJISXd4c0Q3aWh2b0Rlb28xTWFiMGhLZkNBRnlfcFI0Wks4TVNXaDh4OVpYa2tjMzN0bUE3VmIwU3ZvWnpLdy1KdEN3aFZDUjZQUEduc25Sem9tQjhqLWhtQQ?oc=5"
+    },
+    {
+      "id": "ewzglo",
+      "topic": "stocks",
+      "title": "Акции TK Accelis начали торговаться на ведущей немецкой фондов... - GMK Center",
+      "description": "",
+      "source": "GMK Center",
+      "date": 1793175002000,
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOamhyM0NCMVpTWGcyR0I4Y3Y0aTJEeXh5MzUzM0FSdjNCaDRKWHVxVXF6alktTEs2Q0pyQW5FdmdJX1M1TzJhcTJsR3dqb3RuOVN6Y1lXUmFsZDFSSHdaMmpvQlFJTFp5MUh5TE4zNFNqeXd3TEtTR0xONDdJR1ppOVdtQ2lhODhCa2VMWjhfX3RqQTBTNjV6R0xMREZuRjRN0gGmAUFVX3lxTE1nRnRtR3RQY25pREo0NlNHc2xyazhISC1jV3o0Vkl0bVVpcV93WGJaNXowdmlkaFVtVUROTGc5QW1ZWjVKNVNTZEh2OFFUS2pnVlBEdkcwSF85aUVlWHFuTUtLMy1HQ2F5bE1kRHhGSWNSS1NpZDQ0UVRzYzFoRW5aMUFvZFdSTFRoWTVBN2RUUUR2VGJEaUhhdXFrTWZabXJQQ09uYXc?oc=5"
+    },
+    {
+      "id": "1qvrp0e",
+      "topic": "economy",
+      "title": "Основные направления единой государственной денежно-кредитной политики на 2027 год и период 2028 и 2029 годов - Центральный Банк России",
+      "description": "",
+      "source": "Центральный Банк России",
+      "date": 1793170800000,
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9PMkdOT0xwNFFUcHFPMkttTmVOVzhacWxzVEZNc2o4TjNjenl0MTVXSGRTc3A2Z1RpVTIxb3E0NFBRR040alFVVVkyMlV3LVZzQlhyS1d3YmJkVTZ5?oc=5"
     },
     {
       "id": "133pl8z",
@@ -443,13 +515,13 @@
       "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE9ZYmNReGMyTTRQMmZ5aktibDlXckh3WnltV1lPbFNEMWd1QWtXRW4yMzFyMnBzY3VZYTlmV3lfblAzaHhNc2MyR1BmYnVudw?oc=5"
     },
     {
-      "id": "lesr9e",
-      "topic": "currency",
-      "title": "Курсы доллара, евро и юаня на 28 октября - Банки.ру",
+      "id": "1wnivp8",
+      "topic": "stocks",
+      "title": "Рынки акций Европы выросли во вторник, кроме Британии - Интерфакс",
       "description": "",
-      "source": "Банки.ру",
-      "date": 1793152835000,
-      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBSSGE5dldrci1nYUlueGpkUmlmejNLaUE4TFZ6WnRVS2lReDdVX3lVcUlEREtYdEl1OHA5cDRMakNzUnU2YkRGWjF5OXBWTXBuTlY1U0RUVQ?oc=5"
+      "source": "Интерфакс",
+      "date": 1793156580000,
+      "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE9vZTlRQlZTV0J5eWFsMzB3VXM5YUN1RlpVY252Z2o2dy1vemlZaFBqei1KZ0pnMnRUQmlvUU1WUkQ3ejFtWDdVbG9KZnZCZ9IBS0FVX3lxTE9KazhLdEZibUFIaE9kX1NaY3pRbmJkSk9LZk5FYXQ4U3JwM0o1ZUxMM1RiaVFrTFVTRWwwVzZRbi1Ea1hjTUtpRzdTSQ?oc=5"
     },
     {
       "id": "y150cp",
@@ -470,15 +542,6 @@
       "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE92dXJIUm16XzJ6OFNvekNBaThZUklKTE9fRUJkYkNiZHljRU5hZ1BVbUppb2lmSFo5MUZxcnliT2tpQ0lEdUJXdW9TbDI5Y3JtS0c1bDMwUDN3Nk82VFVVcllZVWhwTDg?oc=5"
     },
     {
-      "id": "rz7u1n",
-      "topic": "stocks",
-      "title": "Успешное IPO — только начало: Strategy Partners назвала факторы устойчивого роста акций после размещения - IT Channel News",
-      "description": "",
-      "source": "IT Channel News",
-      "date": 1793134800000,
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFB1LTVieVRjejRvSUVwb2J5ZE1tUkZGN21Jb05GUDVwQnU0aFpfRDhzM1NJOWs2c1FGYzhwcEpMSTQ0NjlaV2RIQjdUZVRpaWVUMzFIVElXbmQ3aU1HT0N4cG5za0ZLWWs?oc=5"
-    },
-    {
       "id": "1558dfb",
       "topic": "crypto",
       "title": "Аналитик Ansem предупреждает о риске глубокой коррекции биткоина и Ethereum - BeInCrypto",
@@ -486,15 +549,6 @@
       "source": "BeInCrypto",
       "date": 1793121000000,
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBXTU9qUnFCdXJJQjAzRjkxSGw2MHRuWDljUGhvTGp2eUNia3BVRWtBaVItUkQwS1BEZklyeGQzbG5scnRYTDl6ZWg4YUxkRWg1eFhlc1dhLXVaT3pvcDd3bGMzMHhFYVNyZmhnOUhpOA?oc=5"
-    },
-    {
-      "id": "16wuvif",
-      "topic": "crypto",
-      "title": "Бразильские компании обратились к стейблкоинам в день выборов, чтобы избежать валютного краха - CoinDesk",
-      "description": "",
-      "source": "CoinDesk",
-      "date": 1793120347000,
-      "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOaUZYVmpBbXpaRTdPTVl6bGhQX1o1WFdHbjVqT1Z5Rjh1QWI3WUVNZm5YQUl2bHVtQzAxTlRSOGZNMXphRmtRdVhZNUhIRlI5blJ4SldhSDB6dVAtMWJPZmlIRHhUZDRNTlZ1bDZEai1iVnVnUjVEUUcyaFZFbFE0VWlHcXVORDdPQ0F1UlhKVnZXM2Zmd200NE92RzloUTkzcHFoU1NJVEoyME9BRm52OGZDRHNuUW4zekNYWW5EYS1PRVlUWFNUX1FQUQ?oc=5"
     },
     {
       "id": "1rgsrsj",
@@ -506,15 +560,6 @@
       "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxOQUhJemp0OWh3RVZPZEE1NFpfYnozckhDVEhnWkFwX0M3S0tmTFd0NUNLVjhNQ2wzSGdLSmp1VG5nczdKc2tJRHhfSXh6dGprVXBMc1k5TUtmaUZZMElfdDdUSWh5WkwtNHRhTng3RGJCR2doeEZkQTRCTlFTbnhlOXRTaG9NRXJZYlp3alIwcVZLeEt6N0daQlNjQU9qdw?oc=5"
     },
     {
-      "id": "18w59yo",
-      "topic": "currency",
-      "title": "Курсы валют ЦБ РФ: курс рубля к доллару, евро, юаню, бел. рублю, сомони, сому и суму - ProFinance",
-      "description": "",
-      "source": "ProFinance",
-      "date": 1793115112000,
-      "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQWFpIblBNNnFtYjgycmNScThBaUEtM2c2bGhSeE1yTXNyTG1YOUpPS3FzUV9yNlhvMUtVOVg1Z1ZITlhtLXI1OVV2QzJ4MGszN01zTVlqNmF5Y1N5MzVLWWhxTEVGVVZGRklaMjVnUzZoSkJNR3EwUk1LcEN0ZHlYRHZ2NTVpUmlRVkdvSHo2am4wOXdUUmV3enZodXNRWW5QdG1idFZPVWh5dl9OcGlBMEFZWGZRQnlJWVpxWUpsUVQ3OXRIS3M4dmhDdEdNQQ?oc=5"
-    },
-    {
       "id": "16vbyr9",
       "topic": "currency",
       "title": "Рубль начал снижаться к доллару и евро. ЦБ установил официальные курсы на 28 октября - Банки.ру",
@@ -524,13 +569,22 @@
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE5DZG9aNmpwMFc4eTlHREZsZE94YzB3NklwZkFmUFM3a1NmNVZYVlBZZFZ2RVRKXzQ4Znk0T1BvbnpTTXhVTTVKTFlxdGRZcGNWdktaaFowMA?oc=5"
     },
     {
-      "id": "47l0t8",
+      "id": "18w59yo",
+      "topic": "currency",
+      "title": "Курсы валют ЦБ РФ: курс рубля к доллару, евро, юаню, бел. рублю, сомони, сому и суму - ProFinance",
+      "description": "",
+      "source": "ProFinance",
+      "date": 1793111280000,
+      "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQWFpIblBNNnFtYjgycmNScThBaUEtM2c2bGhSeE1yTXNyTG1YOUpPS3FzUV9yNlhvMUtVOVg1Z1ZITlhtLXI1OVV2QzJ4MGszN01zTVlqNmF5Y1N5MzVLWWhxTEVGVVZGRklaMjVnUzZoSkJNR3EwUk1LcEN0ZHlYRHZ2NTVpUmlRVkdvSHo2am4wOXdUUmV3enZodXNRWW5QdG1idFZPVWh5dl9OcGlBMEFZWGZRQnlJWVpxWUpsUVQ3OXRIS3M4dmhDdEdNQQ?oc=5"
+    },
+    {
+      "id": "m1x2pl",
       "topic": "stocks",
       "title": "Индекс Мосбиржи превысил 2500 пунктов впервые за пять месяцев - TKS.RU",
       "description": "",
       "source": "TKS.RU",
-      "date": 1793105708000,
-      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNWTZJT19WdGFEcTVubWREMlE0c2xkeEdTRmRwY1V5aE1lVlZQV05iMUo3QjBKX1k5VllRN1o3YXhONGtwbWdvMnN3R2pNblhtVWVla0lQYUozWUUzYlZpbEprQXl5VmhlV1lMbC1NNjdjRjZIV0Y3MHRzTUdBS19EUWQ1OEk2TWlsVDVVaFBJT1M1OTZmdU1xa3Zad1VBekIxLWRQMmdUVkI4MU5XR0pENjAwWFJHOUV2?oc=5"
+      "date": 1793104620000,
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPZ0p3aHdiOUlYWlJrY25pVEFibkxDbDhkdWVOUGtaR01VRGVuZWFEdm9iMmhETjNlcVQ0YjlUdy1qcGluWjlZQnc0a21sM2NyOXV0MTg0cEl0am8weHp4U3oxNHpKR2tPNFhzVWpYLUd4ZDhwQzJQVElrV3VyUFJaREVQbW8wNkRRV3Jkc0QxZlJpSEl0N1lGUHQ0YU1idjlaRjBBUzZzWk1lV0s4dHIxVA?oc=5"
     },
     {
       "id": "1f4fxgb",
@@ -560,15 +614,6 @@
       "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQamlkMWRSX2NuSHFGMXBnblFTN09ac0xCejlOUXV0dTk3ei1UQ0QxYTQ3UU9UOXlqcTFUbnBxcDhxU1FhdnltM0hudGgwYS1MMjNWTlg2TDk2eFIzU2g1YjRvcy05NDk0eFZsMHRwSTdRS2RSS1JYVjM5UmFUT0VBQ01waHdxeWttTkpqdnRVOGNXdlFLLUJ0Nm1vVV94UzBudS1pYl9xSk1WS05CSGpjOG1ZNnVVc25wRmNldzFPb2s0alZGYi1jU3BR?oc=5"
     },
     {
-      "id": "16k02lp",
-      "topic": "stocks",
-      "title": "Биржи Азии завершили торги разнонаправленно: KOSPI вырос на 3%, а Shenzhen упал на 2,5% - Finversia",
-      "description": "",
-      "source": "Finversia",
-      "date": 1793095725000,
-      "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPRUs0czdTRTZfQkZTRm8xT25FMUMybWptTTF6Yzc3U3V0TGJhaFF4SzhFaEJ3dS1CVGxlbEo0dFI2REs0akJSQnRmU0JZQU5pS2xWc1VIOGkwVTh5MWRpRnFQcUVVRWxVVDdMUEpzTVhIT2R1V3JjdlBYTXlEd19reC1TYTJNa0pya0p5YU5RaEhaMW5tV0Y5bjl6c3BpaXRyeWxtSjI4b2xGRzIxSGtCek54a0NlZEd5TmRkSzdBRUQ3V1dIZlFycg?oc=5"
-    },
-    {
       "id": "1d4uvyy",
       "topic": "crypto",
       "title": "Сейчас настало время накапливать биткоин, заявляет Galaxy - CoinDesk",
@@ -576,15 +621,6 @@
       "source": "CoinDesk",
       "date": 1793094166000,
       "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOcG1BZDdmVUxuNE91MHRBcEV2ek5EZFZab0ZhajgzcGxBLS12eG15enEyOWxZSmRaR2N4UUFXTG5LTnltSVBCTFQ3NDJxRFc5RlN2RUE2cGhQM1FiWUdGQm8zc05qM3RfVEVyZk9rZ3V4eTB0Vm0wTXRPY0wxeGhZWVN2d21hN2NHcGc1ZHVhLXVMWWZ6cWVVMU15TDg?oc=5"
-    },
-    {
-      "id": "1qtkm0j",
-      "topic": "stocks",
-      "title": "ИИ-пузырь лопнул в Китае. Начался обвал акций ИТ-компаний - CNews.ru",
-      "description": "",
-      "source": "CNews.ru",
-      "date": 1793094014000,
-      "link": "https://news.google.com/rss/articles/CBMickFVX3lxTFB3bW93RElFVDRkc3YtdXI4Z3ZGZVlwSzVDQ2laQjJWOWFDWTFqeXBfVEtGQVJncGNzcHJqNTFUZTJZbzFwWTV2NlFkMzhHX1BGa3JsVHFZNjE3WV92ejV4T25GcUNtRFcybjZKaVVmMEs0UQ?oc=5"
     },
     {
       "id": "1g1irvc",
@@ -596,15 +632,6 @@
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5MZF8zcXFETHZyZE92Ry1LN3kxRnRUXzlId0E3MkFSaFZhLTZQUFhmNWNfOU9NVlEyR2VrbXprNDRrVTdLZzh3c2pCdmRHSkFUQTZLTk91cGhWMXVaVXdSaERnV2VKWk01N18waGdDOA?oc=5"
     },
     {
-      "id": "stspf0",
-      "topic": "stocks",
-      "title": "В Китае «лопнул пузырь» нейросетей: акции компаний обрушиваются - Kursiv Media",
-      "description": "",
-      "source": "Kursiv Media",
-      "date": 1793084516000,
-      "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNZ1lVTFN5cUcxaHVHc0MyZ2NwRktQeGM1RklQOWhUUGh4M2hIMlNBVWIzOU5FU1YxYzNuWVRHWjFRa1JyRy1QX2I0MmdKMGN3cWRpaDR3N3Z6VU4wbU1RQ1NzMjYzb2JfTmZrRTl2dUFYYm9nUEpWS2lxSkJFNWdGcmJlQXFjYlB3WElEUVdvNmxfNVpFNHBIRkp1RnZiaExzcVBkQkFxWQ?oc=5"
-    },
-    {
       "id": "42qj9b",
       "topic": "metals",
       "title": "Цены на драгоценные металлы - 26-10-26 - Armenpress",
@@ -614,49 +641,13 @@
       "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5fOHQ2ZVdwcE9lNXFTVmE1OFcwRHV6ZGVnMTFILWxMZjZNY2I2aWh6cTlPSTRWenZHREtJRnBsanM4QkZOblFnVWh5Y2g4ME8wMVHSAVdBVV95cUxQUkZJX3dnemFzNmdQMDgwSGlxSFMyVm9ZeVV0c0RDaDFuNlZnTEozdmlCVnoza01fT3RPZ1RmQzJUV0FISE1CZGRCZ3pqNWxqaFYycXl6RmM?oc=5"
     },
     {
-      "id": "ds1xlc",
-      "topic": "stocks",
-      "title": "Цены на акции после IPO: инвесторы получают прибыль или терпят убытки? - Vietnam.vn",
+      "id": "1dfv6f",
+      "topic": "currency",
+      "title": "Рубль продолжает расти к доллару и евро. ЦБ установил официальные курсы на 27 октября - Банки.ру",
       "description": "",
-      "source": "Vietnam.vn",
-      "date": 1793074334000,
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQV3hVMVlOUVFuOVRDcXYzSXJwbGxZYWRZYWYzdmJmWjdHcUJtWnFfRUg3a252YV9nbXhzWG5KcVZ6Q2htZ2I2YjhiNWZBdWl3UDBwNUpXN1VTMFVSZ3lSU1NLQ2JfTlF6Nzl2anUzdVpQWFhBMEx3aG5kbGNMaU9aUWtNaWZzamZu?oc=5"
-    },
-    {
-      "id": "19o7vlk",
-      "topic": "stocks",
-      "title": "Anthropic подала документы на IPO и выбрала тикер ANT - Компьютерра",
-      "description": "",
-      "source": "Компьютерра",
-      "date": 1793040160000,
-      "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQYXRxelV4N2dyMDBJNlFhT2dfSlhUQnZmT1lmRTR0RWpvUU83MnBWbG40ejJpc2dUb1RKX0RmWjN5NTU1dkZIY21DV3lKQjV1RDk4SG5ZeHVJMTZYSkRITHNiMElGVE05bTVwdzhranQtT2NfVVVPME1oNnczYVFhdWhKMm92QVNwQjh4MUFrRUw?oc=5"
-    },
-    {
-      "id": "136b6b8",
-      "topic": "stocks",
-      "title": "Разработчик Claude выходит на биржу с оценкой более 1,5 трлн долларов. За полгода Anthropic получила 80 млрд долларов убытков - The Insider",
-      "description": "",
-      "source": "The Insider",
-      "date": 1793030309000,
-      "link": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE04eUREUTRrYXVWT1BXR25MZTltdFpnSWdyYUczT25OakRQQk9ZRmJSbnRIeDZiNGEwWl9JNmgzYWhYSm8?oc=5"
-    },
-    {
-      "id": "1w3vzi1",
-      "topic": "stocks",
-      "title": "Бразильские активы рухнули после выборного шока. Какие акции еще нравятся аналитикам? - TradingView",
-      "description": "",
-      "source": "TradingView",
-      "date": 1793021495000,
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5XUzJsd1VpcFROaDRzUlJjWFpkUS03bG5aN1JIQ0pyYlp1dGNtMk5YQ3V5RWttVUV0TFhVMmpPeWxLOVBKMjJrbTU0c09rV254aWJkc2hDOUJSSk1BdkluYXNxRTR0VHJL?oc=5"
-    },
-    {
-      "id": "ai1obp",
-      "topic": "stocks",
-      "title": "Карта рискованности фондовых рынков: почему Швейцария оказалась рискованнее Турции - Хабр",
-      "description": "",
-      "source": "Хабр",
-      "date": 1793016000000,
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE13MWV2Qi0tMWpBQ2c0cVNuUmZTTU1wOG12eHU4dlp6QkpUZm1YX3ZjZFkzdDFRSjBGd28tdTkta1VhSTFDR3NySmxOY3hyNXQxQ0piU0FUNW9hTzAtQjNUencxQ3dIb1k1Y2dqWNIBWEFVX3lxTE14VVNya1dRR1YtWXQxNkFiZEE5aUktWWdkQ0lnVzcwN05MNktuSXp6WXA0eEtFQVVOMGlqd1JOeG00Wmh3MVluWVdodm5uSDRBbEY1NTdNemE?oc=5"
+      "source": "Банки.ру",
+      "date": 1793026787000,
+      "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE5OVDR2S3VwSURpU1NJRU4tSVdfdG0wazZMMEJfSFZqM3RUZjVrdmlYMHFBSXdQOFI3cmRUUGU3R1N2MTRWcmw2QnlRZkxaZDY3dWhEbm1Zaw?oc=5"
     },
     {
       "id": "1dsopes",
@@ -704,6 +695,15 @@
       "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1WWWFfZ2tmWjBhUlNqUzUtemZ0bXRZSUZIWEM0bmVHRWhvS2oyTHJiZDE1aFRxcmJvbHhJUjFJZFdOaWpIbko4NXpBUnFkQQ?oc=5"
     },
     {
+      "id": "7heslg",
+      "topic": "crypto",
+      "title": "Strategy (MSTR), Strive (ASST) должны сбалансировать покупки биткоина (BTC) и дивиденды по привилегированным акциям - CoinDesk",
+      "description": "",
+      "source": "CoinDesk",
+      "date": 1792857600000,
+      "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxNNWM0TkdOLUowQm04ZlNvaEJNTjN3LTdGVUxZa09ab0pxZXFRVnJsUVEzR3dzVXNfWUdDUFRQVWJrZ04tQXh1UXZ0dEF6WjhVS18yQktGMDd6UFF1Ql9Kc3NhblF6Tm1aQ2FLQ1FLcjdWbDQyZ2hmLVZLV2VrNzd3U19vSWpPcWMzU1RCb0t0dVF2eW5sdDVpUWV3OUpXWk9yb3IwcVRIdDY1amFDbHVjdDAzNzJtb2NIeWVkQnV5WFpxbnU3TzRUV0ZsZ2ZXUEVB?oc=5"
+    },
+    {
       "id": "a91cmc",
       "topic": "metals",
       "title": "Снижение цен на драгоценные металлы: золото, серебро и платина подешевели - Media.az",
@@ -713,13 +713,13 @@
       "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNaS1TMV8xYng1eHo1N05xUzlZTEJoUHI1MnllWGtWcGk5RkN2ZTRVbzFBSjVnTHkwNG41NlpuRnp2UGxDM242ZUQ2YkwzdklaRDU4Z0RVUldFRXJIYjhPXzdVMzhKaHFZWHozZFhQTF9aY2VmM1hHWXN4Y3hNaDVRbEg5ck50OUY2dkZpSUVsdGRrb01UNHRXdDZfYjZtVHc?oc=5"
     },
     {
-      "id": "bvv8ua",
+      "id": "1eme5id",
       "topic": "metals",
-      "title": "Цены на серебро сегодня, 24 октября 2026 года: резкое падение цен на серебро. - Vietnam.vn",
+      "title": "Цены на драгоценные металлы снизились - 23-10-26 - Armenpress",
       "description": "",
-      "source": "Vietnam.vn",
-      "date": 1792816869000,
-      "link": "https://news.google.com/rss/articles/CBMickFVX3lxTFBuaEE1UXhTUlhtb1pVYWRUaDg4NlBmZC1RS3ZhU05Xd2hrRDJ3UzRMdjVhc29kdU9kaWFLUWJ3NzJlWmpiekkwWlI0RVdPa0NVN0Y3YzVuajFHQXFiTHVPaUk2a0ZvTlEyX2luamN6eElTQQ?oc=5"
+      "source": "Armenpress",
+      "date": 1792826100000,
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE04X3dnMlctdHJLUy1CUHFjd3d3dm5DM1JZWjNMZ1FZeFRwRmZXdUllTVljZlZqcFp3NUFab0ItaV9HX1NNN09aNEQzN0hoUG42ZVHSAVdBVV95cUxOeUk5blRjMFdDM2pseXpGUU54MjlUaWdOSGZ1bWxMUnU4a1Y5aHRaal84aHhIMlVCa2I3bmstUlUwYnN4dlFIdlJoTlVFdi1mRWxVOTliZUE?oc=5"
     }
   ]
 }
