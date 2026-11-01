@@ -5,6 +5,7 @@
   const inSubfolder = /\/(exchange|stocks)\//.test(path) || /\/(exchange|stocks)\/?$/.test(path);
   const base = inSubfolder ? "../" : "./";
   const accountHref = `${base}auth.html`;
+  if(window.ValutkinI18n&&!document.querySelector('script[data-i18n-pages]')){const translations=document.createElement('script');translations.src=`${base}i18n-pages.js`;translations.dataset.i18nPages='true';document.head.appendChild(translations)}
   let localStore=null,sessionStore=null;
   try{localStore=window.localStorage}catch(_){}
   try{sessionStore=window.sessionStorage}catch(_){}

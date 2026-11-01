@@ -417,6 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("stock-search")?.addEventListener("input", renderStocksView);
     document.getElementById("stock-sort")?.addEventListener("change", renderStocksView);
     document.getElementById("stocks-favorites-only")?.addEventListener("change", renderStocksView);
+    const density=document.getElementById("stock-density"),grid=document.getElementById("stocks-grid"),compact=stockGet("valutkin_stocks_density")==="compact";grid?.classList.toggle("compact",compact);if(density){density.setAttribute("aria-pressed",String(compact));density.textContent=compact?"▦ Обычный вид":"▦ Компактно";density.onclick=()=>{const next=!grid.classList.contains("compact");grid.classList.toggle("compact",next);density.setAttribute("aria-pressed",String(next));density.textContent=next?"▦ Обычный вид":"▦ Компактно";stockSet("valutkin_stocks_density",next?"compact":"normal");window.ValutkinI18n?.apply(density)}}
     loadStocks("popular");
     startAutoRefresh();
 
@@ -568,7 +569,7 @@ function renderStockChart(points, symbol) {
 
     if (stockChart) stockChart.destroy();
 
-    const labels = points.map(p => new Date(p.t).toLocaleDateString("ru-RU", { day:"2-digit", month:"short", year: currentDays >= 365 ? "2-digit" : undefined }));
+    const labels = points.map(p => new Date(p.t).toLocaleDateString(document.documentElement.lang||"ru-RU", { day:"2-digit", month:"short", year: currentDays >= 365 ? "2-digit" : undefined }));
     const values = points.map(p => p.v);
 
     const isUp = values[values.length - 1] >= values[0];

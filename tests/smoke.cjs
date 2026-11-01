@@ -190,12 +190,17 @@ function testExchangeDirectory() {
 function testTenLanguageInterface() {
   const { window } = browser("index.html");
   evaluate(window, "i18n.js");
+  evaluate(window, "i18n-pages.js");
   window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   const i18n = window.ValutkinI18n;
   assert.deepEqual(Object.keys(i18n.languages), ["ru","en","zh","es","fr","de","ar","pt","ja","ko"]);
   for (const language of Object.keys(i18n.languages)) {
     i18n.setLanguage(language);
     assert.notEqual(i18n.translate("Главная"), "", `missing ${language} translation`);
+    if (language !== "ru") {
+      assert.notEqual(i18n.translate("Отзывы о Валюткине"), "Отзывы о Валюткине", `missing reviews translation for ${language}`);
+      assert.notEqual(i18n.translate("Поиск компании или тикера"), "Поиск компании или тикера", `missing stocks translation for ${language}`);
+    }
   }
   i18n.setLanguage("en");
   assert.equal(i18n.currency, "USD");
@@ -264,6 +269,8 @@ function testWalletAndFreeSecurityFeatures() {
 }
 
 function testStaticFiles() {
+  const htmlFiles = [...fs.readdirSync(ROOT).filter(name => name.endsWith(".html")), "stocks/index.html", "exchange/index.html"];
+  for (const html of htmlFiles) assert.match(read(html), /i18n\.js/, `${html} must load the language system`);
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
     "stocks/stocks.js", "exchange/exchange.js"
@@ -279,6 +286,10 @@ function testStaticFiles() {
   const mainSource = read("script.js");
   assert.match(mainSource, /translucentAccent/, "chart colors must normalize short CSS hex values");
   assert.doesNotMatch(mainSource, /addColorStop\(0, `\$\{accent\}66`\)/, "short CSS hex must not create an invalid Canvas color");
+  assert.match(mainSource, /valutkin_currency_sort/, "currency sorting must persist");
+  assert.match(mainSource, /compact-currencies/, "currency cards need a compact mode");
+  const stocksSource = read("stocks/stocks.js");
+  assert.match(stocksSource, /valutkin_stocks_density/, "stock density must persist");
   const compareSource = read("compare.js");
   assert.match(compareSource, /api\.binance\.com\/api\/v3\/klines/, "crypto comparison needs a rate-limit-resistant primary source");
   assert.match(compareSource, /api\.coingecko\.com/, "crypto comparison needs a fallback source");
