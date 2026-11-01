@@ -177,7 +177,7 @@ function testExchangeDirectory() {
   const { window } = browser("exchange/index.html");
   evaluate(window, "exchange/exchange.js");
   const document = window.document;
-  assert.ok(document.querySelectorAll("[data-cur]").length >= 40, "exchange directory needs broad currency choice");
+  assert.ok(document.querySelectorAll("[data-cur]").length >= 55, "exchange directory needs broad fiat and digital asset choice");
   assert.ok(document.querySelectorAll(".service-card").length >= 5);
   assert.ok([...document.querySelectorAll(".service-card")].every(link => link.rel.includes("noopener")));
   document.querySelector("#exchange-search").value = "тенге";
@@ -185,6 +185,10 @@ function testExchangeDirectory() {
   assert.equal(document.querySelectorAll("[data-cur]").length, 1);
   document.querySelector("[data-cur]").click();
   assert.match(document.querySelector(".exchange-header").textContent, /KZT/);
+  document.querySelector("#exchange-search").value = "Bitcoin";
+  document.querySelector("#exchange-search").dispatchEvent(new window.Event("input"));
+  document.querySelector('[data-cur="BTC"]').click();
+  assert.match(document.querySelector(".service-list").textContent, /Coinbase/);
 }
 
 function testTenLanguageInterface() {
@@ -290,6 +294,7 @@ function testStaticFiles() {
   assert.match(mainSource, /compact-currencies/, "currency cards need a compact mode");
   const stocksSource = read("stocks/stocks.js");
   assert.match(stocksSource, /valutkin_stocks_density/, "stock density must persist");
+  assert.ok(new Set([...stocksSource.matchAll(/symbol: "([A-Z.\-]+)"/g)].map(match => match[1])).size >= 230, "stocks directory needs at least 230 companies");
   const compareSource = read("compare.js");
   assert.match(compareSource, /api\.binance\.com\/api\/v3\/klines/, "crypto comparison needs a rate-limit-resistant primary source");
   assert.match(compareSource, /api\.coingecko\.com/, "crypto comparison needs a fallback source");

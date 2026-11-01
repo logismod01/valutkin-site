@@ -145,6 +145,18 @@ const CURRENCIES = {
     "SHIB": ["Shiba Inu", "🐕", "crypto"],
     "USDC": ["USD Coin", "🔵", "crypto"],
     "DAI": ["Dai", "◉", "crypto"],
+    "SUI": ["Sui", "💧", "crypto"],
+    "ICP": ["Internet Computer", "∞", "crypto"],
+    "FIL": ["Filecoin", "📁", "crypto"],
+    "ETC": ["Ethereum Classic", "◆", "crypto"],
+    "AAVE": ["Aave", "👻", "crypto"],
+    "HBAR": ["Hedera", "ℏ", "crypto"],
+    "ALGO": ["Algorand", "△", "crypto"],
+    "VET": ["VeChain", "✓", "crypto"],
+    "CRO": ["Cronos", "⬡", "crypto"],
+    "XMR": ["Monero", "ɱ", "crypto"],
+    "POL": ["Polygon", "⬢", "crypto"],
+    "PEPE": ["Pepe", "🐸", "crypto"],
     // ===== МЕТАЛЛЫ =====
     "XAU": ["Золото", "🥇", "metals"],
     "XAG": ["Серебро", "🥈", "metals"],
@@ -163,6 +175,9 @@ const CRYPTO_IDS = {
     "LTC": "litecoin", "BCH": "bitcoin-cash", "XLM": "stellar", "UNI": "uniswap",
     "ATOM": "cosmos", "NEAR": "near", "APT": "aptos", "ARB": "arbitrum",
     "OP": "optimism", "SHIB": "shiba-inu", "USDC": "usd-coin", "DAI": "dai",
+    "SUI": "sui", "ICP": "internet-computer", "FIL": "filecoin", "ETC": "ethereum-classic",
+    "AAVE": "aave", "HBAR": "hedera-hashgraph", "ALGO": "algorand", "VET": "vechain",
+    "CRO": "crypto-com-chain", "XMR": "monero", "POL": "matic-network", "PEPE": "pepe",
 };
 
 // Валюта для fawazahmed0 — строчными буквами
@@ -211,7 +226,7 @@ function restoreCachedRates() {
 async function loadRates() {
     const requests = await Promise.allSettled([
         fetchJson(API_FIAT_URL),
-        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink,litecoin,bitcoin-cash,stellar,uniswap,cosmos,near,aptos,arbitrum,optimism,shiba-inu,usd-coin,dai&vs_currencies=usd,rub"),
+        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink,litecoin,bitcoin-cash,stellar,uniswap,cosmos,near,aptos,arbitrum,optimism,shiba-inu,usd-coin,dai,sui,internet-computer,filecoin,ethereum-classic,aave,hedera-hashgraph,algorand,vechain,crypto-com-chain,monero,matic-network,pepe&vs_currencies=usd,rub"),
         fetchJson("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
     ]);
     const [fiatResult, cryptoResult, metalsResult] = requests;

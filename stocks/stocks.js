@@ -14,6 +14,9 @@ const CACHE_TIME = 60000; // 60 секунд
 
 const STOCKS = {
     "popular": [
+        { symbol: "CAT", name: "Caterpillar", flag: "🚜" },
+        { symbol: "DE", name: "Deere & Company", flag: "🌾" },
+        { symbol: "RTX", name: "RTX", flag: "✈️" },
         { symbol: "CRWD", name: "CrowdStrike", flag: "🛡️" },
         { symbol: "MSTR", name: "Strategy", flag: "₿" },
         { symbol: "ARM", name: "Arm Holdings", flag: "🦾" },
@@ -47,6 +50,10 @@ const STOCKS = {
         { symbol: "SBUX", name: "Starbucks", flag: "☕" },
     ],
     "tech": [
+        { symbol: "ANET", name: "Arista Networks", flag: "🌐" },
+        { symbol: "TSM", name: "TSMC", flag: "🧠" },
+        { symbol: "SAP", name: "SAP", flag: "🔷" },
+        { symbol: "SONY", name: "Sony", flag: "🎮" },
         { symbol: "NET", name: "Cloudflare", flag: "☁️" },
         { symbol: "DDOG", name: "Datadog", flag: "🐕" },
         { symbol: "MDB", name: "MongoDB", flag: "🍃" },
@@ -115,6 +122,11 @@ const STOCKS = {
         { symbol: "VLVLY", name: "Volvo", flag: "🇸🇪" },
     ],
     "finance": [
+        { symbol: "GS", name: "Goldman Sachs", flag: "🏛️" },
+        { symbol: "MS", name: "Morgan Stanley", flag: "🏦" },
+        { symbol: "BLK", name: "BlackRock", flag: "◼️" },
+        { symbol: "SCHW", name: "Charles Schwab", flag: "📊" },
+        { symbol: "C", name: "Citigroup", flag: "🏙️" },
         { symbol: "IBKR", name: "Interactive Brokers", flag: "📊" },
         { symbol: "AFRM", name: "Affirm", flag: "💳" },
         { symbol: "UPST", name: "Upstart", flag: "🤖" },
@@ -182,6 +194,8 @@ const STOCKS = {
         { symbol: "TAP", name: "Molson Coors", flag: "🍺" },
     ],
     "entertainment": [
+        { symbol: "SPOT", name: "Spotify", flag: "🎧" },
+        { symbol: "RBLX", name: "Roblox", flag: "🧱" },
         { symbol: "CHTR", name: "Charter", flag: "📺" },
         { symbol: "NYT", name: "New York Times", flag: "📰" },
         { symbol: "LVS", name: "Las Vegas Sands", flag: "🎰" },
@@ -215,6 +229,9 @@ const STOCKS = {
         { symbol: "WMG", name: "Warner Music", flag: "🎶" },
     ],
     "energy": [
+        { symbol: "EQT", name: "EQT", flag: "🔥" },
+        { symbol: "LNG", name: "Cheniere Energy", flag: "🚢" },
+        { symbol: "BE", name: "Bloom Energy", flag: "🔋" },
         { symbol: "VST", name: "Vistra", flag: "⚡" },
         { symbol: "CEG", name: "Constellation Energy", flag: "⚛️" },
         { symbol: "OKLO", name: "Oklo", flag: "☢️" },
@@ -227,6 +244,9 @@ const STOCKS = {
         { symbol: "FSLR", name: "First Solar", flag: "🔆" }, { symbol: "OXY", name: "Occidental", flag: "🏭" },
     ],
     "health": [
+        { symbol: "NVO", name: "Novo Nordisk", flag: "🇩🇰" },
+        { symbol: "AZN", name: "AstraZeneca", flag: "🧪" },
+        { symbol: "BMY", name: "Bristol Myers Squibb", flag: "💊" },
         { symbol: "VRTX", name: "Vertex", flag: "🧬" },
         { symbol: "REGN", name: "Regeneron", flag: "🔬" },
         { symbol: "DXCM", name: "Dexcom", flag: "🩸" },
@@ -239,6 +259,9 @@ const STOCKS = {
         { symbol: "AMGN", name: "Amgen", flag: "🧫" }, { symbol: "GILD", name: "Gilead", flag: "🧬" },
     ],
     "retail": [
+        { symbol: "TJX", name: "TJX Companies", flag: "🛍️" },
+        { symbol: "ROST", name: "Ross Stores", flag: "🏷️" },
+        { symbol: "LULU", name: "Lululemon", flag: "🧘" },
         { symbol: "CVNA", name: "Carvana", flag: "🚘" },
         { symbol: "CHWY", name: "Chewy", flag: "🐾" },
         { symbol: "BURL", name: "Burlington", flag: "🧥" },
