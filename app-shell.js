@@ -5,6 +5,7 @@
   const inSubfolder = /\/(exchange|stocks)\//.test(path) || /\/(exchange|stocks)\/?$/.test(path);
   const base = inSubfolder ? "../" : "./";
   const accountHref = `${base}auth.html`;
+  if(window.ValutkinI18n&&!document.querySelector('script[data-i18n-pages]')){const translations=document.createElement('script');translations.src=`${base}i18n-pages.js`;translations.dataset.i18nPages='true';document.head.appendChild(translations)}
   let localStore=null,sessionStore=null;
   try{localStore=window.localStorage}catch(_){}
   try{sessionStore=window.sessionStorage}catch(_){}
@@ -29,7 +30,7 @@
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
     [`${base}stocks/`, "📈", "Акции"], [`${base}reviews.html`, "⭐", "Отзывы"], [`${base}wallet.html`, "◈", "Кошелёк"], [`${base}support.html`, "❓", "Поддержка"], [`${base}macro.html`, "🌐", "Сырьё и ставки"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
-    [`${base}profile.html`, "🔔", "Портфель и уведомления"], [`${base}goals.html`, "🎯", "Цели накопления"], [`${base}updates.html`, "✨", "Что нового"], [`${base}install.html`, "📲", "Установить приложение"]
+    [`${base}profile.html`, "🔔", "Портфель и уведомления"], [`${base}goals.html`, "🎯", "Цели накопления"], [`${base}planner.html`, "🗓️", "Будущие расходы"], [`${base}world.html`, "🌍", "Мировая экономика"], [`${base}crisis-lab.html`, "🧪", "Лаборатория кризисов"], [`${base}updates.html`, "✨", "Что нового"], [`${base}install.html`, "📲", "Установить приложение"]
   ];
 
   function setTheme(name) {
@@ -63,6 +64,7 @@
       const makeLanguageMenu=()=>{const current=window.ValutkinI18n.language,currency=window.ValutkinI18n.currency;languageBox.innerHTML=`<button type="button" class="header-language-button" aria-expanded="false" aria-label="Язык и основная валюта">🌐 <b>${current.toUpperCase()}</b><small>${currency}</small></button><div class="header-language-menu" role="menu">${Object.entries(window.ValutkinI18n.languages).map(([id,name])=>`<button type="button" data-quick-language="${id}" class="${id===current?'active':''}"><span>${id.toUpperCase()}</span><b>${name}</b><small>${window.ValutkinI18n.currencies[id]}</small></button>`).join("")}</div>`;const trigger=languageBox.querySelector(".header-language-button"),menu=languageBox.querySelector(".header-language-menu");trigger.onclick=()=>{const open=languageBox.classList.toggle("open");trigger.setAttribute("aria-expanded",String(open))};menu.querySelectorAll("[data-quick-language]").forEach(button=>button.onclick=()=>{window.ValutkinI18n.setLanguage(button.dataset.quickLanguage);makeLanguageMenu()})};makeLanguageMenu();headerRight.prepend(languageBox);document.addEventListener("click",event=>{if(!languageBox.contains(event.target))languageBox.classList.remove("open")});
     }
     if(!document.querySelector('script[data-feature-suite]')){const suite=document.createElement('script');suite.src=`${base}feature-suite.js`;suite.dataset.featureSuite='true';document.body.appendChild(suite)}
+    if(!document.querySelector('script[data-personal-suite]')){const personal=document.createElement('script');personal.src=`${base}personal-suite.js`;personal.dataset.personalSuite='true';document.body.appendChild(personal)}
     const palette=document.createElement("div");
     palette.className="shell-palette";
     palette.innerHTML=`<div role="dialog" aria-modal="true" aria-label="Поиск по Валюткину"><div class="palette-search"><span>⌕</span><input type="search" placeholder="Страница, функция или тема…" aria-label="Поиск команд"><button type="button" aria-label="Закрыть">✕</button></div><div class="palette-results"></div><small>↑↓ выбор · Enter открыть · Esc закрыть</small></div>`;

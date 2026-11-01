@@ -76,7 +76,7 @@ function testProfile() {
   evaluate(window, "profile-upgrade.js");
   window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   const document = window.document;
-  assert.equal(document.querySelectorAll(".profile-upgrade-grid .dashboard-card").length, 3);
+  assert.equal(document.querySelectorAll(".profile-upgrade-grid .dashboard-card").length, 4);
   document.querySelector("#asset-code").value = "BTC";
   document.querySelector("#asset-amount").value = "2";
   document.querySelector("#asset-buy-price").value = "50";
@@ -177,7 +177,7 @@ function testExchangeDirectory() {
   const { window } = browser("exchange/index.html");
   evaluate(window, "exchange/exchange.js");
   const document = window.document;
-  assert.ok(document.querySelectorAll("[data-cur]").length >= 40, "exchange directory needs broad currency choice");
+  assert.ok(document.querySelectorAll("[data-cur]").length >= 55, "exchange directory needs broad fiat and digital asset choice");
   assert.ok(document.querySelectorAll(".service-card").length >= 5);
   assert.ok([...document.querySelectorAll(".service-card")].every(link => link.rel.includes("noopener")));
   document.querySelector("#exchange-search").value = "тенге";
@@ -185,17 +185,26 @@ function testExchangeDirectory() {
   assert.equal(document.querySelectorAll("[data-cur]").length, 1);
   document.querySelector("[data-cur]").click();
   assert.match(document.querySelector(".exchange-header").textContent, /KZT/);
+  document.querySelector("#exchange-search").value = "Bitcoin";
+  document.querySelector("#exchange-search").dispatchEvent(new window.Event("input"));
+  document.querySelector('[data-cur="BTC"]').click();
+  assert.match(document.querySelector(".service-list").textContent, /Coinbase/);
 }
 
 function testTenLanguageInterface() {
   const { window } = browser("index.html");
   evaluate(window, "i18n.js");
+  evaluate(window, "i18n-pages.js");
   window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   const i18n = window.ValutkinI18n;
   assert.deepEqual(Object.keys(i18n.languages), ["ru","en","zh","es","fr","de","ar","pt","ja","ko"]);
   for (const language of Object.keys(i18n.languages)) {
     i18n.setLanguage(language);
     assert.notEqual(i18n.translate("Главная"), "", `missing ${language} translation`);
+    if (language !== "ru") {
+      assert.notEqual(i18n.translate("Отзывы о Валюткине"), "Отзывы о Валюткине", `missing reviews translation for ${language}`);
+      assert.notEqual(i18n.translate("Поиск компании или тикера"), "Поиск компании или тикера", `missing stocks translation for ${language}`);
+    }
   }
   i18n.setLanguage("en");
   assert.equal(i18n.currency, "USD");
@@ -261,9 +270,18 @@ function testWalletAndFreeSecurityFeatures() {
   assert.match(setupSql, /scheduled_goal_targets/);
   assert.match(read("app-shell.js"), /goals\.html.*Цели накопления/);
   assert.match(read("app-shell.js"), /updates\.html.*Что нового/);
+  assert.match(read("app-shell.js"), /planner\.html.*Будущие расходы/);
+  assert.match(read("app-shell.js"), /world\.html.*Мировая экономика/);
+  assert.match(read("app-shell.js"), /crisis-lab\.html.*Лаборатория кризисов/);
+  assert.match(read("personal-suite.js"), /Да, включить/);
+  assert.match(read("personal-suite.js"), /Нет, не включать/);
+  assert.match(read("personal-suite.js"), /История не отправляется в Supabase/);
+  assert.match(read("dashboard-settings.js"), /valutkin_dashboard_workspaces/);
 }
 
 function testStaticFiles() {
+  const htmlFiles = [...fs.readdirSync(ROOT).filter(name => name.endsWith(".html")), "stocks/index.html", "exchange/index.html"];
+  for (const html of htmlFiles) assert.match(read(html), /i18n\.js/, `${html} must load the language system`);
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
     "stocks/stocks.js", "exchange/exchange.js"
@@ -279,6 +297,11 @@ function testStaticFiles() {
   const mainSource = read("script.js");
   assert.match(mainSource, /translucentAccent/, "chart colors must normalize short CSS hex values");
   assert.doesNotMatch(mainSource, /addColorStop\(0, `\$\{accent\}66`\)/, "short CSS hex must not create an invalid Canvas color");
+  assert.match(mainSource, /valutkin_currency_sort/, "currency sorting must persist");
+  assert.match(mainSource, /compact-currencies/, "currency cards need a compact mode");
+  const stocksSource = read("stocks/stocks.js");
+  assert.match(stocksSource, /valutkin_stocks_density/, "stock density must persist");
+  assert.ok(new Set([...stocksSource.matchAll(/symbol: "([A-Z.\-]+)"/g)].map(match => match[1])).size >= 230, "stocks directory needs at least 230 companies");
   const compareSource = read("compare.js");
   assert.match(compareSource, /api\.binance\.com\/api\/v3\/klines/, "crypto comparison needs a rate-limit-resistant primary source");
   assert.match(compareSource, /api\.coingecko\.com/, "crypto comparison needs a fallback source");

@@ -8,7 +8,7 @@
   tabs.forEach(tab=>tab.onclick=()=>show(tab.dataset.converterTab));
   const money=(n,code)=>new Intl.NumberFormat("ru-RU",{style:"currency",currency:code,maximumFractionDigits:4}).format(n);
   const historyBox=document.getElementById("conversion-history");
-  function renderHistory(){const rows=read(HISTORY_KEY,[]);historyBox.innerHTML=rows.length?rows.slice(0,30).map(row=>`<div><b>${escape(row.amount)} ${escape(row.from)}</b><span>${escape(row.summary)}</span><small>${new Date(row.at).toLocaleString("ru-RU")}</small></div>`).join(""):'<p class="empty-lab">История пока пуста</p>'}
+  function renderHistory(){const rows=read(HISTORY_KEY,[]);historyBox.innerHTML=rows.length?rows.slice(0,30).map(row=>`<div><b>${escape(row.amount)} ${escape(row.from)}</b><span>${escape(row.summary)}</span><small>${new Date(row.at).toLocaleString(document.documentElement.lang||"ru-RU")}</small></div>`).join(""):'<p class="empty-lab">История пока пуста</p>'}
   function remember(amount,from,summary){const rows=read(HISTORY_KEY,[]);rows.unshift({amount,from,summary,at:Date.now()});write(HISTORY_KEY,rows.slice(0,30));renderHistory()}
   const targetBox=document.getElementById("multi-targets"),available=["RUB","USD","EUR","CNY","KZT","GBP","JPY","CHF","AED","TRY"];
   function selected(){return [...targetBox.querySelectorAll("button.active")].map(x=>x.dataset.code)}

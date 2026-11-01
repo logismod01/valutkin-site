@@ -145,6 +145,18 @@ const CURRENCIES = {
     "SHIB": ["Shiba Inu", "🐕", "crypto"],
     "USDC": ["USD Coin", "🔵", "crypto"],
     "DAI": ["Dai", "◉", "crypto"],
+    "SUI": ["Sui", "💧", "crypto"],
+    "ICP": ["Internet Computer", "∞", "crypto"],
+    "FIL": ["Filecoin", "📁", "crypto"],
+    "ETC": ["Ethereum Classic", "◆", "crypto"],
+    "AAVE": ["Aave", "👻", "crypto"],
+    "HBAR": ["Hedera", "ℏ", "crypto"],
+    "ALGO": ["Algorand", "△", "crypto"],
+    "VET": ["VeChain", "✓", "crypto"],
+    "CRO": ["Cronos", "⬡", "crypto"],
+    "XMR": ["Monero", "ɱ", "crypto"],
+    "POL": ["Polygon", "⬢", "crypto"],
+    "PEPE": ["Pepe", "🐸", "crypto"],
     // ===== МЕТАЛЛЫ =====
     "XAU": ["Золото", "🥇", "metals"],
     "XAG": ["Серебро", "🥈", "metals"],
@@ -163,6 +175,9 @@ const CRYPTO_IDS = {
     "LTC": "litecoin", "BCH": "bitcoin-cash", "XLM": "stellar", "UNI": "uniswap",
     "ATOM": "cosmos", "NEAR": "near", "APT": "aptos", "ARB": "arbitrum",
     "OP": "optimism", "SHIB": "shiba-inu", "USDC": "usd-coin", "DAI": "dai",
+    "SUI": "sui", "ICP": "internet-computer", "FIL": "filecoin", "ETC": "ethereum-classic",
+    "AAVE": "aave", "HBAR": "hedera-hashgraph", "ALGO": "algorand", "VET": "vechain",
+    "CRO": "crypto-com-chain", "XMR": "monero", "POL": "matic-network", "PEPE": "pepe",
 };
 
 // Валюта для fawazahmed0 — строчными буквами
@@ -175,6 +190,7 @@ let state = {
     crypto: {},
     activeCategory: "popular",
     searchQuery: "",
+    sort: mainGet("valutkin_currency_sort") || "default",
     updatedAt: null,
     currentModal: null,
     currentPeriod: 1,
@@ -210,7 +226,7 @@ function restoreCachedRates() {
 async function loadRates() {
     const requests = await Promise.allSettled([
         fetchJson(API_FIAT_URL),
-        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink,litecoin,bitcoin-cash,stellar,uniswap,cosmos,near,aptos,arbitrum,optimism,shiba-inu,usd-coin,dai&vs_currencies=usd,rub"),
+        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink,litecoin,bitcoin-cash,stellar,uniswap,cosmos,near,aptos,arbitrum,optimism,shiba-inu,usd-coin,dai,sui,internet-computer,filecoin,ethereum-classic,aave,hedera-hashgraph,algorand,vechain,crypto-com-chain,monero,matic-network,pepe&vs_currencies=usd,rub"),
         fetchJson("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
     ]);
     const [fiatResult, cryptoResult, metalsResult] = requests;
@@ -302,6 +318,11 @@ function renderCurrencies() {
         }
         return true;
     });
+
+    if(state.sort==="name")codes.sort((a,b)=>localizedAssetName(a).localeCompare(localizedAssetName(b),document.documentElement.lang));
+    if(state.sort==="code")codes.sort((a,b)=>a.localeCompare(b));
+    if(state.sort==="value-high")codes.sort((a,b)=>(getRubValue(b)??-Infinity)-(getRubValue(a)??-Infinity));
+    if(state.sort==="value-low")codes.sort((a,b)=>(getRubValue(a)??Infinity)-(getRubValue(b)??Infinity));
 
     if (codes.length === 0) {
         grid.innerHTML = '<div class="loading">Ничего не найдено 🤷</div>';
@@ -609,7 +630,7 @@ function renderChart(history, code, days) {
         state.chart.destroy();
     }
 
-    const labels = history.map(p => new Date(p.t).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: days > 90 ? "2-digit" : undefined }));
+    const labels = history.map(p => new Date(p.t).toLocaleDateString(document.documentElement.lang||"ru-RU", { day: "2-digit", month: "short", year: days > 90 ? "2-digit" : undefined }));
     const values = history.map(p => p.v);
     const min = Math.min(...values), max = Math.max(...values), average = values.reduce((a,b) => a+b,0)/values.length;
     document.getElementById("modal-chart-stats").innerHTML = `<span>Минимум <b>${formatChartPrice(min)} ₽</b></span><span>Среднее <b>${formatChartPrice(average)} ₽</b></span><span>Максимум <b>${formatChartPrice(max)} ₽</b></span>`;
@@ -696,6 +717,7 @@ function loadTheme() {
 
 document.addEventListener("DOMContentLoaded", () => {
     loadTheme();
+    const categories=document.querySelector(".categories");if(categories&&!document.querySelector(".currency-view-tools")){const tools=document.createElement("div");tools.className="currency-view-tools";tools.innerHTML=`<label>Сортировка <select id="currency-sort"><option value="default">По умолчанию</option><option value="name">По названию</option><option value="code">По коду</option><option value="value-high">Сначала дорогие</option><option value="value-low">Сначала дешёвые</option></select></label><button id="currency-density" type="button" aria-pressed="false">▦ Компактно</button>`;categories.after(tools);const sort=tools.querySelector("#currency-sort"),density=tools.querySelector("#currency-density"),grid=document.getElementById("currencies-grid");sort.value=state.sort;sort.onchange=()=>{state.sort=sort.value;mainSet("valutkin_currency_sort",state.sort);renderCurrencies()};const compact=mainGet("valutkin_currency_density")==="compact";grid.classList.toggle("compact-currencies",compact);density.setAttribute("aria-pressed",String(compact));density.textContent=compact?"▦ Обычный вид":"▦ Компактно";density.onclick=()=>{const next=!grid.classList.contains("compact-currencies");grid.classList.toggle("compact-currencies",next);density.setAttribute("aria-pressed",String(next));density.textContent=next?"▦ Обычный вид":"▦ Компактно";mainSet("valutkin_currency_density",next?"compact":"normal");window.ValutkinI18n?.apply(density)};window.ValutkinI18n?.apply(tools)}
 
     // Переключение тем
     document.querySelectorAll(".theme-btn").forEach(btn => {

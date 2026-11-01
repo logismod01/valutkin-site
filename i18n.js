@@ -38,5 +38,6 @@
   const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)applyNode(node)});
   const start=()=>{apply();if(document.body)observer.observe(document.body,{childList:true,subtree:true});};
   document.readyState==="loading"?document.addEventListener("DOMContentLoaded",start):start();
-  window.ValutkinI18n={languages,currencies,get language(){return language},get currency(){return currencies[language]},setLanguage,translate,apply};
+  function register(bundle){for(const [lang,phrases] of Object.entries(bundle||{}))if(dictionaries[lang]&&phrases&&typeof phrases==="object")Object.assign(dictionaries[lang],phrases);apply()}
+  window.ValutkinI18n={languages,currencies,get language(){return language},get currency(){return currencies[language]},setLanguage,translate,apply,register};
 })();
