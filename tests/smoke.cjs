@@ -76,7 +76,7 @@ function testProfile() {
   evaluate(window, "profile-upgrade.js");
   window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   const document = window.document;
-  assert.equal(document.querySelectorAll(".profile-upgrade-grid .dashboard-card").length, 3);
+  assert.equal(document.querySelectorAll(".profile-upgrade-grid .dashboard-card").length, 4);
   document.querySelector("#asset-code").value = "BTC";
   document.querySelector("#asset-amount").value = "2";
   document.querySelector("#asset-buy-price").value = "50";
@@ -270,6 +270,13 @@ function testWalletAndFreeSecurityFeatures() {
   assert.match(setupSql, /scheduled_goal_targets/);
   assert.match(read("app-shell.js"), /goals\.html.*Цели накопления/);
   assert.match(read("app-shell.js"), /updates\.html.*Что нового/);
+  assert.match(read("app-shell.js"), /planner\.html.*Будущие расходы/);
+  assert.match(read("app-shell.js"), /world\.html.*Мировая экономика/);
+  assert.match(read("app-shell.js"), /crisis-lab\.html.*Лаборатория кризисов/);
+  assert.match(read("personal-suite.js"), /Да, включить/);
+  assert.match(read("personal-suite.js"), /Нет, не включать/);
+  assert.match(read("personal-suite.js"), /История не отправляется в Supabase/);
+  assert.match(read("dashboard-settings.js"), /valutkin_dashboard_workspaces/);
 }
 
 function testStaticFiles() {

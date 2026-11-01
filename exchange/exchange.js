@@ -27,7 +27,8 @@ const REGIONAL = {
  RUB:[["СберБанк","https://www.sberbank.ru","Приложение и отделения"],["ВТБ","https://www.vtb.ru","Приложение и отделения"],["Альфа-Банк","https://alfabank.ru","Приложение и отделения"]]
 };
 const selector=document.getElementById("currency-selector"),content=document.getElementById("exchange-content"),search=document.getElementById("exchange-search");
-let selected="USD";
+const requestedCurrency=new URLSearchParams(location.search).get("currency")?.toUpperCase();
+let selected=CURRENCIES[requestedCurrency]?requestedCurrency:"USD";
 const safeUrl=value=>{try{const url=new URL(value);return url.protocol==="https:"?url.href:"#"}catch{return"#"}};
 function services(code){const [name,,country]=CURRENCIES[code],local=REGIONAL[code]||[];if(DIGITAL.has(code))return[
  {type:"🔐 Лицензированные платформы",note:"Доступность, проверка личности и возрастные требования зависят от страны",items:[["Coinbase",`https://www.coinbase.com/price/${DIGITAL_SLUG[code]}`,"Проверьте поддержку актива и вашей страны"],["Kraken",`https://www.kraken.com/prices/${DIGITAL_SLUG[code]}`,"Официальная страница цен и доступности"],["Binance",`https://www.binance.com/en/price/${code.toLowerCase()}`,"Сервис может быть недоступен в отдельных странах"]]},
