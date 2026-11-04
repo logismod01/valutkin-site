@@ -133,3 +133,14 @@ input,select,textarea{transition:border-color .2s ease,box-shadow .2s ease,backg
   body{padding-bottom:calc(70px + env(safe-area-inset-bottom))!important}.shell-toast{bottom:calc(72px + env(safe-area-inset-bottom))}
 }
 @media(max-width:380px){.mobile-bottom-nav{padding-inline:5px}.mobile-bottom-nav small{font-size:8px}.side-drawer{left:4px;right:4px}.drawer-links{gap:4px}.drawer-links a{font-size:11px}}
+/* Детализированная motion-система для всех страниц: плавное появление при прокрутке. */
+@media(prefers-reduced-motion:no-preference){
+  .detail-motion-ready{opacity:0;transform:translateY(15px) scale(.992);filter:saturate(.86);animation:none!important;transition:opacity .48s ease var(--detail-delay,0ms),transform .58s cubic-bezier(.2,.75,.2,1) var(--detail-delay,0ms),filter .5s ease var(--detail-delay,0ms),border-color .22s ease,box-shadow .22s ease}
+  .detail-motion-ready.detail-visible{opacity:1;transform:none;filter:none}
+  .card,.stock-card,.dashboard-card,.review-card,.goal-card,.service-card,.lab-card,.country-card,.trip-card{isolation:isolate}
+  .card::before,.stock-card::before,.dashboard-card::before,.review-card::before,.goal-card::before,.service-card::before,.lab-card::before,.country-card::before,.trip-card::before{content:"";position:absolute;inset:-1px;z-index:-1;pointer-events:none;border-radius:inherit;background:radial-gradient(320px circle at var(--shine-x,15%) var(--shine-y,0%),color-mix(in srgb,var(--accent) 8%,transparent),transparent 65%);opacity:.6;transition:opacity .25s}
+  .card:hover::before,.stock-card:hover::before,.dashboard-card:hover::before,.review-card:hover::before,.goal-card:hover::before,.service-card:hover::before,.lab-card:hover::before,.country-card:hover::before,.trip-card:hover::before{opacity:1}
+  dialog[open],.modal.active,.trade-modal.active,.tutorial-modal.active,.shell-offline-panel.open{animation:premium-dialog-in .3s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes premium-dialog-in{from{opacity:0;transform:translateY(14px) scale(.985)}}
+}
+@media(hover:hover) and (pointer:fine){button:not(:disabled):hover,.btn-primary:hover,.ghost-btn:hover{transform:translateY(-1px)}a:not(.drawer-links a):hover{text-underline-offset:3px}}
