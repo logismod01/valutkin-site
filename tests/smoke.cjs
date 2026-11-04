@@ -40,6 +40,12 @@ function testShellWithoutStorage() {
   assert.equal(window.document.querySelector("a.header-left")?.getAttribute("href"), "./", "site brand must link to homepage");
   assert.equal(window.document.querySelectorAll("[data-shell-theme]").length, 19);
   assert.equal(window.document.querySelectorAll("#shell-font option").length, 10);
+  const moreButton = window.document.querySelector("[data-mobile-more]");
+  moreButton.click();
+  assert.ok(window.document.querySelector(".side-drawer").classList.contains("open"), "mobile menu must open from the More button");
+  assert.ok(window.document.querySelector(".drawer-backdrop").classList.contains("open"), "mobile menu backdrop must open");
+  window.document.querySelector(".drawer-close").click();
+  assert.ok(!window.document.querySelector(".side-drawer").classList.contains("open"), "mobile menu close button must work");
   window.document.querySelector('[data-shell-theme="matrix"]').click();
   assert.equal(window.document.documentElement.dataset.theme, "matrix");
 }
