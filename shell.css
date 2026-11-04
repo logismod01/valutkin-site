@@ -114,3 +114,4 @@ input,select,textarea{transition:border-color .2s ease,box-shadow .2s ease,backg
   body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.shell-toast{bottom:calc(84px + env(safe-area-inset-bottom))}
 }
 @media(max-width:380px){.mobile-bottom-nav{left:6px;right:6px;padding-inline:4px}.mobile-bottom-nav small{font-size:7px}.mobile-bottom-nav span{width:29px;height:29px;font-size:18px}}
+.device-only-badge{margin-left:auto;padding:2px 5px;border:1px solid color-mix(in srgb,var(--accent) 35%,var(--card-border));border-radius:6px;color:var(--accent);font-size:8px;font-weight:900;letter-spacing:.08em}
