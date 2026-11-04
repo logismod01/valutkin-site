@@ -38,3 +38,45 @@ a,button,input,select,textarea,.card,.lab-card,.market-asset,.service-card,.news
 /* Мягкая общая анимация: интерфейс живой, но не мешает чтению. */
 @keyframes shell-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes shell-glow{0%,100%{box-shadow:0 0 0 rgba(0,0,0,0)}50%{box-shadow:0 0 28px color-mix(in srgb,var(--accent) 12%,transparent)}}main>section,main>article,.dashboard-card,.game-card,.review-card,.goal-card{animation:shell-rise .42s both}.dashboard-card:nth-child(2),.game-card:nth-child(2),.review-card:nth-child(2),.goal-card:nth-child(2){animation-delay:.045s}.dashboard-card:nth-child(3),.game-card:nth-child(3),.review-card:nth-child(3),.goal-card:nth-child(3){animation-delay:.09s}.card,.stock-card,.dashboard-card,.game-card,.review-card,.goal-card{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.card:hover,.dashboard-card:hover,.review-card:hover,.goal-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 38%,var(--card-border));box-shadow:0 16px 38px rgba(0,0,0,.13)}.drawer-handle span{animation:shell-glow 3.2s ease-in-out infinite}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}}
 .smart-actions .drawer-section-title button{margin-left:auto;border:0;background:none;color:var(--text-muted);cursor:pointer}.smart-links{display:grid;grid-template-columns:1fr 1fr;gap:6px}.smart-links a,.smart-enable{padding:8px;border:1px solid var(--card-border);border-radius:9px;background:var(--input-bg);color:var(--text-color);font-size:11px}.smart-links a span{margin-right:5px}.smart-enable{width:100%;cursor:pointer}.smart-consent{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;padding:16px;background:rgba(0,0,0,.7);backdrop-filter:blur(8px)}.smart-consent>div{max-width:460px;padding:27px;border:1px solid var(--card-border);border-radius:22px;background:var(--header-bg);color:var(--text-color);box-shadow:0 30px 100px rgba(0,0,0,.45);animation:shell-rise .3s}.smart-consent>div>span{font-size:38px}.smart-consent p{color:var(--text-muted);line-height:1.6}.smart-consent>div>div{display:flex;gap:9px}.smart-consent button{padding:11px 14px;border:1px solid var(--card-border);border-radius:10px;background:var(--input-bg);color:var(--text-color);cursor:pointer}.smart-consent [data-smart-yes]{background:var(--accent);color:#08111f;font-weight:800}
+/* Компактная мобильная оболочка сайта и установленного PWA. */
+.mobile-bottom-nav{display:none}
+@media(max-width:760px){
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
+  .header{position:sticky!important;top:0;z-index:850;min-height:56px!important;padding:7px 10px!important;background:color-mix(in srgb,var(--header-bg) 94%,transparent);backdrop-filter:blur(22px);border-bottom:1px solid var(--header-border)}
+  .header-nav,.header .theme-picker,.header .telegram-wrap,.header .btn-telegram,.tg-text{display:none!important}
+  .header-left{gap:7px}.header-logo{width:34px!important;height:34px!important}.header-title{font-size:17px!important}
+  .header-right{margin-left:auto;gap:6px!important}.header-language-button{min-height:38px!important;border-radius:10px}.account-shortcut{width:38px;height:38px;min-width:38px;min-height:38px;padding:0!important;border-radius:10px}
+  .mobile-bottom-nav{position:fixed;left:8px;right:8px;bottom:calc(7px + env(safe-area-inset-bottom));z-index:1800;display:grid;grid-template-columns:repeat(6,1fr);padding:5px;border:1px solid var(--card-border);border-radius:18px;background:color-mix(in srgb,var(--header-bg) 94%,transparent);backdrop-filter:blur(25px);box-shadow:0 14px 45px rgba(0,0,0,.32)}
+  .mobile-bottom-nav a,.mobile-bottom-nav button{display:grid;place-items:center;gap:1px;min-width:0;min-height:50px;padding:4px 1px;border:0;border-radius:13px;background:transparent;color:var(--text-muted);font:inherit;text-decoration:none;cursor:pointer}
+  .mobile-bottom-nav span{font-size:20px;line-height:1}.mobile-bottom-nav small{max-width:100%;overflow:hidden;font-size:9px;text-overflow:ellipsis;white-space:nowrap}
+  .mobile-bottom-nav a.active{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+  .mobile-bottom-nav a:active,.mobile-bottom-nav button:active{transform:scale(.92);background:var(--input-bg)}
+  .side-drawer{top:calc(7px + env(safe-area-inset-top));bottom:calc(72px + env(safe-area-inset-bottom));z-index:1900}.drawer-handle{display:none}.drawer-body{width:min(330px,calc(100vw - 18px));border-radius:0 22px 22px 0;padding:14px}
+  .drawer-brand{position:sticky;top:-14px;z-index:3;margin:-14px -14px 0;padding:14px;background:var(--header-bg)}.drawer-links{grid-template-columns:1fr 1fr;gap:5px}.drawer-links a{min-height:42px;padding:7px 9px;font-size:12px}.drawer-links span{font-size:16px}.drawer-themes{height:105px;grid-template-columns:1fr 1fr}.drawer-themes button{min-height:38px;padding:6px 8px;font-size:11px}
+  main.container,.profile-main,.game-main,.support-page,.reviews-page,.goals-page,.install-page,.updates-page,.planner-page,.world-page,.crisis-page{width:100%!important;max-width:100%!important;padding-left:12px!important;padding-right:12px!important}
+  h1,.page-title{letter-spacing:-.025em}button,.btn-primary,.ghost-btn,select{touch-action:manipulation}
+  .dashboard-settings{bottom:calc(82px + env(safe-area-inset-bottom))!important}.dashboard-settings-popover{max-height:65dvh;overflow:auto}
+  .shell-toast{bottom:calc(82px + env(safe-area-inset-bottom))}.project-promo{margin:14px auto}
+}
+@media(max-width:430px){
+  .mobile-bottom-nav{left:5px;right:5px;bottom:calc(4px + env(safe-area-inset-bottom));border-radius:16px}.mobile-bottom-nav a,.mobile-bottom-nav button{min-height:48px}.mobile-bottom-nav small{font-size:8px}
+  .header-language-button small{display:none}.drawer-links a{font-size:11px}.drawer-body{width:calc(100vw - 10px)}
+}
+@media(display-mode:standalone) and (max-width:760px){.header{padding-top:calc(7px + env(safe-area-inset-top))!important}.mobile-bottom-nav{box-shadow:0 8px 30px rgba(0,0,0,.38)}}
+@media(hover:none) and (pointer:coarse){.card:hover,.stock-card:hover,.dashboard-card:hover,.review-card:hover,.goal-card:hover,.service-card:hover{transform:none!important}.drawer-links a:hover{transform:none}}
+@media(max-width:760px){
+  .card,.dashboard-card,.game-card,.review-card,.goal-card,.lab-card,.service-card{border-radius:15px!important;padding:14px!important}
+  .summary-grid,.goals-summary,.planner-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}.summary-grid article,.goals-summary article,.planner-stats article{padding:13px!important;border-radius:13px!important}.summary-grid strong,.goals-summary b,.planner-stats b{font-size:20px!important}
+  .profile-hero,.game-hero,.reviews-hero,.goals-hero,.planner-hero{border-radius:17px!important}.profile-actions,.portfolio-actions,.review-actions,.goal-actions,.support-actions{gap:6px!important}.profile-actions button,.profile-actions a,.portfolio-actions button,.goal-actions button{min-height:40px;padding:8px 10px!important;font-size:12px}
+  .stock-tools,.market-controls,.planner-controls{gap:7px!important}.stock-categories,.categories,.converter-tabs,.stock-periods,.modal-periods{scroll-snap-type:x proximity;overscroll-behavior-inline:contain}.stock-categories>* ,.categories>* ,.converter-tabs>* ,.stock-periods>* ,.modal-periods>*{scroll-snap-align:start}
+  input,select,textarea{max-width:100%}.inline-form,.lab-form,.feature-form{grid-template-columns:1fr!important}.inline-form button,.lab-form button{width:100%}
+  dialog{max-height:92dvh;overflow:auto;margin:auto auto 0;border-radius:20px 20px 0 0!important;padding-bottom:env(safe-area-inset-bottom)}
+  .modal-content,.stock-modal-content,.trade-modal form{border-radius:20px!important;padding:17px!important}
+  .footer{padding-bottom:20px}.footer-content{gap:10px}.footer-fox{width:45px!important}.footer-links{font-size:11px}
+}
+@media(max-width:430px){.summary-grid,.goals-summary,.planner-stats{grid-template-columns:1fr 1fr!important}.card-grid,.stocks-grid{gap:8px!important}}
+/* Состояние сети показывается только внутри установленного приложения. */
+.app-offline-banner{display:none}
+.app-is-offline .app-offline-banner{position:fixed;z-index:2100;top:calc(7px + env(safe-area-inset-top));left:50%;display:block;max-width:calc(100vw - 24px);padding:8px 13px;border:1px solid rgba(251,191,36,.45);border-radius:999px;background:#292111;color:#fde68a;box-shadow:0 8px 28px rgba(0,0,0,.3);font-size:12px;font-weight:700;text-align:center;transform:translateX(-50%)}
+.app-is-offline .online-disabled,.app-is-offline button:disabled[title="Нужен интернет"]{cursor:not-allowed!important;filter:grayscale(.7);opacity:.48!important;pointer-events:auto}
+@media(max-width:760px){.app-is-offline .app-offline-banner{top:calc(61px + env(safe-area-inset-top));font-size:10px}.app-is-offline .header{padding-top:7px!important}}
