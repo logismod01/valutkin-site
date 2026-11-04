@@ -51,6 +51,10 @@ function testShellWithoutStorage() {
 }
 
 function testGame() {
+  const gameHtml = read("game.html");
+  assert.ok(!/<script src="game\.js/.test(gameHtml), "game must not start before device and profile checks");
+  assert.match(read("game-device-gate.js"), /getSession\(\)/, "game access gate must verify a real profile");
+  assert.match(read("game.js"), /VALUTKIN_GAME_USER_ID/, "local game saves must be isolated by user id");
   const { window } = browser("game.html");
   evaluate(window, "game.js");
   const document = window.document;

@@ -175,7 +175,7 @@
     try {
       const registration=await navigator.serviceWorker.register(`${base}service-worker.js`);
       const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
-      const announceUpdate=worker=>{if(!worker)return;if(!standalone){worker.postMessage({type:"SKIP_WAITING"});return}showShellToast("Новая версия приложения готова. Хотите обновить её сейчас?","info",()=>{storageSet(sessionStore,"valutkin_sw_reloading","1");worker.postMessage({type:"SKIP_WAITING"});});};
+      const announceUpdate=worker=>{if(!worker)return;if(!standalone){storageSet(sessionStore,"valutkin_sw_reloading","1");worker.postMessage({type:"SKIP_WAITING"});return}showShellToast("Новая версия приложения готова. Хотите обновить её сейчас?","info",()=>{storageSet(sessionStore,"valutkin_sw_reloading","1");worker.postMessage({type:"SKIP_WAITING"});});};
       if(standalone)(registration.active||navigator.serviceWorker.controller)?.postMessage({type:"PWA_CLIENT"});
       if(registration.waiting&&navigator.serviceWorker.controller)announceUpdate(registration.waiting);
       registration.addEventListener("updatefound",()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)announceUpdate(worker);});});
