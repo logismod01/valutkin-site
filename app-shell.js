@@ -28,8 +28,8 @@
     ["accessible","Читаемый"],["playful","Игровой"]
   ];
   const links = [
-    [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
-    [`${base}stocks/`, "📈", "Акции"], [`${base}travel.html`, "✈️", "Путешествия"], [`${base}reviews.html`, "⭐", "Отзывы"], [`${base}wallet.html`, "◈", "Кошелёк"], [`${base}support.html`, "❓", "Поддержка"], [`${base}macro.html`, "🌐", "Сырьё и ставки"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
+    [`${base}`, "🏠", "Главная"], [`${base}travel.html`, "✈️", "Путешествия"], [`${base}exchange/`, "💱", "Где купить"],
+    [`${base}stocks/`, "📈", "Акции"], [`${base}reviews.html`, "⭐", "Отзывы"], [`${base}wallet.html`, "◈", "Кошелёк"], [`${base}support.html`, "❓", "Поддержка"], [`${base}macro.html`, "🌐", "Сырьё и ставки"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
     [`${base}profile.html`, "🔔", "Портфель и уведомления"], [`${base}goals.html`, "🎯", "Цели накопления"], [`${base}planner.html`, "🗓️", "Будущие расходы"], [`${base}world.html`, "🌍", "Мировая экономика"], [`${base}crisis-lab.html`, "🧪", "Лаборатория кризисов"], [`${base}updates.html`, "✨", "Что нового"], [`${base}install.html`, "📲", "Установить приложение"]
   ];
 
