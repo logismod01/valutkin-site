@@ -1,8 +1,9 @@
 // Свежая версия интерфейса при наличии сети и полноценный офлайн-режим.
-const CACHE_NAME = "valutkin-v78";
+const CACHE_NAME = "valutkin-v83";
+const pwaClients = new Set();
 const APP_SHELL = [
   "./", "./index.html", "./offline.html", "./style.css", "./dashboard-settings.css", "./script.js", "./market-lab.js?v=40", "./manifest.json", "./.well-known/assetlinks.template.json",
-  "./theme.js", "./i18n.js", "./i18n-pages.js", "./feature-suite.js", "./personal-suite.js", "./planner.html", "./planner.css", "./planner.js", "./world.html", "./world.css", "./world.js", "./crisis-lab.html", "./crisis-lab.css", "./crisis-lab.js", "./macro.html", "./macro.js", "./macro.css", "./supabase-config.js", "./app-shell.js", "./shell.css",
+  "./travel.html", "./travel.css", "./travel.js", "./theme.js", "./i18n.js", "./i18n-pages.js", "./feature-suite.js", "./personal-suite.js", "./planner.html", "./planner.css", "./planner.js", "./world.html", "./world.css", "./world.js", "./crisis-lab.html", "./crisis-lab.css", "./crisis-lab.js", "./macro.html", "./macro.js", "./macro.css", "./supabase-config.js", "./app-shell.js", "./shell.css",
   "./game.html", "./game.css", "./game.js?v=49", "./company.html", "./company.css", "./company.js?v=46", "./dashboard-settings.js",
   "./compare.html", "./compare.css", "./compare.js", "./goals.html", "./goals.css", "./goals.js", "./updates.html", "./updates.css", "./install.html", "./install.css", "./install.js", "./reviews.html", "./reviews.css", "./reviews.js", "./wallet.html", "./wallet.css", "./support.html", "./support.css", "./support.js", "./profile-upgrade.js", "./news.html", "./news.css", "./news.js", "./data/news.json", "./market-tools.html", "./market-tools.css", "./market-tools.js", "./converter-hub.js", "./profile.html", "./profile.css", "./profile.js?v=49",
   "./auth.html", "./auth.css", "./auth.js", "./assets/logo.png", "./assets/fox.png", "./assets/icon-192.png", "./assets/icon-512.png", "./assets/icon-maskable-512.png",
@@ -16,9 +17,9 @@ self.addEventListener("install", event => {
     if(!saved) throw new Error("Не удалось сохранить оболочку приложения");
     console.info(`Офлайн-кэш: ${saved}/${APP_SHELL.length}`);
   }));
-  self.skipWaiting();
 });
 self.addEventListener("message", event => {
+  if (event.data?.type === "PWA_CLIENT" && event.source?.id) pwaClients.add(event.source.id);
   if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
   if (event.data?.type === "CACHE_ALL") {
     const task=caches.open(CACHE_NAME).then(cache=>Promise.allSettled(APP_SHELL.map(path=>cache.add(path)))).then(results=>{
@@ -63,18 +64,18 @@ self.addEventListener("notificationclick", event => {
 self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET" || new URL(request.url).origin !== location.origin) return;
-  const destination = request.destination;
-  // HTML, CSS и JS должны обновляться вместе — иначе новый JS может открыться со старым CSS.
-  if (request.mode === "navigate" || destination === "style" || destination === "script" || new URL(request.url).pathname.endsWith(".json")) {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-  // Изображения показываем мгновенно из кэша и обновляем в фоне.
-  event.respondWith(caches.match(request).then(cached => {
-    const fresh = fetch(request).then(async response => {
-      if (response.ok) (await caches.open(CACHE_NAME)).put(request, response.clone());
-      return response;
-    }).catch(() => cached || Response.error());
-    return cached || fresh;
-  }));
+  event.respondWith((async()=>{
+    const url=new URL(request.url),client=event.clientId?await self.clients.get(event.clientId):null;
+    const pwaLaunch=request.mode==="navigate"&&url.searchParams.get("source")==="pwa";
+    const isPwa=pwaLaunch||pwaClients.has(event.clientId)||Boolean(client&&new URL(client.url).searchParams.get("source")==="pwa");
+    if(pwaLaunch&&event.resultingClientId)pwaClients.add(event.resultingClientId);
+    // Обычный сайт всегда работает из сети. Офлайн-кэш предназначен только для установленного приложения.
+    if(!isPwa)return fetch(request);
+    const destination=request.destination;
+    // HTML, CSS и JS приложения должны обновляться вместе.
+    if(request.mode==="navigate"||destination==="style"||destination==="script"||url.pathname.endsWith(".json"))return networkFirst(request);
+    const cached=await caches.match(request);
+    const fresh=fetch(request).then(async response=>{if(response.ok)(await caches.open(CACHE_NAME)).put(request,response.clone());return response}).catch(()=>cached||Response.error());
+    return cached||fresh;
+  })());
 });

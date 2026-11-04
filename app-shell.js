@@ -29,7 +29,7 @@
   ];
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}exchange/`, "💱", "Где купить"],
-    [`${base}stocks/`, "📈", "Акции"], [`${base}reviews.html`, "⭐", "Отзывы"], [`${base}wallet.html`, "◈", "Кошелёк"], [`${base}support.html`, "❓", "Поддержка"], [`${base}macro.html`, "🌐", "Сырьё и ставки"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
+    [`${base}stocks/`, "📈", "Акции"], [`${base}travel.html`, "✈️", "Путешествия"], [`${base}reviews.html`, "⭐", "Отзывы"], [`${base}wallet.html`, "◈", "Кошелёк"], [`${base}support.html`, "❓", "Поддержка"], [`${base}macro.html`, "🌐", "Сырьё и ставки"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
     [`${base}profile.html`, "🔔", "Портфель и уведомления"], [`${base}goals.html`, "🎯", "Цели накопления"], [`${base}planner.html`, "🗓️", "Будущие расходы"], [`${base}world.html`, "🌍", "Мировая экономика"], [`${base}crisis-lab.html`, "🧪", "Лаборатория кризисов"], [`${base}updates.html`, "✨", "Что нового"], [`${base}install.html`, "📲", "Установить приложение"]
   ];
 
@@ -58,6 +58,7 @@
       <button class="drawer-install" type="button">📲 Установить приложение</button>
       <a class="drawer-telegram" href="https://t.me/valutkin_bot" target="_blank" rel="noopener noreferrer">✈️ Открыть в Telegram</a></div>`;
     document.body.appendChild(aside);
+    const mobileNav=document.createElement("nav");mobileNav.className="mobile-bottom-nav";mobileNav.setAttribute("aria-label","Мобильная навигация");const mobileLinks=[[`${base}`,"⌂","Главная"],[`${base}stocks/`,"↗","Рынки"],[`${base}game.html`,"◈","Игра"],[`${base}goals.html`,"◎","Цели"],[`${base}profile.html`,"♙","Профиль"]];mobileNav.innerHTML=mobileLinks.map(([url,icon,text])=>`<a href="${url}" title="${text}"><span>${icon}</span><small>${text}</small></a>`).join("")+`<button type="button" data-mobile-more aria-label="Открыть всё меню"><span>☰</span><small>Ещё</small></button>`;document.body.appendChild(mobileNav);mobileNav.querySelector("[data-mobile-more]").onclick=()=>{aside.classList.add("open");handle?.setAttribute("aria-expanded","true")};const current=(location.pathname.replace(/index\.html$/,"")||"/");mobileNav.querySelectorAll("a").forEach(link=>{const target=new URL(link.href,location.href).pathname.replace(/index\.html$/,"");link.classList.toggle("active",target===current||(target.endsWith("/")&&target!=="/"&&current.startsWith(target)))});
     const headerRight=document.querySelector(".header-right");
     if(headerRight&&window.ValutkinI18n){
       const languageBox=document.createElement("div");languageBox.className="header-language";
@@ -155,14 +156,27 @@
     const toast=document.createElement("div");toast.className=`shell-toast ${type}`;toast.innerHTML=`<span>${shellEscape(text)}</span>${action?'<button type="button">Обновить</button>':''}<button type="button" class="toast-close" aria-label="Закрыть">✕</button>`;document.body.appendChild(toast);
     toast.querySelector(".toast-close").onclick=()=>toast.remove();if(action)toast.querySelector("button:not(.toast-close)").onclick=action;setTimeout(()=>toast.remove(),action?15000:5000);
   }
+  function setupAppConnectivity() {
+    const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+    if(!standalone)return;
+    const banner=document.createElement("div");banner.className="app-offline-banner";banner.setAttribute("role","status");banner.textContent="Офлайн-режим: сохранённые страницы и функции устройства доступны";document.body.appendChild(banner);
+    const onlineOnlySelector='.drawer-telegram,a[href^="http://"],a[href^="https://"],form[action] button[type="submit"],#auth-form button[type="submit"],#review-form button[type="submit"],#new-goal,.goal-actions button,#goal-form button[type="submit"],[data-push-enable],[data-push-test]';
+    const update=()=>{const offline=!navigator.onLine;document.body.classList.toggle("app-is-offline",offline);document.querySelectorAll(onlineOnlySelector).forEach(element=>{if(element.tagName==="A"){element.setAttribute("aria-disabled",String(offline));element.classList.toggle("online-disabled",offline)}else{if(offline){element.dataset.onlineWasDisabled=String(element.disabled);element.disabled=true;element.title="Нужен интернет"}else if(element.dataset.onlineWasDisabled!==undefined){element.disabled=element.dataset.onlineWasDisabled==="true";delete element.dataset.onlineWasDisabled;element.removeAttribute("title")}}})};
+    document.addEventListener("click",event=>{const target=event.target.closest('a[aria-disabled="true"]');if(!target)return;event.preventDefault();showShellToast("Это действие требует подключения к интернету","info")},true);
+    addEventListener("online",()=>{update();showShellToast("Соединение восстановлено","success")});addEventListener("offline",update);update();
+  }
   async function registerWorker() {
     if (!navigator.serviceWorker?.register) return;
     try {
       const registration=await navigator.serviceWorker.register(`${base}service-worker.js`);
-      registration.addEventListener("updatefound",()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)showShellToast("Доступна новая версия сайта","info",()=>{navigator.serviceWorker.addEventListener("controllerchange",()=>location.reload(),{once:true});worker.postMessage({type:"SKIP_WAITING"});});});});
-      navigator.serviceWorker.addEventListener("controllerchange",()=>{if(storageGet(sessionStore,"valutkin_sw_reloading"))return;storageSet(sessionStore,"valutkin_sw_reloading","1");location.reload();});
+      const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+      const announceUpdate=worker=>{if(!worker)return;if(!standalone){worker.postMessage({type:"SKIP_WAITING"});return}showShellToast("Новая версия приложения готова. Хотите обновить её сейчас?","info",()=>{storageSet(sessionStore,"valutkin_sw_reloading","1");worker.postMessage({type:"SKIP_WAITING"});});};
+      if(standalone)(registration.active||navigator.serviceWorker.controller)?.postMessage({type:"PWA_CLIENT"});
+      if(registration.waiting&&navigator.serviceWorker.controller)announceUpdate(registration.waiting);
+      registration.addEventListener("updatefound",()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)announceUpdate(worker);});});
+      navigator.serviceWorker.addEventListener("controllerchange",()=>{if(storageGet(sessionStore,"valutkin_sw_reloading"))location.reload();});
       window.addEventListener("load",()=>storageRemove(sessionStore,"valutkin_sw_reloading"),{once:true});
     } catch(error) { console.warn("Service Worker:",error); }
   }
-  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded",()=>{mount();registerWorker();}) : (mount(),registerWorker());
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded",()=>{mount();setupAppConnectivity();registerWorker();}) : (mount(),setupAppConnectivity(),registerWorker());
 })();
