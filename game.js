@@ -2,7 +2,7 @@ let gameStorage=null;try{gameStorage=window.localStorage}catch(_){}
 const gameGet=(key,fallback=null)=>{try{return gameStorage?.getItem(key)??fallback}catch(_){return fallback}};
 const gameSet=(key,value)=>{try{gameStorage?.setItem(key,value);return Boolean(gameStorage)}catch(_){return false}};
 const gameRemove=key=>{try{gameStorage?.removeItem(key)}catch(_){}};
-const GAME_ROOT="valutkin_market_game_v1",FUND_ACTIVE_KEY="valutkin_game_active_fund",FUND_LIST_KEY="valutkin_game_funds";let activeFund=(gameGet(FUND_ACTIVE_KEY)||"main").replace(/[^a-z0-9-]/g,"")||"main";const GAME_KEY=activeFund==="main"?GAME_ROOT:`${GAME_ROOT}_${activeFund}`;window.resetValutkinGame=()=>{gameRemove(GAME_KEY);location.reload()};
+const GAME_USER_SUFFIX=window.VALUTKIN_GAME_USER_ID?`_${String(window.VALUTKIN_GAME_USER_ID).replace(/[^a-z0-9-]/gi,"")}`:"",GAME_ROOT=`valutkin_market_game_v1${GAME_USER_SUFFIX}`,FUND_ACTIVE_KEY=`valutkin_game_active_fund${GAME_USER_SUFFIX}`,FUND_LIST_KEY=`valutkin_game_funds${GAME_USER_SUFFIX}`;let activeFund=(gameGet(FUND_ACTIVE_KEY)||"main").replace(/[^a-z0-9-]/g,"")||"main";const GAME_KEY=activeFund==="main"?GAME_ROOT:`${GAME_ROOT}_${activeFund}`;window.resetValutkinGame=()=>{gameRemove(GAME_KEY);location.reload()};
 let soundEnabled=true,audioContext=null;try{soundEnabled=gameGet("valutkin_game_sound")!=="off"}catch(_){}
 function playSound(kind="click"){
  if(!soundEnabled)return;
