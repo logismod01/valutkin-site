@@ -50,6 +50,17 @@ function testShellWithoutStorage() {
   assert.equal(window.document.documentElement.dataset.theme, "matrix");
 }
 
+function testCrisisLab() {
+  const { window } = browser("crisis-lab.html");
+  evaluate(window, "crisis-lab.js");
+  const document = window.document;
+  document.querySelector("#crisis-run").click();
+  assert.equal(document.querySelector("#crisis-placeholder").hidden, true, "crisis placeholder must disappear after simulation");
+  assert.equal(document.querySelector("#crisis-output").hidden, false, "crisis result must appear after simulation");
+  assert.ok(document.querySelector(".crisis-result").classList.contains("has-result"), "result card must switch to compact result layout");
+  assert.match(read("crisis-lab.css"), /crisis-result>\[hidden\]\{display:none!important\}/, "hidden crisis content must never reserve layout space");
+}
+
 function testGame() {
   const gameHtml = read("game.html");
   assert.ok(!/<script src="game\.js/.test(gameHtml), "game must not start before device and profile checks");
@@ -328,6 +339,7 @@ function testStaticFiles() {
 
 const tests = [
   ["shell without storage", testShellWithoutStorage],
+  ["crisis lab responsive result", testCrisisLab],
   ["game", testGame],
   ["game without storage", testGameWithoutStorage],
   ["profile weighted average", testProfile],

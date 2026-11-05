@@ -30,7 +30,7 @@
   const links = [
     [`${base}`, "🏠", "Главная"], [`${base}travel.html`, "✈️", "Путешествия"], [`${base}exchange/`, "💱", "Где купить"],
     [`${base}stocks/`, "📈", "Акции"], [`${base}reviews.html`, "⭐", "Отзывы"], [`${base}wallet.html`, "◈", "Кошелёк"], [`${base}support.html`, "❓", "Поддержка"], [`${base}macro.html`, "🌐", "Сырьё и ставки"], [`${base}news.html`, "📰", "Новости рынка"], [`${base}market-tools.html`, "🧰", "Инструменты рынка"], [`${base}game.html`, "🎮", "Биржевая игра"], [`${base}compare.html`, "⚖️", "Сравнение"], [accountHref, "👤", "Войти"],
-    [`${base}profile.html`, "🔔", "Портфель и уведомления"], [`${base}goals.html`, "🎯", "Цели накопления"], [`${base}planner.html`, "🗓️", "Будущие расходы"], [`${base}world.html`, "🌍", "Мировая экономика"], [`${base}crisis-lab.html`, "🧪", "Лаборатория кризисов"], [`${base}updates.html`, "✨", "Что нового"], [`${base}install.html`, "📲", "Установить приложение"]
+    [`${base}hq.html`, "🧭", "Финансовый штаб"], [`${base}profile.html`, "🔔", "Портфель и уведомления"], [`${base}goals.html`, "🎯", "Цели накопления"], [`${base}planner.html`, "🗓️", "Будущие расходы"], [`${base}world.html`, "🌍", "Мировая экономика"], [`${base}crisis-lab.html`, "🧪", "Лаборатория кризисов"], [`${base}updates.html`, "✨", "Что нового"], [`${base}install.html`, "📲", "Установить приложение"]
   ];
 
   function setTheme(name) {
@@ -161,6 +161,13 @@
     const toast=document.createElement("div");toast.className=`shell-toast ${type}`;toast.innerHTML=`<span>${shellEscape(text)}</span>${action?'<button type="button">Обновить</button>':''}<button type="button" class="toast-close" aria-label="Закрыть">✕</button>`;document.body.appendChild(toast);
     toast.querySelector(".toast-close").onclick=()=>toast.remove();if(action)toast.querySelector("button:not(.toast-close)").onclick=action;setTimeout(()=>toast.remove(),action?15000:5000);
   }
+  function setupMotionDetails() {
+    if(matchMedia("(prefers-reduced-motion: reduce)").matches||!("IntersectionObserver" in window))return;
+    const selector="main section,main article,.card,.stock-card,.dashboard-card,.game-card,.review-card,.goal-card,.service-card,.lab-card,.country-card,.phrase-row,.trip-card";
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("detail-visible");observer.unobserve(entry.target)}}),{rootMargin:"0px 0px -7%",threshold:.06});
+    const prepare=root=>{const nodes=root.matches?.(selector)?[root]:root.querySelectorAll?.(selector)||[];[...nodes].forEach((node,index)=>{if(node.classList.contains("detail-motion-ready"))return;node.classList.add("detail-motion-ready");node.style.setProperty("--detail-delay",`${Math.min(index%8,7)*32}ms`);observer.observe(node)})};
+    prepare(document);new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node.nodeType===1)prepare(node)}))).observe(document.body,{childList:true,subtree:true});
+  }
   function setupAppConnectivity() {
     const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
     if(!standalone)return;
@@ -183,5 +190,5 @@
       window.addEventListener("load",()=>storageRemove(sessionStore,"valutkin_sw_reloading"),{once:true});
     } catch(error) { console.warn("Service Worker:",error); }
   }
-  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded",()=>{mount();setupAppConnectivity();registerWorker();}) : (mount(),setupAppConnectivity(),registerWorker());
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded",()=>{mount();setupMotionDetails();setupAppConnectivity();registerWorker();}) : (mount(),setupMotionDetails(),setupAppConnectivity(),registerWorker());
 })();
