@@ -245,8 +245,11 @@ function testTenLanguageInterface() {
 
 function testWalletAndFreeSecurityFeatures() {
   const wallet = browser("wallet.html");
-  assert.match(wallet.window.document.querySelector(".police-tape").textContent, /СКОРО ОТКРОЕТСЯ/);
-  assert.equal(wallet.window.document.querySelectorAll(".wallet-plans article").length, 3);
+  evaluate(wallet.window, "wallet.js");
+  assert.match(wallet.window.document.querySelector(".wallet-warning").textContent, /seed-фразу/);
+  assert.equal(wallet.window.document.querySelectorAll(".security-card>div").length, 4);
+  assert.equal(wallet.window.document.querySelectorAll(".network-row").length, 7);
+  assert.doesNotMatch(read("wallet.js"), /eth_sendTransaction|personal_sign|eth_signTypedData/, "watch-only wallet must not request transfers or signatures");
   const authHtml = read("auth.html");
   const authSource = read("auth.js");
   assert.match(authHtml, /data-oauth="google"/);
