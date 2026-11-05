@@ -22,3 +22,9 @@ create policy "users submit own pending travel reviews" on public.travel_reviews
 drop policy if exists "users delete own pending travel reviews" on public.travel_reviews;
 create policy "users delete own pending travel reviews" on public.travel_reviews for delete to authenticated using (auth.uid()=user_id and status='pending');
 -- Модератор меняет status через Supabase Dashboard. Не выдавайте клиенту service_role.
+
+drop policy if exists "moderators read all travel reviews" on public.travel_reviews;
+create policy "moderators read all travel reviews" on public.travel_reviews for select to authenticated using ((auth.jwt()->'app_metadata'->>'role') in ('moderator','admin'));
+drop policy if exists "moderators decide travel reviews" on public.travel_reviews;
+create policy "moderators decide travel reviews" on public.travel_reviews for update to authenticated using ((auth.jwt()->'app_metadata'->>'role') in ('moderator','admin')) with check ((auth.jwt()->'app_metadata'->>'role') in ('moderator','admin'));
+-- Роль назначается только сервером или в Supabase Dashboard. Никогда не доверяйте role из user_metadata.
