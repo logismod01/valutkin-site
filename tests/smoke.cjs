@@ -248,8 +248,11 @@ function testWalletAndFreeSecurityFeatures() {
   evaluate(wallet.window, "wallet.js");
   assert.match(wallet.window.document.querySelector(".wallet-warning").textContent, /seed-фразу/);
   assert.equal(wallet.window.document.querySelectorAll(".security-card>div").length, 4);
-  assert.equal(wallet.window.document.querySelectorAll(".network-row").length, 7);
-  assert.doesNotMatch(read("wallet.js"), /eth_sendTransaction|personal_sign|eth_signTypedData/, "watch-only wallet must not request transfers or signatures");
+  assert.equal(wallet.window.document.querySelectorAll(".network-row").length, 10);
+  const walletSource = read("wallet.js");
+  assert.match(walletSource, /network\?\.testnet/, "transaction preparation must reject non-test networks");
+  assert.match(walletSource, /eth_sendTransaction/, "testnet transfers must be confirmed by an external wallet");
+  assert.doesNotMatch(walletSource, /personal_sign|eth_signTypedData|privateKey|seedPhrase/, "wallet must not request signatures, private keys or seed phrases");
   const authHtml = read("auth.html");
   const authSource = read("auth.js");
   assert.match(authHtml, /data-oauth="google"/);

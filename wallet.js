@@ -12,6 +12,9 @@
     "0xa": { name: "Optimism", symbol: "ETH", rpc: "https://mainnet.optimism.io", explorer: "https://optimistic.etherscan.io/address/" },
     "0x2105": { name: "Base", symbol: "ETH", rpc: "https://mainnet.base.org", explorer: "https://basescan.org/address/" },
     "0xa86a": { name: "Avalanche C-Chain", symbol: "AVAX", rpc: "https://api.avax.network/ext/bc/C/rpc", explorer: "https://snowtrace.io/address/" },
+    "0xaa36a7": { name: "Ethereum Sepolia", symbol: "Sepolia ETH", rpc: "https://ethereum-sepolia-rpc.publicnode.com", explorer: "https://sepolia.etherscan.io/address/", txExplorer: "https://sepolia.etherscan.io/tx/", testnet: true },
+    "0x13882": { name: "Polygon Amoy", symbol: "Amoy POL", rpc: "https://polygon-amoy-bor-rpc.publicnode.com", explorer: "https://amoy.polygonscan.com/address/", txExplorer: "https://amoy.polygonscan.com/tx/", testnet: true },
+    "0x14a34": { name: "Base Sepolia", symbol: "Sepolia ETH", rpc: "https://sepolia.base.org", explorer: "https://sepolia.basescan.org/address/", txExplorer: "https://sepolia.basescan.org/tx/", testnet: true },
   };
   let account = "";
   let chain = "";
@@ -88,16 +91,22 @@
       account = accounts[0];
       $("wallet-connect").hidden = true;
       $("wallet-disconnect").hidden = false;
-      await loadBalance(account);
+      await loadBalance(account); renderReceive();
     } catch (error) { status(error?.code === 4001 ? "Подключение отменено." : "Не удалось подключить кошелёк.", true); }
   }
   function disconnect() {
-    account = ""; chain = "";
+    account = ""; chain = ""; renderReceive();
     $("wallet-address").textContent = "Не подключён"; $("wallet-address").removeAttribute("title");
     $("wallet-balance").textContent = "—"; $("wallet-network").textContent = "Сеть не выбрана"; $("wallet-symbol").textContent = "Баланс нативной монеты";
     $("wallet-connect").hidden = false; $("wallet-disconnect").hidden = true; $("wallet-copy").disabled = true;
     status("Связь удалена из интерфейса. При необходимости отключите сайт и в настройках кошелька."); renderNetworks();
   }
+  let pendingTransaction = null;
+  function parseUnits(value) { const normalized = String(value).trim(); if (!/^(?:0|[1-9]\d*)(?:\.\d{1,18})?$/.test(normalized)) throw Error("AMOUNT"); const [whole, fraction = ""] = normalized.split("."); return BigInt(whole) * 10n ** 18n + BigInt((fraction + "0".repeat(18)).slice(0, 18)); }
+  function renderReceive() { const box=$("receive-request"),amount=$("receive-amount")?.value.trim(); if (!box) return; if (!account || !chains[chain]) { box.textContent="Сначала подключите кошелёк."; box.dataset.uri=""; return; } let uri=`ethereum:${account}@${BigInt(chain).toString()}`; try { if(amount) uri+=`?value=${parseUnits(amount)}`; } catch {} box.textContent=uri; box.dataset.uri=uri; }
+  async function prepareTransaction(event) { event.preventDefault(); pendingTransaction=null; $("transaction-send").hidden=true; if(!account||!provider()) return status("Сначала подключите внешний кошелёк.",true); const network=chains[chain]; if(!network?.testnet) { $("transaction-preview").innerHTML="<b>Реальная сеть заблокирована</b><span>Переключитесь во внешнем кошельке на Ethereum Sepolia, Polygon Amoy или Base Sepolia.</span>"; return; } const to=$("transaction-to").value.trim(),amount=$("transaction-amount").value.trim(); if(!valid(to)) return toast("Проверьте адрес получателя"); try { const value=parseUnits(amount); if(value<=0n) throw Error("AMOUNT"); const transaction={from:account,to,value:`0x${value.toString(16)}`},gas=await provider().request({method:"eth_estimateGas",params:[transaction]}); pendingTransaction=transaction; $("transaction-preview").innerHTML=`<b>${escapeHtml(network.name)}</b><span>Получатель: ${short(to)}</span><span>Сумма: ${escapeHtml(amount)} ${escapeHtml(network.symbol)}</span><span>Оценка газа: ${BigInt(gas).toLocaleString("ru-RU")} единиц</span>`; $("transaction-send").hidden=false; } catch(error) { $("transaction-preview").innerHTML=`<b>Не удалось подготовить перевод</b><span>${error?.code===4001?"Запрос отменён.":"Проверьте баланс тестовых монет, адрес и сумму."}</span>`; } }
+  async function sendTransaction() { if(!pendingTransaction||!chains[chain]?.testnet)return; const button=$("transaction-send"); button.disabled=true; try { const hash=await provider().request({method:"eth_sendTransaction",params:[pendingTransaction]}); pendingTransaction=null; button.hidden=true; $("transaction-preview").innerHTML=`<b>Транзакция передана внешнему кошельку</b><a href="${chains[chain].txExplorer}${hash}" target="_blank" rel="noopener noreferrer">Открыть в обозревателе ↗</a><small>Статус в блокчейне может обновиться не сразу.</small>`; } catch(error) { toast(error?.code===4001?"Подтверждение отменено":"Кошелёк не отправил транзакцию"); } finally { button.disabled=false; } }
+  $("transaction-form").onsubmit=prepareTransaction; $("transaction-send").onclick=sendTransaction; $("receive-amount").oninput=renderReceive; $("receive-copy").onclick=()=>{const uri=$("receive-request").dataset.uri;if(uri)navigator.clipboard?.writeText(uri).then(()=>toast("Запрос скопирован"))}; $("receive-share").onclick=async()=>{const uri=$("receive-request").dataset.uri;if(!uri)return toast("Сначала подключите кошелёк");try{if(navigator.share)await navigator.share({title:"Запрос Web3-платежа",text:uri});else await navigator.clipboard?.writeText(uri)}catch(error){if(error.name!=="AbortError")toast("Не удалось поделиться")}};
   $("watch-chain").innerHTML = Object.entries(chains).map(([id, item]) => `<option value="${id}">${item.name} · ${item.symbol}</option>`).join("");
   $("wallet-connect").onclick = connect;
   $("wallet-disconnect").onclick = disconnect;
@@ -113,6 +122,6 @@
   $("wallet-import").onchange = async (event) => { try { const data = JSON.parse(await event.target.files[0].text()), rows = data.addresses; if (!Array.isArray(rows)) throw Error(); watch = rows.filter((item) => item && valid(item.address) && chains[item.chain]).slice(0, 30).map((item) => ({ address: item.address, chain: item.chain, name: String(item.name || "Адрес").slice(0, 40) })); saveWatch(); toast(`Импортировано: ${watch.length}`); } catch { toast("Не удалось импортировать файл"); } event.target.value = ""; };
   $("wallet-clear-history").onclick = () => { write(HISTORY_KEY, []); renderHistory(); };
   provider()?.on?.("accountsChanged", (accounts) => accounts?.[0] ? (account = accounts[0], loadBalance(account)) : disconnect());
-  provider()?.on?.("chainChanged", (id) => { chain = id; if (account) loadBalance(account); else renderNetworks(); });
-  saveWatch(); renderNetworks(); renderHistory();
+  provider()?.on?.("chainChanged", (id) => { chain = id; pendingTransaction=null; $("transaction-send").hidden=true; if (account) loadBalance(account).then(renderReceive); else { renderNetworks(); renderReceive(); } });
+  saveWatch(); renderNetworks(); renderHistory(); renderReceive();
 })();
