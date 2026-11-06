@@ -144,3 +144,20 @@ input,select,textarea{transition:border-color .2s ease,box-shadow .2s ease,backg
   @keyframes premium-dialog-in{from{opacity:0;transform:translateY(14px) scale(.985)}}
 }
 @media(hover:hover) and (pointer:fine){button:not(:disabled):hover,.btn-primary:hover,.ghost-btn:hover{transform:translateY(-1px)}a:not(.drawer-links a):hover{text-underline-offset:3px}}
+/* Mobile usability v4: крупные зоны касания и читаемое полноэкранное меню. */
+@media(max-width:760px) and (pointer:coarse), (max-width:520px){
+  .header{min-height:64px!important;padding:9px 12px!important}.header-logo{width:40px!important;height:40px!important}.header-title{font-size:19px!important}.header-language-button,.account-shortcut{width:auto!important;min-width:44px!important;height:44px!important;min-height:44px!important;padding:0 10px!important}
+  body{padding-bottom:calc(78px + env(safe-area-inset-bottom))!important}
+  .mobile-bottom-nav{height:calc(70px + env(safe-area-inset-bottom));padding:5px 6px env(safe-area-inset-bottom)}
+  .mobile-bottom-nav a,.mobile-bottom-nav button{min-height:62px;gap:4px}.mobile-bottom-nav span{width:36px;height:32px;font-size:23px}.mobile-bottom-nav small{font-size:10px;font-weight:800}
+  .side-drawer{left:5px;right:5px;top:calc(5px + env(safe-area-inset-top));bottom:calc(74px + env(safe-area-inset-bottom))}.drawer-body{padding:16px!important;border-radius:22px!important}.drawer-brand{top:-16px;margin:-16px -16px 7px;padding:16px}.drawer-brand img{width:46px;height:46px}.drawer-brand b{font-size:19px}.drawer-brand small{font-size:12px}.drawer-close{width:46px;height:46px;font-size:28px}
+  .drawer-links{grid-template-columns:1fr;gap:8px;padding:12px 0}.drawer-links a,.drawer-links a[href$="travel.html"]{min-height:54px;padding:11px 14px;border-color:var(--card-border);border-radius:14px;font-size:15px;font-weight:750}.drawer-links span{width:28px;font-size:22px;text-align:center}.device-only-badge{font-size:9px}
+  .drawer-section-title{margin-top:8px;font-size:15px}.drawer-themes{height:160px;grid-template-columns:1fr 1fr;gap:8px}.drawer-themes button{min-height:50px;padding:10px 12px;font-size:14px}.drawer-themes span{font-size:20px}
+  .font-section select,.language-section select{min-height:50px!important;padding:11px 13px!important;font-size:16px!important}.language-note{font-size:12px}
+  .drawer-tools{gap:8px}.drawer-tools button{min-height:50px;padding:11px;font-size:13px}.drawer-tools button:first-child{min-height:54px}.drawer-install,.drawer-telegram{min-height:52px;padding:13px;font-size:15px}
+  main button:not(.promo-close):not(.dialog-close):not([aria-label="Закрыть"]),main .btn-primary,main .btn-link,main .ghost-btn,main a.button,main input[type="submit"]{min-height:48px;padding-top:11px;padding-bottom:11px;font-size:max(14px,1em)}
+  main input:not([type="checkbox"]):not([type="radio"]),main select,main textarea{min-height:48px;padding:11px 12px!important}
+  .shell-toast{bottom:calc(80px + env(safe-area-inset-bottom));padding:15px;font-size:14px}.shell-toast button{min-height:42px;min-width:42px}
+  .header-language-menu{top:70px;left:7px!important;right:7px!important;max-height:calc(100dvh - 150px);padding:10px}.header-language-menu button{min-height:50px;padding:11px;font-size:14px}
+}
+@media(max-width:370px){.mobile-bottom-nav small{font-size:9px}.mobile-bottom-nav span{font-size:21px}.drawer-links a,.drawer-links a[href$="travel.html"]{min-height:52px;font-size:14px}.drawer-themes{grid-template-columns:1fr}}
