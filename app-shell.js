@@ -82,8 +82,11 @@
     document.body.appendChild(offlinePanel);
     const commands=[...links.map(([url,icon,text])=>({name:text,icon,url,keywords:"страница навигация"})),...themes.map(([id,icon,name])=>({name:`Тема: ${name}`,icon,theme:id,keywords:"цвет оформление"})),{name:"Установить приложение",icon:"📲",action:"install",keywords:"pwa скачать"},{name:"Увеличить текст",icon:"Аа",action:"text",keywords:"доступность шрифт"},{name:"Наверх страницы",icon:"↑",action:"top",keywords:"прокрутка"},{name:"Офлайн-центр",icon:"☁",action:"offline",keywords:"без интернета кэш скачать приложение"}];
     const handle = aside.querySelector(".drawer-handle");
-    const closeDrawer=()=>{aside.classList.remove("open");drawerBackdrop.classList.remove("open");handle.setAttribute("aria-expanded","false")};
-    handle.addEventListener("click", () => { const open = aside.classList.toggle("open");drawerBackdrop.classList.toggle("open",open);handle.setAttribute("aria-expanded", String(open)); });
+    const menuHeader=document.querySelector(".header-right"), menuShortcut=document.createElement("button");
+    menuShortcut.type="button";menuShortcut.className="header-menu-shortcut";menuShortcut.setAttribute("aria-label","Открыть все разделы");menuShortcut.setAttribute("aria-expanded","false");menuShortcut.innerHTML='<span>☰</span><b>Разделы</b>';menuHeader?.prepend(menuShortcut);
+    const closeDrawer=()=>{aside.classList.remove("open");drawerBackdrop.classList.remove("open");handle.setAttribute("aria-expanded","false");menuShortcut.setAttribute("aria-expanded","false")};
+    const toggleDrawer=()=>{const open=aside.classList.toggle("open");drawerBackdrop.classList.toggle("open",open);handle.setAttribute("aria-expanded",String(open));menuShortcut.setAttribute("aria-expanded",String(open))};
+    handle.addEventListener("click",toggleDrawer);menuShortcut.addEventListener("click",toggleDrawer);
     aside.querySelector(".drawer-close").onclick=closeDrawer;drawerBackdrop.onclick=closeDrawer;
     document.addEventListener("keydown",event=>{if(event.key==="Escape")closeDrawer()});
     document.addEventListener("click", e => { if (innerWidth <= 760 && aside.classList.contains("open")&&!aside.contains(e.target)&&!mobileNav.contains(e.target))closeDrawer(); });
@@ -166,11 +169,8 @@
     toast.querySelector(".toast-close").onclick=()=>toast.remove();if(action)toast.querySelector("button:not(.toast-close)").onclick=action;setTimeout(()=>toast.remove(),action?15000:5000);
   }
   function setupMotionDetails() {
-    if(matchMedia("(prefers-reduced-motion: reduce)").matches||!("IntersectionObserver" in window))return;
-    const selector="main section,main article,.card,.stock-card,.dashboard-card,.game-card,.review-card,.goal-card,.service-card,.lab-card,.country-card,.phrase-row,.trip-card";
-    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("detail-visible");observer.unobserve(entry.target)}}),{rootMargin:"0px 0px -7%",threshold:.06});
-    const prepare=root=>{const nodes=root.matches?.(selector)?[root]:root.querySelectorAll?.(selector)||[];[...nodes].forEach((node,index)=>{if(node.classList.contains("detail-motion-ready"))return;node.classList.add("detail-motion-ready");node.style.setProperty("--detail-delay",`${Math.min(index%8,7)*32}ms`);observer.observe(node)})};
-    prepare(document);new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node.nodeType===1)prepare(node)}))).observe(document.body,{childList:true,subtree:true});
+    // Производительный режим: глобальный MutationObserver и blur-анимации удалены.
+    // Небольшие CSS-переходы остаются только на элементах, с которыми взаимодействует пользователь.
   }
   function setupAppConnectivity() {
     const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
