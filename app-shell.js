@@ -166,11 +166,8 @@
     toast.querySelector(".toast-close").onclick=()=>toast.remove();if(action)toast.querySelector("button:not(.toast-close)").onclick=action;setTimeout(()=>toast.remove(),action?15000:5000);
   }
   function setupMotionDetails() {
-    if(matchMedia("(prefers-reduced-motion: reduce)").matches||!("IntersectionObserver" in window))return;
-    const selector="main section,main article,.card,.stock-card,.dashboard-card,.game-card,.review-card,.goal-card,.service-card,.lab-card,.country-card,.phrase-row,.trip-card";
-    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("detail-visible");observer.unobserve(entry.target)}}),{rootMargin:"0px 0px -7%",threshold:.06});
-    const prepare=root=>{const nodes=root.matches?.(selector)?[root]:root.querySelectorAll?.(selector)||[];[...nodes].forEach((node,index)=>{if(node.classList.contains("detail-motion-ready"))return;node.classList.add("detail-motion-ready");node.style.setProperty("--detail-delay",`${Math.min(index%8,7)*32}ms`);observer.observe(node)})};
-    prepare(document);new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node.nodeType===1)prepare(node)}))).observe(document.body,{childList:true,subtree:true});
+    // Производительный режим: глобальный MutationObserver и blur-анимации удалены.
+    // Небольшие CSS-переходы остаются только на элементах, с которыми взаимодействует пользователь.
   }
   function setupAppConnectivity() {
     const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
