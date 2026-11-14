@@ -1,0 +1,16 @@
+(()=>{"use strict";const offers=[
+["Saily","eSIM","190+ стран","от $1.99 / 1 ГБ","7 дней","https://saily.com/","Установка в приложении; сравните итоговую цену для страны"],
+["Airalo","eSIM","200+ стран и регионов","от $4.50 / 1 ГБ","7 дней","https://www.airalo.com/","Есть локальные, региональные и глобальные пакеты"],
+["Nomad","eSIM","190+ стран","от $4 / 1 ГБ","7 дней","https://www.getnomad.app/","Региональные планы часто выгоднее нескольких отдельных"],
+["Ubigi","eSIM","200+ направлений","от $2.50 / 500 МБ","1 день и более","https://cellulardata.ubigi.com/","Поддерживает разовые и возобновляемые пакеты"],
+["Jetpac","eSIM","150+ стран","от $1 / 1 ГБ","4 дня, промо","https://www.jetpacglobal.com/","Проверьте обычную цену после стартового пакета"],
+["Holafly","eSIM","популярные направления","от $6.90","1 день","https://esim.holafly.com/","Безлимит обычно имеет fair-use и ограничения раздачи"],
+["aloSIM","eSIM","175+ стран","от $4.50 / 1 ГБ","7 дней","https://alosim.com/","В некоторых пакетах доступен международный номер"],
+["GigSky","eSIM","190+ стран, море и авиа","от $4.99 / 1 ГБ","7 дней","https://www.gigsky.com/","Есть специальные планы для круизов и перелётов"],
+["Orange Travel","eSIM","Европа и мир","от €4.99 / 1 ГБ","7 дней","https://travel.orange.com/","У части пакетов есть звонки и SMS"],
+["MobiMatter","маркетплейс eSIM","200+ стран","от $3–5 / 1 ГБ","зависит от оператора","https://mobimatter.com/","Сравнивайте сеть, срок и условия конкретного поставщика"],
+["Местный оператор","Физическая SIM","в стране прибытия","обычно дешевле на 10+ ГБ","7–30 дней","","Покупайте в официальном салоне по паспорту, если это требуется законом"],
+["Домашний оператор","роуминг","ваш текущий номер","зависит от тарифа","день или пакет","","Удобнее для банковских SMS, но часто дороже передачи данных"]
+];
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));let mode="all";function render(){const q=$("#sim-search").value.trim().toLowerCase(),rows=offers.filter(x=>(mode==="all"||(mode==="esim"&&x[1].toLowerCase().includes("esim"))||(mode==="physical"&&x[1].includes("SIM")&&!x[1].toLowerCase().includes("esim"))||(mode==="роуминг"&&x[1].toLowerCase().includes("роуминг")))&&(!q||x.join(" ").toLowerCase().includes(q)));$("#sim-result").textContent=`${rows.length} вариантов`;$("#sim-grid").innerHTML=rows.map((x,i)=>`<article class="sim-card" style="--sim-hue:${(i*31+165)%360}"><header><span>${x[1].includes("eSIM")?"◉":"▣"}</span><div><small>${esc(x[1])}</small><h3>${esc(x[0])}</h3></div></header><dl><div><dt>Покрытие</dt><dd>${esc(x[2])}</dd></div><div><dt>Ориентир цены</dt><dd>${esc(x[3])}</dd></div><div><dt>Срок</dt><dd>${esc(x[4])}</dd></div></dl><p>${esc(x[6])}</p>${x[5]?`<a href="${x[5]}" target="_blank" rel="noopener noreferrer">Официальный сайт ↗</a>`:'<b class="sim-local">Ищите официальный салон</b>'}</article>`).join("")}
+if(location.hash==="#sims-panel") document.querySelector('[data-tab="sims"]')?.click();$("#sim-search").oninput=render;$("#sim-filters").onclick=e=>{const b=e.target.closest("[data-sim]");if(!b)return;mode=b.dataset.sim;document.querySelectorAll("[data-sim]").forEach(x=>x.classList.toggle("active",x===b));render()};render()})();

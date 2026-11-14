@@ -120,6 +120,28 @@ const CURRENCIES = {
     "FJD": ["Доллар Фиджи", "🇫🇯", "oceania"],
     "PGK": ["Кина Папуа — Новой Гвинеи", "🇵🇬", "oceania"],
     "WST": ["Самоанская тала", "🇼🇸", "oceania"],
+    "MVR": ["Мальдивская руфия", "🇲🇻", "asia"],
+    "TMT": ["Туркменский манат", "🇹🇲", "asia"],
+    "IQD": ["Иракский динар", "🇮🇶", "mena"],
+    "IRR": ["Иранский риал", "🇮🇷", "mena"],
+    "LBP": ["Ливанский фунт", "🇱🇧", "mena"],
+    "LYD": ["Ливийский динар", "🇱🇾", "mena"],
+    "DZD": ["Алжирский динар", "🇩🇿", "mena"],
+    "SDG": ["Суданский фунт", "🇸🇩", "mena"],
+    "SOS": ["Сомалийский шиллинг", "🇸🇴", "mena"],
+    "AOA": ["Ангольская кванза", "🇦🇴", "mena"],
+    "BWP": ["Ботсванская пула", "🇧🇼", "mena"],
+    "CDF": ["Конголезский франк", "🇨🇩", "mena"],
+    "MZN": ["Мозамбикский метикал", "🇲🇿", "mena"],
+    "NAD": ["Доллар Намибии", "🇳🇦", "mena"],
+    "SZL": ["Свазилендский лилангени", "🇸🇿", "mena"],
+    "ZMW": ["Замбийская квача", "🇿🇲", "mena"],
+    "ZWL": ["Зимбабвийский доллар", "🇿🇼", "mena"],
+    "HTG": ["Гаитянский гурд", "🇭🇹", "america"],
+    "GYD": ["Гайанский доллар", "🇬🇾", "america"],
+    "SRD": ["Суринамский доллар", "🇸🇷", "america"],
+    "CUP": ["Кубинское песо", "🇨🇺", "america"],
+    "SVC": ["Сальвадорский колон", "🇸🇻", "america"],
     "BTC": ["Bitcoin", "🪙", "crypto"],
     "ETH": ["Ethereum", "💎", "crypto"],
     "TON": ["Toncoin", "💠", "crypto"],
@@ -157,6 +179,18 @@ const CURRENCIES = {
     "XMR": ["Monero", "ɱ", "crypto"],
     "POL": ["Polygon", "⬢", "crypto"],
     "PEPE": ["Pepe", "🐸", "crypto"],
+    "KAS": ["Kaspa", "🔷", "crypto"],
+    "TAO": ["Bittensor", "🧠", "crypto"],
+    "INJ": ["Injective", "🥷", "crypto"],
+    "RENDER": ["Render", "🎨", "crypto"],
+    "FET": ["Artificial Superintelligence Alliance", "🤖", "crypto"],
+    "LDO": ["Lido DAO", "💧", "crypto"],
+    "MKR": ["Maker", "◈", "crypto"],
+    "GRT": ["The Graph", "📊", "crypto"],
+    "IMX": ["Immutable", "🎮", "crypto"],
+    "STX": ["Stacks", "🟧", "crypto"],
+    "SEI": ["Sei", "🔴", "crypto"],
+    "TIA": ["Celestia", "🌌", "crypto"],
     // ===== МЕТАЛЛЫ =====
     "XAU": ["Золото", "🥇", "metals"],
     "XAG": ["Серебро", "🥈", "metals"],
@@ -178,6 +212,9 @@ const CRYPTO_IDS = {
     "SUI": "sui", "ICP": "internet-computer", "FIL": "filecoin", "ETC": "ethereum-classic",
     "AAVE": "aave", "HBAR": "hedera-hashgraph", "ALGO": "algorand", "VET": "vechain",
     "CRO": "crypto-com-chain", "XMR": "monero", "POL": "matic-network", "PEPE": "pepe",
+    "KAS": "kaspa", "TAO": "bittensor", "INJ": "injective-protocol", "RENDER": "render-token",
+    "FET": "fetch-ai", "LDO": "lido-dao", "MKR": "maker", "GRT": "the-graph",
+    "IMX": "immutable-x", "STX": "blockstack", "SEI": "sei-network", "TIA": "celestia",
 };
 
 // Валюта для fawazahmed0 — строчными буквами
@@ -226,7 +263,7 @@ function restoreCachedRates() {
 async function loadRates() {
     const requests = await Promise.allSettled([
         fetchJson(API_FIAT_URL),
-        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink,litecoin,bitcoin-cash,stellar,uniswap,cosmos,near,aptos,arbitrum,optimism,shiba-inu,usd-coin,dai,sui,internet-computer,filecoin,ethereum-classic,aave,hedera-hashgraph,algorand,vechain,crypto-com-chain,monero,matic-network,pepe&vs_currencies=usd,rub"),
+        fetchJson(API_CRYPTO_URL + "?ids=bitcoin,ethereum,the-open-network,tether,solana,binancecoin,ripple,cardano,dogecoin,tron,polkadot,avalanche-2,chainlink,litecoin,bitcoin-cash,stellar,uniswap,cosmos,near,aptos,arbitrum,optimism,shiba-inu,usd-coin,dai,sui,internet-computer,filecoin,ethereum-classic,aave,hedera-hashgraph,algorand,vechain,crypto-com-chain,monero,matic-network,pepe,kaspa,bittensor,injective-protocol,render-token,fetch-ai,lido-dao,maker,the-graph,immutable-x,blockstack,sei-network,celestia&vs_currencies=usd,rub"),
         fetchJson("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
     ]);
     const [fiatResult, cryptoResult, metalsResult] = requests;
