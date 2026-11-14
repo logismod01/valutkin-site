@@ -33,6 +33,8 @@
     [`${base}hq.html`, "🧭", "Финансовый штаб"], [`${base}profile.html`, "🔔", "Портфель и уведомления"], [`${base}goals.html`, "🎯", "Цели накопления"], [`${base}planner.html`, "🗓️", "Будущие расходы"], [`${base}world.html`, "🌍", "Мировая экономика"], [`${base}crisis-lab.html`, "🧪", "Лаборатория кризисов"], [`${base}academy.html`, "🎓", "Академия"], [`${base}vault.html`, "🔐", "Зашифрованная копия"], [`${base}updates.html`, "✨", "Что нового"], [`${base}install.html`, "📲", "Установить приложение"]
   ];
 
+  const linkDescriptions = {"Главная":"Курсы, конвертер и обзор","Путешествия":"50 стран и умный переводчик","Где купить":"Банки и обменные сервисы","Акции":"Компании и отрасли мира","Все активы мира":"466 инструментов в одном месте","Ценные металлы":"Сырьё и стратегические материалы","Отзывы":"Опыт сообщества","Кошелёк":"Защищённое Web3-подключение","Поддержка":"Помощь и обратная связь","Сырьё и ставки":"Макроэкономический радар","Новости рынка":"Важные события без шума","Инструменты рынка":"Калькуляторы и аналитика","Биржевая игра":"Тренировка без реальных денег","Сравнение":"Сопоставление активов","Финансовый штаб":"Персональная панель управления","Портфель и уведомления":"Активы, цели и сигналы","Цели накопления":"Планы и контроль прогресса","Будущие расходы":"Финансовый календарь","Мировая экономика":"Показатели разных стран","Лаборатория кризисов":"Безопасные сценарии риска","Академия":"48 интерактивных уроков","Зашифрованная копия":"Локальная защита данных","Что нового":"История обновлений","Установить приложение":"Валюткин всегда под рукой"};
+
   function setTheme(name) {
     root.dataset.theme = name;
     storageSet(localStore,"valutkin_theme",name);
@@ -49,7 +51,7 @@
     aside.setAttribute("aria-label", "Быстрое меню");
     aside.innerHTML = `<button class="drawer-handle" aria-label="Открыть меню" aria-expanded="false"><span>☰</span><b>Меню</b></button>
       <div class="drawer-body"><div class="drawer-brand"><img src="${base}assets/logo.png" alt=""><div><b>Валюткин</b><small>Все разделы</small></div><button class="drawer-close" type="button" aria-label="Закрыть меню">×</button></div>
-      <nav class="drawer-links">${links.map(([url, icon, text]) => `<a href="${url}"><span>${icon}</span>${text}</a>`).join("")}</nav>
+      <nav class="drawer-links">${links.map(([url, icon, text]) => `<a href="${url}" data-label="${text}"><span class="drawer-link-icon">${icon}</span><span class="drawer-link-copy"><b>${text}</b><small>${linkDescriptions[text]||"Личный кабинет Валюткина"}</small></span><i aria-hidden="true">→</i></a>`).join("")}</nav>
       <div class="drawer-section"><div class="drawer-section-title">Темы <small>крутите колёсико</small></div>
       <div class="drawer-themes" tabindex="0">${themes.map(([id, icon, title]) => `<button data-shell-theme="${id}" title="${title}"><span>${icon}</span>${title}</button>`).join("")}</div></div>
       <div class="drawer-section font-section"><div class="drawer-section-title">Шрифт</div><select id="shell-font">${fonts.map(([id,name])=>`<option value="${id}">${name}</option>`).join("")}</select></div>
