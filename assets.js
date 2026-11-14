@@ -3,7 +3,7 @@
   const $ = (id) => document.getElementById(id), items = Array.isArray(window.VALUTKIN_ASSET_INDEX) ? window.VALUTKIN_ASSET_INDEX : [], KEY = "valutkin_asset_directory_favorites";
   let type = "all", limit = 80, query = "", sort = "code", favorites = [];
   try { favorites = JSON.parse(localStorage.getItem(KEY) || "[]"); if (!Array.isArray(favorites)) favorites = []; } catch { favorites = []; }
-  const labels = { currency: "Валюта", crypto: "Криптоактив", stock: "Акция", metal: "Металл" };
+  const labels = { currency: "Валюта", crypto: "Криптоактив", stock: "Акция", metal: "Металл", material: "Материал" };
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(favorites.slice(0, 200))); } catch {} };
   function toast(text) { const el = $("asset-toast"); el.textContent = text; el.classList.add("show"); clearTimeout(el.t); el.t = setTimeout(() => el.classList.remove("show"), 1800); }
   function filtered() { const needle = query.toLocaleLowerCase(), favorite = new Set(favorites); return items.filter((item) => (type === "all" || type === "favorite" ? type !== "favorite" || favorite.has(item.id) : item.type === type) && (!needle || `${item.code} ${item.name} ${item.category}`.toLocaleLowerCase().includes(needle))).sort((a, b) => sort === "name" ? a.name.localeCompare(b.name, "ru") : sort === "type" ? a.type.localeCompare(b.type) || a.code.localeCompare(b.code) : a.code.localeCompare(b.code)); }

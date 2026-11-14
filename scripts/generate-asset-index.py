@@ -21,7 +21,11 @@ for line in main.splitlines():
         seen.add(symbol)
         assets.append({'id':f'stock:{symbol}','code':symbol,'name':name,'icon':icon,'type':'stock','category':category or 'stocks','href':f'stocks/?q={symbol}'})
 
+materials=Path('data/materials.js').read_text()
+for material_id,symbol,name,icon,group in re.findall(r'\{id:"([^"]+)",symbol:"([^"]+)",name:"([^"]+)",icon:"([^"]+)",group:"([^"]+)"',materials):
+    assets.append({'id':f'material:{material_id}','code':symbol,'name':name,'icon':icon,'type':'material','category':group,'href':f'materials.html#{material_id}'})
+
 assets.sort(key=lambda item:(item['type'],item['code']))
 Path('data').mkdir(exist_ok=True)
 Path('data/asset-index.js').write_text('window.VALUTKIN_ASSET_INDEX='+json.dumps(assets,ensure_ascii=False,separators=(',',':'))+';\n')
-print(f'Generated {len(assets)} assets: '+', '.join(f'{kind}={sum(x["type"]==kind for x in assets)}' for kind in ['currency','crypto','metal','stock']))
+print(f'Generated {len(assets)} assets: '+', '.join(f'{kind}={sum(x["type"]==kind for x in assets)}' for kind in ['currency','crypto','metal','material','stock']))
