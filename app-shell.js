@@ -82,8 +82,11 @@
     document.body.appendChild(offlinePanel);
     const commands=[...links.map(([url,icon,text])=>({name:text,icon,url,keywords:"страница навигация"})),...themes.map(([id,icon,name])=>({name:`Тема: ${name}`,icon,theme:id,keywords:"цвет оформление"})),{name:"Установить приложение",icon:"📲",action:"install",keywords:"pwa скачать"},{name:"Увеличить текст",icon:"Аа",action:"text",keywords:"доступность шрифт"},{name:"Наверх страницы",icon:"↑",action:"top",keywords:"прокрутка"},{name:"Офлайн-центр",icon:"☁",action:"offline",keywords:"без интернета кэш скачать приложение"}];
     const handle = aside.querySelector(".drawer-handle");
-    const closeDrawer=()=>{aside.classList.remove("open");drawerBackdrop.classList.remove("open");handle.setAttribute("aria-expanded","false")};
-    handle.addEventListener("click", () => { const open = aside.classList.toggle("open");drawerBackdrop.classList.toggle("open",open);handle.setAttribute("aria-expanded", String(open)); });
+    const menuHeader=document.querySelector(".header-right"), menuShortcut=document.createElement("button");
+    menuShortcut.type="button";menuShortcut.className="header-menu-shortcut";menuShortcut.setAttribute("aria-label","Открыть все разделы");menuShortcut.setAttribute("aria-expanded","false");menuShortcut.innerHTML='<span>☰</span><b>Разделы</b>';menuHeader?.prepend(menuShortcut);
+    const closeDrawer=()=>{aside.classList.remove("open");drawerBackdrop.classList.remove("open");handle.setAttribute("aria-expanded","false");menuShortcut.setAttribute("aria-expanded","false")};
+    const toggleDrawer=()=>{const open=aside.classList.toggle("open");drawerBackdrop.classList.toggle("open",open);handle.setAttribute("aria-expanded",String(open));menuShortcut.setAttribute("aria-expanded",String(open))};
+    handle.addEventListener("click",toggleDrawer);menuShortcut.addEventListener("click",toggleDrawer);
     aside.querySelector(".drawer-close").onclick=closeDrawer;drawerBackdrop.onclick=closeDrawer;
     document.addEventListener("keydown",event=>{if(event.key==="Escape")closeDrawer()});
     document.addEventListener("click", e => { if (innerWidth <= 760 && aside.classList.contains("open")&&!aside.contains(e.target)&&!mobileNav.contains(e.target))closeDrawer(); });
