@@ -307,6 +307,19 @@ const STOCKS = {
         { symbol: "EDU", name: "New Oriental", flag: "🎓" },
     ],
 };
+// Дополнительные компании добавляются в существующие категории, а не в дублирующие разделы.
+STOCKS.tech.push(
+ {symbol:"SMCI",name:"Super Micro Computer",flag:"🖥️"},{symbol:"CDNS",name:"Cadence Design Systems",flag:"📐"},{symbol:"SNPS",name:"Synopsys",flag:"🧩"},{symbol:"FTNT",name:"Fortinet",flag:"🛡️"},{symbol:"TEAM",name:"Atlassian",flag:"🧰"});
+STOCKS.tech.push(
+ {symbol:"HUBS",name:"HubSpot",flag:"🧲"},{symbol:"OKTA",name:"Okta",flag:"🔑"},{symbol:"DOCU",name:"DocuSign",flag:"✍️"},{symbol:"ZM",name:"Zoom",flag:"🎥"},{symbol:"TWLO",name:"Twilio",flag:"💬"});
+STOCKS.finance.push(
+ {symbol:"APO",name:"Apollo Global Management",flag:"🏛️"},{symbol:"ARES",name:"Ares Management",flag:"📊"}, {symbol:"BLK",name:"BlackRock",flag:"🏦"},{symbol:"BX",name:"Blackstone",flag:"🏛️"},{symbol:"COF",name:"Capital One",flag:"💳"},{symbol:"NU",name:"Nu Holdings",flag:"💜"});
+STOCKS.health.push(
+ {symbol:"ZBH",name:"Zimmer Biomet",flag:"🦴"},{symbol:"BIIB",name:"Biogen",flag:"🧬"},{symbol:"ALNY",name:"Alnylam Pharmaceuticals",flag:"🧪"}, {symbol:"NVO",name:"Novo Nordisk",flag:"🇩🇰"},{symbol:"MRK",name:"Merck",flag:"💊"},{symbol:"ISRG",name:"Intuitive Surgical",flag:"🦾"},{symbol:"VRTX",name:"Vertex Pharmaceuticals",flag:"🧬"});
+STOCKS.energy.push(
+ {symbol:"BEPC",name:"Brookfield Renewable",flag:"🌊"},{symbol:"ETR",name:"Entergy",flag:"⚡"},{symbol:"CQP",name:"Cheniere Energy Partners",flag:"🔥"}, {symbol:"CEG",name:"Constellation Energy",flag:"⚛️"},{symbol:"VST",name:"Vistra",flag:"⚡"},{symbol:"FSLR",name:"First Solar",flag:"☀️"});
+STOCKS.retail.push(
+ {symbol:"DASH",name:"DoorDash",flag:"🛵"},{symbol:"ONON",name:"On Holding",flag:"👟"}, {symbol:"TGT",name:"Target",flag:"🎯"},{symbol:"LOW",name:"Lowe's",flag:"🛠️"},{symbol:"MELI",name:"MercadoLibre",flag:"🛍️"});
 
 // ============================================
 // ЗАГРУЗКА (с задержкой — чтобы не было 429)
