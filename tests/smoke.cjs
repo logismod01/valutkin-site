@@ -173,25 +173,14 @@ function testSplitMarketPages() {
 
 function testNewsPage() {
   const { window } = browser("news.html");
-  window.localStorage.setItem("valutkin_news_cache_v1", JSON.stringify({ at: Date.now(), items: [
-    { id: "safe-1", topic: "crypto", title: '<img src=x onerror="window.hacked=1"> Bitcoin растёт', description: "Описание", source: "Тестовое СМИ", date: Date.now(), link: "https://example.com/story" },
-    { id: "safe-2", topic: "currency", title: "Курс валют", description: "Решение центрального банка", source: "Другое СМИ", date: Date.now(), link: "https://example.org/story" }
-  ] }));
-  window.fetch = async () => { throw new Error("cached data expected"); };
-  window.setInterval = () => 0;
-  evaluate(window, "news.js");
   const document = window.document;
-  assert.equal(document.querySelectorAll(".news-card").length, 2);
-  assert.equal(document.querySelector(".news-card img"), null);
-  assert.equal(window.hacked, undefined);
-  document.querySelector('[data-news-category="crypto"]').click();
-  assert.equal(document.querySelectorAll(".news-card").length, 1);
-  document.querySelector(".news-save").click();
-  assert.equal(JSON.parse(window.localStorage.getItem("valutkin_saved_news_v1")).length, 1);
+  assert.match(document.querySelector(".news-closed-label")?.textContent || "", /ЗАКРЫТО/);
+  assert.ok(document.querySelector(".news-closed-hero"));
+  assert.equal(document.querySelector('script[src="news.js"]'), null, "closed feed must not fetch or process stale news");
+  const official = [...document.querySelectorAll(".news-source-guide a")];
+  assert.ok(official.length >= 3);
+  assert.ok(official.every(link => link.target === "_blank" && link.rel.includes("noopener")));
   assert.match(read("app-shell.js"), /news\.html.*Новости рынка/);
-  const newsSource = read("news.js");
-  assert.match(newsSource, /\.\/data\/news\.json/, "news must load a same-origin snapshot");
-  assert.doesNotMatch(newsSource, /rss2json|news\.google\.com/, "browser must not call cross-origin RSS services");
 }
 
 function testExchangeDirectory() {
