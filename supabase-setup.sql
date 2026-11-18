@@ -437,3 +437,49 @@ revoke all on function public.list_my_sessions() from public, anon;
 revoke all on function public.revoke_my_session(uuid) from public, anon;
 grant execute on function public.list_my_sessions() to authenticated;
 grant execute on function public.revoke_my_session(uuid) to authenticated;
+
+-- Мировой пульс: добровольные дайджесты и важные изменения без случайного спама.
+create table if not exists public.world_push_preferences (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  enabled boolean not null default false,
+  mode text not null default 'mixed' check(mode in ('mixed','digest','important')),
+  assets text[] not null default array['EUR','CNY','GBP','JPY','KZT','TRY'],
+  digest_hours integer[] not null default array[9,19],
+  threshold numeric not null default 1.5 check(threshold between 0.5 and 20),
+  timezone text not null default 'UTC',
+  last_digest_key text,
+  last_important_at timestamptz,
+  updated_at timestamptz not null default now()
+);
+alter table public.world_push_preferences enable row level security;
+drop policy if exists "world_push_own_select" on public.world_push_preferences;
+create policy "world_push_own_select" on public.world_push_preferences for select using(auth.uid()=user_id);
+drop policy if exists "world_push_own_insert" on public.world_push_preferences;
+create policy "world_push_own_insert" on public.world_push_preferences for insert with check(auth.uid()=user_id);
+drop policy if exists "world_push_own_update" on public.world_push_preferences;
+create policy "world_push_own_update" on public.world_push_preferences for update using(auth.uid()=user_id) with check(auth.uid()=user_id);
+create table if not exists public.world_market_state(id text primary key,rates jsonb not null default '{}'::jsonb,checked_at timestamptz not null default now());
+alter table public.world_market_state enable row level security;
+revoke all on public.world_market_state from anon,authenticated;
+insert into public.world_market_state(id) values('fiat-rub') on conflict(id) do nothing;
+
+create or replace function public.scheduled_world_push_targets(p_secret text)
+returns table(user_id uuid,mode text,assets text[],digest_hours integer[],threshold numeric,timezone text,last_digest_key text,last_important_at timestamptz,subscription_id bigint,endpoint text,p256dh text,auth text,previous_rates jsonb)
+language sql security definer set search_path=public as $$
+  select p.user_id,p.mode,p.assets,p.digest_hours,p.threshold,p.timezone,p.last_digest_key,p.last_important_at,s.id,s.endpoint,s.p256dh,s.auth,coalesce(m.rates,'{}'::jsonb)
+  from public.world_push_preferences p join public.push_subscriptions s on s.user_id=p.user_id cross join public.world_market_state m
+  where p.enabled and m.id='fiat-rub' and exists(select 1 from public.push_scheduler_config c where c.id='world-pulse' and c.secret_hash=encode(extensions.digest(p_secret,'sha256'),'hex'));
+$$;
+create or replace function public.mark_world_push_run(p_secret text,p_rates jsonb,p_digest_user_ids uuid[],p_important_user_ids uuid[],p_expired_subscription_ids bigint[])
+returns void language plpgsql security definer set search_path=public as $$
+begin
+ if not exists(select 1 from public.push_scheduler_config where id='world-pulse' and secret_hash=encode(extensions.digest(p_secret,'sha256'),'hex')) then raise exception 'unauthorized'; end if;
+ update public.world_market_state set rates=p_rates,checked_at=now() where id='fiat-rub';
+ update public.world_push_preferences set last_digest_key=to_char(now(),'YYYY-MM-DD-HH24'),updated_at=now() where user_id=any(coalesce(p_digest_user_ids,array[]::uuid[]));
+ update public.world_push_preferences set last_important_at=now(),updated_at=now() where user_id=any(coalesce(p_important_user_ids,array[]::uuid[]));
+ delete from public.push_subscriptions where id=any(coalesce(p_expired_subscription_ids,array[]::bigint[]));
+end;$$;
+revoke all on function public.scheduled_world_push_targets(text) from public,authenticated;
+revoke all on function public.mark_world_push_run(text,jsonb,uuid[],uuid[],bigint[]) from public,authenticated;
+grant execute on function public.scheduled_world_push_targets(text) to anon;
+grant execute on function public.mark_world_push_run(text,jsonb,uuid[],uuid[],bigint[]) to anon;

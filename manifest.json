@@ -42,6 +42,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Мировой пульс",
+      "short_name": "Пульс",
+      "description": "Краткая валютная сводка и push-настройки",
+      "url": "./phone-widget.html",
+      "icons": [
+        {
+          "src": "./assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
       "name": "Курсы валют",
       "short_name": "Курсы",
       "url": "./",
@@ -75,20 +87,9 @@
       ]
     },
     {
-      "name": "Мой профиль",
-      "short_name": "Профиль",
-      "url": "./profile.html",
-      "icons": [
-        {
-          "src": "./assets/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Сравнение",
-      "short_name": "Сравнить",
-      "url": "./compare.html",
+      "name": "Моя поездка",
+      "short_name": "Поездка",
+      "url": "./travel.html#trip-panel",
       "icons": [
         {
           "src": "./assets/icon-192.png",
