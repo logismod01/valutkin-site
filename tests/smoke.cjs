@@ -296,8 +296,10 @@ function testWalletAndFreeSecurityFeatures() {
 }
 
 function testStaticFiles() {
-  const htmlFiles = [...fs.readdirSync(ROOT).filter(name => name.endsWith(".html")), "stocks/index.html", "exchange/index.html"];
+  const htmlFiles = [...fs.readdirSync(ROOT).filter(name => name.endsWith(".html") && !/^google[\w-]+\.html$/i.test(name)), "stocks/index.html", "exchange/index.html"];
   for (const html of htmlFiles) assert.match(read(html), /i18n\.js/, `${html} must load the language system`);
+  const verificationFiles = fs.readdirSync(ROOT).filter(name => /^google[\w-]+\.html$/i.test(name));
+  for (const html of verificationFiles) assert.match(read(html), /^google-site-verification: google[\w-]+\.html\s*$/, `${html} must remain an exact Google verification response`);
   const scripts = [
     ...fs.readdirSync(ROOT).filter(name => name.endsWith(".js")),
     "stocks/stocks.js", "exchange/exchange.js"
